@@ -1,6 +1,6 @@
 <h1 align="center">ProperDim 1.4</h1>
 <br>
-<p align="center"><img width="300" src="https://github.com/user-attachments/assets/d1d517c4-ac8d-414c-afc4-131fe98929bc" /></p>
+<p align="center"><img width="300" src="https://github.com/user-attachments/assets/fd318d11-80c1-4550-8636-6d6fc22585c8" /></p>
 <h4 align="center">Now you can dim your screen. Properly.</h4>
 &nbsp;
 
@@ -18,40 +18,40 @@ ProperDim is a screen brightness management utility for Windows 10/11 that inclu
 
 <h3 align="center">Main Controls</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/01f9260a-c694-4869-b2b9-ba10890a9d9a" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/740a3ed7-b27b-4ec1-8420-64d39d538ff7" /></p>
 The main control hub of ProperDim sports a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with a transparent black overlay to bring accurate blacks without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. The Multi-Display Control window is also found here by clicking the hyperlink at the bottom of the window.
 
 
 <h3 align="center">Multi-Display Controls</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/a2c9739b-ec7d-4fdd-97ae-0b0263034cc8" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/6651de94-86a9-4f7a-a02f-743f9ec91df3" /></p>
 If you have a multi-screen setup, ProperDim lets you manage this in two different ways. If the "Synchronize Brightness Adjustments" setting is checked, the sliders of each display act as an "offset" for that particular display. This way, you can set each screens max brightness so they visually match, and then adjust them all at once using the main brightness slider. If you disable this setting, the sliders instead behave as independent brightness sliders for each display and you will need to reopen the multi-display settings window again for future adjustments, as the main slider will only adjust the main display in the unchecked configuration.
 
 
 <h3 align="center">Event Schedule</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/243cbafe-c5d9-47ac-8c78-b9266333ffe7" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/1a0d4ad3-1a0b-49b3-9ad5-f2cda1236071" /></p>
 <p>The Schedule tab allows you to add Events to the schedule list which will be automatically triggered when the set time comes to pass. The list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/0ad74538-c3f4-49f0-a7aa-9304c1d051f5" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/f7999eed-67fd-400e-bfae-a52252345f39" /></p>
 <p>The Event Scheduler window provides all the fields required for a valid event. Time of day, brightness level to adjust to, and what days of week it should trigger on. Enabling or disabling the 24-hour clock checkbox will convert the events in the schedule to 12 or 24-hour format, respectively. If you want to edit a previously added event, you can double-click the existing event in the full schedule list.</p>
 
 
 <h3 align="center">Hotkeys</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/bae42874-128a-4dd2-a987-595e69c90670" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/9e6938f5-c8d5-42f0-98b1-0413bfa4aaaa" /></p>
 <p></p>With hotkeys enabled, you can program ProperDim to accept global hotkey commands to increase or decrease brightness anywhere, anytime on your system. Hotkey adjustments are done in 5% increments.</p>
 
 
 <h3 align="center">Options</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/70f9cec7-51f9-4729-a59d-c777fcf47847" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/6e51fcea-3f7b-41c7-b4b7-e59062d5ab5b" /></p>
 <p>The Options tab provides some quality of life options for the user. Here you can enable auto-start on system boot, change what closing the control window does, and whether or not to display the controls when ProperDim is opened. There is also a button for resetting the overlay and event schedule, in case of overlay glitches or you want to start with a fresh schedule.</p>
 
 
 <h3 align="center">System Tray Control</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/950c6153-ab1d-41f8-8f6f-c65377eed1be" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/d2465656-732b-4524-9d77-b8e9d662855a" /></p>
 <p>The right-click menu on the system tray icon is home to quick program shortcuts as well as the QuickDim widget — an easy-to-access slider that lives directly in the right-click menu. Debatable on whether it's actually "quicker" than using the Control Panel or not... but sometimes you just don't wanna open a whole window, ya know?</p>
 
 ## System Requirements
