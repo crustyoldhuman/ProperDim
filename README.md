@@ -46,7 +46,7 @@ If you have a multi-screen setup, ProperDim lets you manage this in two differen
 <h3 align="center">Options</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/6e51fcea-3f7b-41c7-b4b7-e59062d5ab5b" /></p>
-<p>The Options tab provides some quality of life options for the user. Here you can enable auto-start on system boot, change what closing the control window does, and whether or not to display the controls when ProperDim is opened. There is also a button for resetting the overlay and event schedule, in case of overlay glitches or you want to start with a fresh schedule.</p>
+<p>The Options tab provides some quality of life options for the user. Here you can enable auto-start on system boot, change what closing the control window does, and whether or not to display the controls when ProperDim is opened. There is also a button for resetting the display adjustments and event schedule, in case of dimming glitches or you want to start with a fresh schedule.</p>
 
 
 <h3 align="center">System Tray Control</h3>
