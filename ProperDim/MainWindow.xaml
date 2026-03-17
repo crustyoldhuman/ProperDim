@@ -1,0 +1,16 @@
+﻿<Window x:Class="ProperDim.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="clr-namespace:H.NotifyIcon;assembly=H.NotifyIcon.Wpf"
+        Title="ProperDim Controller" Height="0" Width="0"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" Visibility="Hidden">
+
+	<Grid>
+		<tb:TaskbarIcon x:Name="TrayIcon" 
+                        ToolTipText="ProperDim" 
+                        TrayLeftMouseDown="TrayIcon_TrayLeftMouseDown"
+                        TrayLeftMouseDoubleClick="TrayIcon_TrayLeftMouseDown"
+                        TrayRightMouseUp="TrayIcon_TrayRightMouseUp" />
+	</Grid>
+</Window>

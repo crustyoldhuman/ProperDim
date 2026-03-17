@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows7.0</TargetFramework>
+		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+		<UseWPF>true</UseWPF>
+		<Platforms>x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
+		<NoWarn>CA1416</NoWarn>
+		<Product>ProperDim</Product>
+		<Title>ProperDim</Title>
+		<Description>ProperDim Window Dimmer</Description>
+		<AssemblyTitle>ProperDim</AssemblyTitle>
+		<ApplicationIcon>ProperDimIcon.ico</ApplicationIcon>
+		<ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="H.GeneratedIcons.System.Drawing" Version="2.4.1" />
+		<PackageReference Include="H.NotifyIcon" Version="2.4.1" />
+		<PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="ProperDimIcon.ico" />
+	</ItemGroup>
+
+</Project>
