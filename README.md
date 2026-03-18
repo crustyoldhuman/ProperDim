@@ -21,7 +21,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/145be892-166a-49d0-a6ed-0a4596b6fccb" /></p>
 The main control hub of ProperDim sports a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of blacks as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. 
-
+<br>
 <p>Multiple monitors that are connected via traditional cables and natively support gamma adjustment are all fully supported. Because virtual displays literally often lie to enquiring programs about their capabilities, displays connected via USB or wirelessly often will not fully support the dimming slider. Adjustments below 50% will register on ALL screens no matter what, but those connected virtually or via USB will not respond to brightness changes about 50%. I really tried hard to find a reasonable solution to this, but no dice.</p>
 
 <h3 align="center">Event Schedule</h3>
