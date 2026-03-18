@@ -503,7 +503,7 @@
 										  Unchecked="TrayCheckBox_Changed" />
 
 								<CheckBox Name="ShowStartupCheckBox" 
-										  Content="Show controls window on app startup" 
+										  Content="Show Controls window on app startup" 
 										  Checked="ShowStartupCheckBox_Changed" 
 										  Unchecked="ShowStartupCheckBox_Changed" />
 							</StackPanel>
