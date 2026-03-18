@@ -488,22 +488,22 @@
 								<RowDefinition Height="Auto" />
 								<RowDefinition Height="*" />
 							</Grid.RowDefinitions>
-							<StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,-6,65,0" Grid.RowSpan="2">
+							<StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="20,-6,0,0" Grid.RowSpan="2">
 								<CheckBox Name="StartupCheckBox" 
-										  Content="Run ProperDim on system startup" 
+										  Content="Run ProperDim when Windows starts" 
 										  Margin="0,14,0,4" 
 										  Checked="StartupCheckBox_Changed" 
 										  Unchecked="StartupCheckBox_Changed" />
 
 								<CheckBox Name="TrayCheckBox" 
-										  Content="Close window to system tray" 
+										  Content="Close button minimizes to system tray" 
 										  Margin="0,0,0,4" 
 										  IsChecked="True" 
 										  Checked="TrayCheckBox_Changed" 
 										  Unchecked="TrayCheckBox_Changed" />
 
 								<CheckBox Name="ShowStartupCheckBox" 
-										  Content="Show ProperDim on app startup" 
+										  Content="Show controls window on app startup" 
 										  Checked="ShowStartupCheckBox_Changed" 
 										  Unchecked="ShowStartupCheckBox_Changed" />
 							</StackPanel>

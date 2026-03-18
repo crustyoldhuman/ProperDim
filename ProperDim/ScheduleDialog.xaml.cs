@@ -103,9 +103,10 @@ public partial class ScheduleDialog : Window
 			if (h12 == 0) h12 = 12;
 
 			HourBox.SelectedItem = h12.ToString("D2");
-			if (AmPmToggle != null)
+			if (PmRadio != null && AmRadio != null)
 			{
-				AmPmToggle.IsChecked = (amPm == "PM");
+				if (amPm == "PM") PmRadio.IsChecked = true;
+				else AmRadio.IsChecked = true;
 			}
 		}
 		MinuteBox.SelectedItem = m.ToString("D2");
@@ -188,9 +189,9 @@ public partial class ScheduleDialog : Window
 		int hour = int.Parse(HourBox.SelectedItem.ToString());
 		int minute = int.Parse(MinuteBox.SelectedItem.ToString());
 
-		if (Is24hCheck.IsChecked == false && AmPmToggle != null)
+		if (Is24hCheck.IsChecked == false && PmRadio != null)
 		{
-			string amPm = AmPmToggle.IsChecked == true ? "PM" : "AM";
+			string amPm = PmRadio.IsChecked == true ? "PM" : "AM";
 			if (amPm == "PM" && hour < 12) hour += 12;
 			if (amPm == "AM" && hour == 12) hour = 0;
 		}
@@ -249,7 +250,7 @@ public partial class ScheduleDialog : Window
 
 	private void TimeSelection_Changed(object sender, SelectionChangedEventArgs e) => ValidateTime();
 
-	private void AmPmToggle_Click(object sender, RoutedEventArgs e) => ValidateTime();
+	private void AmPmRadio_Click(object sender, RoutedEventArgs e) => ValidateTime();
 
 	private void Is24hCheck_Changed(object sender, RoutedEventArgs e)
 	{
@@ -263,9 +264,9 @@ public partial class ScheduleDialog : Window
 			currentMinute = int.Parse(MinuteBox.SelectedItem.ToString());
 
 			// If switching TO 24h, the old state was 12h. Convert to 24h format before repopulating.
-			if (Is24hCheck.IsChecked == true && AmPmToggle != null)
+			if (Is24hCheck.IsChecked == true && PmRadio is { } pmRadio)
 			{
-				string amPm = AmPmToggle.IsChecked == true ? "PM" : "AM";
+				string amPm = pmRadio.IsChecked == true ? "PM" : "AM";
 				if (amPm == "PM" && currentHour < 12) currentHour += 12;
 				if (amPm == "AM" && currentHour == 12) currentHour = 0;
 			}
@@ -274,9 +275,9 @@ public partial class ScheduleDialog : Window
 
 		PopulateTimeBoxes();
 
-		if (AmPmToggle is { } box)
+		if (AmPmContainer is { } container)
 		{
-			box.Visibility = (Is24hCheck.IsChecked == true) ? Visibility.Collapsed : Visibility.Visible;
+			container.Visibility = Is24hCheck.IsChecked == true ? Visibility.Collapsed : Visibility.Visible;
 		}
 
 		if (hasSelection)
@@ -322,9 +323,9 @@ public partial class ScheduleDialog : Window
 		int hour = int.Parse(HourBox.SelectedItem.ToString());
 		int minute = int.Parse(MinuteBox.SelectedItem.ToString());
 
-		if (Is24hCheck.IsChecked == false && AmPmToggle != null)
+		if (Is24hCheck.IsChecked == false && PmRadio != null)
 		{
-			string amPm = AmPmToggle.IsChecked == true ? "PM" : "AM";
+			string amPm = PmRadio.IsChecked == true ? "PM" : "AM";
 			if (amPm == "PM" && hour < 12) hour += 12;
 			if (amPm == "AM" && hour == 12) hour = 0;
 		}
