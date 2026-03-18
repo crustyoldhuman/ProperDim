@@ -202,12 +202,15 @@
 				</Grid>
 			</Border>
 			<StackPanel Margin="20,10,20,15">
-				<TextBlock Text="Time" Margin="0,0,0,4" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" />
+				<TextBlock Text="Time" Margin="0,0,0,6" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" />
 				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
-					<ComboBox Name="HourBox" Width="65" Margin="0,0,5,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
-					<TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
-					<ComboBox Name="MinuteBox" Width="65" Margin="0,0,10,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
-					<Border Name="AmPmContainer" Width="65" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="3">
+					<ComboBox Name="HourBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
+
+					<TextBlock Text=":" VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" />
+
+					<ComboBox Name="MinuteBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
+
+					<Border Name="AmPmContainer" Width="65" Margin="8,0,0,0" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="3">
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
