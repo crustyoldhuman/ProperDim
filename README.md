@@ -18,14 +18,8 @@ ProperDim is a screen brightness management utility for Windows 10/11 that inclu
 
 <h3 align="center">Main Controls</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/740a3ed7-b27b-4ec1-8420-64d39d538ff7" /></p>
+<p align="center"><img width="425" src="" /></p>
 The main control hub of ProperDim sports a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with a transparent black overlay to bring accurate blacks without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. The Multi-Display Control window is also found here by clicking the hyperlink at the bottom of the window.
-
-
-<h3 align="center">Multi-Display Controls</h3>
-
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/6651de94-86a9-4f7a-a02f-743f9ec91df3" /></p>
-If you have a multi-screen setup, ProperDim lets you manage this in two different ways. If the "Synchronize Brightness Adjustments" setting is checked, the sliders of each display act as an "offset" for that particular display. This way, you can set each screens max brightness so they visually match, and then adjust them all at once using the main brightness slider. If you disable this setting, the sliders instead behave as independent brightness sliders for each display and you will need to reopen the multi-display settings window again for future adjustments, as the main slider will only adjust the main display in the unchecked configuration.
 
 
 <h3 align="center">Event Schedule</h3>
