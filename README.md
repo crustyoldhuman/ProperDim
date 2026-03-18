@@ -15,7 +15,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 - Do you want your screen to go very dark? ***Then, YES!***
 - Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see Main Controls section, second paragraph)
 
-## Feature Breakdown
+## Feature Explanations
 
 <h3 align="center">Main Controls</h3>
 
