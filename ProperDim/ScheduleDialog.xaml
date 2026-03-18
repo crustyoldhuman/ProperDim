@@ -239,7 +239,7 @@
 						</ToggleButton.Template>
 					</ToggleButton>
 				</StackPanel>
-				<CheckBox Name="Is24hCheck" Content="Use 24-hour clock" Foreground="LightGray" Margin="6,0,0,12" Checked="Is24hCheck_Changed" Unchecked="Is24hCheck_Changed" />
+				<CheckBox Name="Is24hCheck" Content="Use 24-hour clock" Foreground="LightGray" Margin="4,0,0,12" HorizontalAlignment="Left" Checked="Is24hCheck_Changed" Unchecked="Is24hCheck_Changed" />
 				<Border Background="#00FFFFFF" Margin="0,0,0,2">
 					<StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,2" HorizontalAlignment="Center">
