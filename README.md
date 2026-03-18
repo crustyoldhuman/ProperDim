@@ -36,7 +36,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <h3 align="center">Hotkeys</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/9e6938f5-c8d5-42f0-98b1-0413bfa4aaaa" /></p>
-<p>With <b>Hotkeys</b> enabled you can program ProperDim to accept global hotkey commands to increase or decrease your brightness anytime and anywhere, without needing to interact with the program windows. When using your assigned hotkeys, adjustments are done in 5% increments by tapping, or by holding down your hotkeys for larger adjustment changes.</p>
+<p>With <b>Hotkeys</b> enabled you can program ProperDim to accept global hotkey commands to increase or decrease your brightness anytime and anywhere, without needing to interact with the program directly. When using your assigned hotkeys, adjustments are done in 5% increments by tapping, or by holding down your hotkeys for larger adjustment changes.</p>
 
 
 <h3 align="center">Options</h3>
