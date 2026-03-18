@@ -18,7 +18,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 ## Feature Explanations
 
 <h3 align="center">Main Controls</h3>
-
+---
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/145be892-166a-49d0-a6ed-0a4596b6fccb" /></p>
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of blacks as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels.</p>
 
