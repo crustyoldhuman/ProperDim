@@ -206,7 +206,7 @@
 				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
 					<ComboBox Name="HourBox" Width="65" Margin="0,0,5,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
 					<TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
-					<ComboBox Name="MinuteBox" Width="65" Margin="0,0,5,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
+					<ComboBox Name="MinuteBox" Width="65" Margin="0,0,10,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
 					<Border Name="AmPmContainer" Width="65" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="3">
 						<Grid>
 							<Grid.ColumnDefinitions>
