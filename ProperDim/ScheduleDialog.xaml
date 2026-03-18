@@ -202,20 +202,47 @@
 				</Grid>
 			</Border>
 			<StackPanel Margin="20,10,20,15">
-				<TextBlock Text="Time" Margin="0,0,0,4" FontWeight="Bold" FontSize="12" />
-				<StackPanel Orientation="Horizontal" Margin="4,0,0,10">
+				<TextBlock Text="Time" Margin="0,0,0,4" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" />
+				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
 					<ComboBox Name="HourBox" Width="65" Margin="0,0,5,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
 					<TextBlock Text=":" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
 					<ComboBox Name="MinuteBox" Width="65" Margin="0,0,5,0" SelectionChanged="TimeSelection_Changed" Focusable="False" />
-					<ComboBox Name="AmPmBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False">
-						<ComboBoxItem Content="AM" IsSelected="True" />
-						<ComboBoxItem Content="PM" />
-					</ComboBox>
+					<ToggleButton Name="AmPmToggle" Width="65" Cursor="Hand" Focusable="False" Click="AmPmToggle_Click">
+						<ToggleButton.Template>
+							<ControlTemplate TargetType="{x:Type ToggleButton}">
+								<Border Background="#3E3E42" BorderBrush="#3F3F46" Margin="2,0,-2,0" BorderThickness="1" CornerRadius="3">
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="*"/>
+											<ColumnDefinition Width="*"/>
+										</Grid.ColumnDefinitions>
+										<Border Name="AmBg" Grid.Column="0" Background="#555555" CornerRadius="2,0,0,2"/>
+										<TextBlock Name="AmText" Grid.Column="0" Text="AM" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="LightGray" FontWeight="SemiBold" FontSize="11"/>
+
+										<Border Name="PmBg" Grid.Column="1" Background="Transparent" CornerRadius="0,2,2,0"/>
+										<TextBlock Name="PmText" Grid.Column="1" Text="PM" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF808080" FontWeight="Normal" FontSize="11" Opacity="0.5"/>
+									</Grid>
+								</Border>
+								<ControlTemplate.Triggers>
+									<Trigger Property="IsChecked" Value="True">
+										<Setter TargetName="AmBg" Property="Background" Value="Transparent"/>
+										<Setter TargetName="AmText" Property="Foreground" Value="#FF808080"/>
+										<Setter TargetName="AmText" Property="FontWeight" Value="Normal"/>
+										<Setter TargetName="AmText" Property="Opacity" Value="0.5"/>
+										<Setter TargetName="PmBg" Property="Background" Value="#555555"/>
+										<Setter TargetName="PmText" Property="Foreground" Value="LightGray"/>
+										<Setter TargetName="PmText" Property="FontWeight" Value="SemiBold"/>
+										<Setter TargetName="PmText" Property="Opacity" Value="1.0"/>
+									</Trigger>
+								</ControlTemplate.Triggers>
+							</ControlTemplate>
+						</ToggleButton.Template>
+					</ToggleButton>
 				</StackPanel>
-				<CheckBox Name="Is24hCheck" Content="Use 24-hour clock" Foreground="LightGray" Margin="4,0,0,12" Checked="Is24hCheck_Changed" Unchecked="Is24hCheck_Changed" />
+				<CheckBox Name="Is24hCheck" Content="Use 24-hour clock" Foreground="LightGray" Margin="6,0,0,12" Checked="Is24hCheck_Changed" Unchecked="Is24hCheck_Changed" />
 				<Border Background="#00FFFFFF" Margin="0,0,0,2">
 					<StackPanel>
-						<StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,2" HorizontalAlignment="Center">
 							<TextBlock Text="Brightness: " FontWeight="Bold" IsHitTestVisible="False" />
 							<TextBlock Name="BrightnessLabel" IsHitTestVisible="False" Text="{Binding ElementName=DialogDimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 						</StackPanel>
@@ -224,7 +251,7 @@
 						</Border>
 					</StackPanel>
 				</Border>
-				<TextBlock Text="Days Active" Margin="0,0,0,8" FontWeight="Bold" />
+				<TextBlock Text="Days Active" Margin="0,0,0,8" FontWeight="Bold" HorizontalAlignment="Center" />
 				<UniformGrid Columns="7" Margin="0,0,0,15">
 					<CheckBox Name="DayM" Content="M" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
 					<CheckBox Name="DayT" Content="T" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
