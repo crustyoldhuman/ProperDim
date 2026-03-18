@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -10,6 +11,13 @@ public partial class AppInfoWindow : Window
 	public AppInfoWindow()
 	{
 		InitializeComponent();
+
+		this.Opacity = 0;
+		this.Loaded += (s, e) =>
+		{
+			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+			this.BeginAnimation(Window.OpacityProperty, anim);
+		};
 	}
 
 	protected override void OnSourceInitialized(System.EventArgs e)

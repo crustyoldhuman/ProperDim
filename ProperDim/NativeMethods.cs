@@ -231,10 +231,6 @@ internal static class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static extern bool GetCursorPos(out POINTStruct lpPoint);
 
-	[DllImport("gdi32.dll")]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP lpRamp);
-
 	[DllImport("user32.dll")]
 	internal static extern IntPtr GetDC(IntPtr hWnd);
 
@@ -261,6 +257,14 @@ internal static class NativeMethods
 	[DllImport("gdi32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static extern bool DeleteDC(IntPtr hdc);
+
+	[DllImport("gdi32.dll")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static extern bool GetDeviceGammaRamp(IntPtr hdc, ref RAMP lpRamp);
+
+	[DllImport("gdi32.dll")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static extern bool SetDeviceGammaRamp(IntPtr hdc, ref RAMP lpRamp);
 
 	[DllImport("user32.dll", CharSet = CharSet.Unicode)]
 	internal static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFOEX lpmi);

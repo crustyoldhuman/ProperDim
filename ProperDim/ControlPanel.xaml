@@ -307,17 +307,17 @@
 					<TabItem Header="Controls">
 						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
 							<StackPanel Margin="20,12,20,0">
-								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,2,0,10">
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,14">
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 								</StackPanel>
-								<Slider Name="DimmerSlider" Margin="0,0,0,10" Minimum="0.05" 
+								<Slider Name="DimmerSlider" Margin="0,0,0,12" Minimum="0.05" 
 									Maximum="1.0" Value="1.0" IsDirectionReversed="False" 
 									ValueChanged="Slider_ValueChanged"
 									PreviewMouseLeftButtonDown="DimmerSlider_PreviewMouseLeftButtonDown"
 									PreviewMouseMove="DimmerSlider_PreviewMouseMove"
 									PreviewMouseLeftButtonUp="DimmerSlider_PreviewMouseLeftButtonUp" />
-								<UniformGrid Columns="6" Margin="0,4,0,-1">
+								<UniformGrid Columns="6" Margin="0,4,0,0">
 									<UniformGrid.Resources>
 										<Style TargetType="{x:Type Button}">
 											<Setter Property="Background" Value="#3E3E42" />
@@ -357,11 +357,6 @@
 									<Button Content="75%" Tag="0.75" Margin="2" Click="QuickSet_Click" />
 									<Button Content="100%" Tag="1.0" Margin="2" Click="QuickSet_Click" />
 								</UniformGrid>
-								<TextBlock HorizontalAlignment="center" Margin="0,6,0,0">
-									<Hyperlink Name="MultiDisplayLink" Foreground="#FFb4b4b4" TextDecorations="Underline" Click="MultiDisplayLink_Click">
-										<Run Text="Multi-Display Controls" FontSize="11" FontWeight="SemiBold" />
-									</Hyperlink>
-								</TextBlock>
 							</StackPanel>
 						</Grid>
 					</TabItem>
@@ -542,7 +537,7 @@
 										</Style>
 									</UniformGrid.Resources>
 									<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
-									<Button Content="Reset Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetDisplays_Click" />
+									<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
 								</UniformGrid>
 								<TextBlock HorizontalAlignment="Right" Margin="0,0,0,2">
                   <Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">

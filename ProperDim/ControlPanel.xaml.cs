@@ -511,7 +511,7 @@ public partial class ControlPanel : Window
 
 	private void ClearSchedule_Click(object sender, RoutedEventArgs e)
 	{
-		var result = MessageBox.Show("You are about to completely wipe all of your scheduled events. Is this what you truly desire?", "Clear Schedule", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+		var result = WarningMessage.Show(this, "You are about to completely wipe all of your scheduled events. Is this what you truly desire?", "Clear Schedule");
 		if (result == MessageBoxResult.Yes)
 		{
 			_mainWindow.ActiveSchedules.Clear();
@@ -520,14 +520,14 @@ public partial class ControlPanel : Window
 		}
 	}
 
-	private void ResetDisplays_Click(object sender, RoutedEventArgs e)
+	private void ResetBrightness_Click(object sender, RoutedEventArgs e)
 	{
-		var result = MessageBox.Show("You are about to clear your brightness settings AND the multi-display settings. Your schedule will remain intact. Is this what you truly desire?", "Reset Displays", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+		var result = WarningMessage.Show(this, "You are about to reset your brightness settings. Your schedule will remain intact. Is this what you truly desire?", "Reset Brightness");
 
 		if (result == MessageBoxResult.Yes)
 		{
 			// Trigger the hardware gamma and magnification reset
-			_mainWindow.HardResetOverlays();
+			_mainWindow.HardResetDisplays();
 
 			// Ensure the main slider UI snaps to 100% to match the reset state
 			SyncSliderWithOpacity(1.0);
@@ -586,24 +586,6 @@ public partial class ControlPanel : Window
 			WindowStartupLocation = WindowStartupLocation.CenterOwner
 		};
 		infoWin.ShowDialog();
-	}
-
-	private void MultiDisplayLink_Click(object sender, RoutedEventArgs e)
-	{
-		try
-		{
-			// Passing _mainWindow ensures OffsetControls can actually 
-			// change the brightness of the screens.
-			OffsetControls offsetWindow = new(_mainWindow)
-			{
-				Owner = this
-			};
-			offsetWindow.Show();
-		}
-		catch (Exception ex)
-		{
-			Debug.WriteLine($"Error opening Multi-Display Settings: {ex.Message}");
-		}
 	}
 
 	private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -737,10 +719,14 @@ public partial class ControlPanel : Window
 	{
 		if (!this.IsVisible)
 		{
+			this.Opacity = 0;
 			this.Show();
 
-			// This reads the current registry theme AND recalculates the frame bug in one go
+			// This reads the current registry theme AND recalculates the frame
 			ApplyThemeShadow();
+
+			DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+			this.BeginAnimation(Window.OpacityProperty, anim);
 		}
 
 		this.ShowInTaskbar = true;
@@ -748,7 +734,7 @@ public partial class ControlPanel : Window
 		this.Activate();
 		this.Focus();
 
-		// Keep your existing tab resetting logic
+		// tab resetting logic
 		Dispatcher.BeginInvoke(new Action(() =>
 		{
 			_suppressTabSync = true;

@@ -25,6 +25,13 @@ public partial class ScheduleDialog : Window
 	{
 		InitializeComponent();
 
+		this.Opacity = 0;
+		this.Loaded += (s, e) =>
+		{
+			DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+			this.BeginAnimation(Window.OpacityProperty, anim);
+		};
+
 		_existingSchedules = existingSchedules ?? [];
 
 		Is24hCheck.IsChecked = ConfigManager.Settings.UseMilitaryTime;
@@ -54,6 +61,13 @@ public partial class ScheduleDialog : Window
 	public ScheduleDialog(DimSchedule existing, List<DimSchedule> existingSchedules)
 	{
 		InitializeComponent();
+
+		this.Opacity = 0;
+		this.Loaded += (s, e) =>
+		{
+			DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+			this.BeginAnimation(Window.OpacityProperty, anim);
+		};
 
 		_existingSchedules = existingSchedules ?? [];
 		_editingItem = existing;

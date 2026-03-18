@@ -40,15 +40,10 @@ namespace ProperDim
 		private int _lastTriggeredMinute = -1;
 
 		private readonly GammaAnimator _gammaAnimator;
-		private readonly Dictionary<MonitorContext, GammaAnimator> _offsetAnimators = [];
 		private bool _isUpdatingFromAnimator = false;
 		private readonly GlobalHotkeyService _hotkeyService;
 		private readonly HardwareGammaService _gammaService;
 		private DateTime _lastHotkeyTime = DateTime.MinValue;
-
-		// OPTIMIZATION: Cache offset dictionary and FriendlyNames
-		private readonly Dictionary<string, double> _offsetCache = [];
-		private readonly Dictionary<string, string> _friendlyNameCache = [];
 
 		// OPTIMIZATION: Static keyword list to avoid reallocation
 		private static readonly string[] _virtualKeywords = [
@@ -59,21 +54,41 @@ namespace ProperDim
 			"vnc", "remotedisplay", "usb", "widi", "wifi", "root", "umb"
 		];
 
-		// --- MULTI-MONITOR TRACKING ---
+		// --- MONITOR TRACKING ---
 		public event Action MonitorsChanged;
 		public class MonitorContext
 		{
 			public IntPtr Handle { get; set; }
 			public string DeviceName { get; set; }
 			public string FriendlyName { get; set; }
-			public double Offset { get; set; } = 1.0;
 			public double LastAppliedGamma { get; set; } = -1;
 			public RectStruct Bounds { get; set; }
-			public double? PreSyncOffset { get; set; } = null;
 			public bool GammaSupported { get; set; } = true;
 			public bool IsPrimary { get; set; } = false;
 			public bool IsHdrEnabled { get; set; } = false;
-			public GammaAnimator OffsetAnimator { get; set; } = new();
+		}
+
+		public void HardResetDisplays()
+		{
+			// 1. Reset hardware gamma and magnification
+			foreach (var m in Monitors)
+			{
+				_gammaService.SetTargetGamma(m.DeviceName, 1.0);
+			}
+			_gammaService.SetGlobalMagnification(1.0);
+
+			// 2. Clear out the tracked monitors and animation states
+			Monitors.Clear();
+
+			// 3. Force a clean re-detection
+			RefreshMonitors();
+
+			// 4. Reset the saved state memory so new tray menus spawn at 100%
+			ConfigManager.Settings.LastOpacity = 1.0;
+			ConfigManager.Settings.Save();
+
+			// 5. Apply 100% brightness instantly to the new clean state
+			ApplyBrightness(1.0);
 		}
 
 		public ObservableCollection<MonitorContext> Monitors { get; private set; } = [];
@@ -100,15 +115,12 @@ namespace ProperDim
 			this.Visibility = Visibility.Hidden;
 			this.ShowInTaskbar = false;
 
-			ProperDim.OffsetControls.IsSyncEnabled = ConfigManager.Settings.SyncBrightness;
-
 			SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 			SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 			SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
 			LoadSchedules();
 			// Pre-parse offsets once on startup
-			ParseOffsetsCache();
 			SetupTimer();
 
 			_gammaService = new HardwareGammaService();
@@ -136,21 +148,15 @@ namespace ProperDim
 			ApplyBrightness(ConfigManager.Settings.LastOpacity);
 		}
 
-		private static bool IsVirtualDisplay(string deviceName, string friendlyName)
+		private static bool IsVirtualDisplay(params string[] hardwareStrings)
 		{
-			string dName = deviceName.ToLower();
-			string fName = friendlyName.ToLower();
-			return _virtualKeywords.Any(k => fName.Contains(k) || dName.Contains(k));
+			return _virtualKeywords.Any(keyword =>
+				hardwareStrings.Any(hw => !string.IsNullOrEmpty(hw) && hw.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
 		}
 
-		private string GetMonitorFriendlyName(string deviceName, DISPLAYCONFIG_PATH_INFO[] paths, uint pathCount)
+		private static string GetMonitorFriendlyName(string deviceName, DISPLAYCONFIG_PATH_INFO[] paths, uint pathCount, out string devicePath)
 		{
-			// OPTIMIZATION: Check cache first to avoid expensive hardware query
-			if (_friendlyNameCache.TryGetValue(deviceName, out string cachedName))
-			{
-				return cachedName;
-			}
-
+			devicePath = "";
 			string resultName = "Display";
 			if (paths == null) return resultName;
 
@@ -176,6 +182,7 @@ namespace ProperDim
 
 							if (DisplayConfigGetDeviceInfo(ref targetName) == 0)
 							{
+								devicePath = targetName.monitorDevicePath ?? "";
 								string rawName = targetName.monitorFriendlyDeviceName;
 								if (!string.IsNullOrEmpty(rawName))
 								{
@@ -202,7 +209,6 @@ namespace ProperDim
 				Debug.WriteLine($"Error retrieving monitor name: {ex.Message}");
 			}
 
-			_friendlyNameCache[deviceName] = resultName;
 			return resultName;
 		}
 
@@ -280,17 +286,10 @@ namespace ProperDim
 			_currentGlobalBrightness = brightness;
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
-
-			// --- CROSS-FADE LOGIC ---
+			// --- APPLY GLOBAL BRIGHTNESS ---
 			foreach (var m in Monitors)
 			{
-				double targetVal = ProperDim.OffsetControls.IsSyncEnabled
-					? _currentGlobalBrightness * m.Offset
-					: (m.IsPrimary ? _currentGlobalBrightness : m.Offset);
-
-				targetVal = Math.Max(0.05, Math.Min(1.0, targetVal));
-
-				_gammaService.SetTargetGamma(m.DeviceName, targetVal);
+				_gammaService.SetTargetGamma(m.DeviceName, _currentGlobalBrightness);
 			}
 
 			// Delegate dimming below 50% to the global Magnification API
@@ -300,41 +299,6 @@ namespace ProperDim
 		public void ApplyBrightnessAnimated(double opacity)
 		{
 			ApplyBrightness(opacity, animate: true, linear: false);
-		}
-
-		public void ApplyMonitorOffsetAnimated(MonitorContext monitor, double targetOffset)
-		{
-			if (!_offsetAnimators.TryGetValue(monitor, out var animator))
-			{
-				animator = new GammaAnimator();
-				_offsetAnimators[monitor] = animator;
-			}
-
-			animator.Stop();
-
-			animator.Start(monitor.Offset, targetOffset, TimeSpan.FromMilliseconds(200), (val) =>
-			{
-				monitor.Offset = val;
-				ApplyBrightness(_currentGlobalBrightness, animate: false);
-			},
-			() =>
-			{
-				monitor.Offset = targetOffset;
-				ApplyBrightness(_currentGlobalBrightness, animate: false);
-			});
-		}
-
-		public void SetMonitorOffset(MonitorContext monitor, double offset)
-		{
-			// Stop any running animation for this monitor 
-			// so it doesn't overwrite the manual drag value on the next frame.
-			if (_offsetAnimators.TryGetValue(monitor, out var anim))
-			{
-				anim.Stop();
-			}
-
-			monitor.Offset = offset;
-			ApplyBrightness(_currentGlobalBrightness, animate: false);
 		}
 		private void SystemEvents_DisplaySettingsChanged(object _, EventArgs __)
 		{
@@ -369,17 +333,38 @@ namespace ProperDim
 
 				if (GetMonitorInfo(hMonitor, ref mi))
 				{
-					string hardwareName = GetMonitorFriendlyName(mi.szDevice, paths, pathCount);
-					bool isVirtual = IsVirtualDisplay(mi.szDevice, hardwareName);
+					string hardwareName = GetMonitorFriendlyName(mi.szDevice, paths, pathCount, out string devicePath);
 
-					DISPLAY_DEVICE device = new() { cb = Marshal.SizeOf<DISPLAY_DEVICE>() };
-					if (EnumDisplayDevices(mi.szDevice, 0, ref device, 0))
+					// Perform a hard API test to see if the driver has physical LUT memory
+					bool hardwareGammaSupported = HardwareGammaService.TestGammaSupport(mi.szDevice);
+
+					DISPLAY_DEVICE adapter = new() { cb = Marshal.SizeOf<DISPLAY_DEVICE>() };
+					string adapterString = "";
+					string adapterId = "";
+					string monitorString = "";
+					string monitorId = "";
+
+					if (EnumDisplayDevices(mi.szDevice, 0, ref adapter, 0))
 					{
-						string id = device.DeviceID.ToUpper();
-						if (id.Contains("ROOT") || id.Contains("CITRIX") || id.Contains("VIRTUAL") || id.Contains("USB"))
+						adapterString = adapter.DeviceString ?? "";
+						adapterId = adapter.DeviceID ?? "";
+
+						DISPLAY_DEVICE monitor = new() { cb = Marshal.SizeOf<DISPLAY_DEVICE>() };
+						if (EnumDisplayDevices(adapter.DeviceName, 0, ref monitor, 0))
 						{
-							isVirtual = true;
+							monitorString = monitor.DeviceString ?? "";
+							monitorId = monitor.DeviceID ?? "";
 						}
+					}
+
+					bool isVirtual = IsVirtualDisplay(mi.szDevice, hardwareName, devicePath, adapterString, adapterId, monitorString, monitorId);
+
+					if (adapterId.Contains("ROOT", StringComparison.OrdinalIgnoreCase) ||
+											monitorId.Contains("ROOT", StringComparison.OrdinalIgnoreCase) ||
+											adapterId.Contains("CITRIX", StringComparison.OrdinalIgnoreCase) ||
+											adapterId.Contains("USB", StringComparison.OrdinalIgnoreCase))
+					{
+						isVirtual = true;
 					}
 
 					bool isPrimary = (mi.dwFlags & MONITORINFOF_PRIMARY) != 0;
@@ -391,7 +376,7 @@ namespace ProperDim
 						DeviceName = mi.szDevice,
 						FriendlyName = hardwareName,
 						Bounds = mi.rcMonitor,
-						GammaSupported = !isVirtual,
+						GammaSupported = hardwareGammaSupported && !isVirtual,
 						IsPrimary = isPrimary,
 						IsHdrEnabled = isHdr
 					});
@@ -405,7 +390,6 @@ namespace ProperDim
 			foreach (var item in toRemove)
 			{
 				Monitors.Remove(item);
-				_offsetAnimators.Remove(item);
 				listChanged = true;
 			}
 
@@ -421,7 +405,6 @@ namespace ProperDim
 						DeviceName = active.DeviceName,
 						FriendlyName = active.FriendlyName,
 						Bounds = active.Bounds,
-						Offset = LoadOffsetFor(active.DeviceName),
 						GammaSupported = active.GammaSupported,
 						IsPrimary = active.IsPrimary,
 						IsHdrEnabled = active.IsHdrEnabled
@@ -453,12 +436,6 @@ namespace ProperDim
 
 			// 2. Clear out the tracked monitors and animation states
 			Monitors.Clear();
-			_offsetAnimators.Clear();
-
-			// 3. Wipe the multi-display offsets
-			_offsetCache.Clear();
-			ConfigManager.Settings.MonitorOffsets = "";
-			ConfigManager.Settings.Save();
 
 			// 4. Force a clean re-detection
 			RefreshMonitors();
@@ -468,65 +445,6 @@ namespace ProperDim
 		}
 
 		// OPTIMIZATION: Parse once to dictionary, then read from it
-		private void ParseOffsetsCache()
-		{
-			_offsetCache.Clear();
-			string allOffsets = ConfigManager.Settings.MonitorOffsets ?? "";
-			if (string.IsNullOrEmpty(allOffsets)) return;
-
-			foreach (var part in allOffsets.Split(';'))
-			{
-				var kv = part.Split('=');
-				if (kv.Length == 2 && double.TryParse(kv[1], out double val))
-				{
-					_offsetCache[kv[0]] = val;
-				}
-			}
-		}
-
-		private double LoadOffsetFor(string deviceName)
-		{
-			if (_offsetCache.TryGetValue(deviceName, out double val))
-			{
-				return val;
-			}
-			return 1.0;
-		}
-
-		public void LoadOffsets()
-		{
-			// OPTIMIZATION: Refresh cache before loading
-			ParseOffsetsCache();
-			if (Monitors == null) return;
-			foreach (var monitor in Monitors)
-			{
-				monitor.Offset = LoadOffsetFor(monitor.DeviceName);
-			}
-		}
-
-		public void SaveOffsets()
-		{
-			List<string> lines = [];
-			foreach (var m in Monitors)
-			{
-				double valToSave = m.Offset;
-
-				// If an animation is running (e.g. user clicked then hit Apply immediately),
-				// save the TARGET value, not the current mid-transition value.
-				if (_offsetAnimators.TryGetValue(m, out var anim) && anim.IsActive)
-				{
-					valToSave = anim.TargetValue;
-				}
-
-				lines.Add($"{m.DeviceName}={valToSave}");
-			}
-
-			ConfigManager.Settings.MonitorOffsets = string.Join(";", lines);
-			ConfigManager.Settings.Save();
-
-			// Update the cache immediately so LoadOffsets() works correctly if called
-			ParseOffsetsCache();
-		}
 
 		protected override void OnSourceInitialized(EventArgs e)
 		{

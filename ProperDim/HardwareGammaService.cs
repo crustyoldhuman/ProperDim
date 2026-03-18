@@ -49,6 +49,20 @@ public class HardwareGammaService : IDisposable
 		ApplyGamma(deviceName, gamma);
 	}
 
+	public static bool TestGammaSupport(string deviceName)
+	{
+		IntPtr dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
+		if (dc != IntPtr.Zero)
+		{
+			RAMP testRamp = new() { Red = new ushort[256], Green = new ushort[256], Blue = new ushort[256] };
+			// This returns false if the driver lacks a physical Look-Up Table
+			bool supported = NativeMethods.GetDeviceGammaRamp(dc, ref testRamp);
+			NativeMethods.DeleteDC(dc);
+			return supported;
+		}
+		return false;
+	}
+
 	public void SetGlobalMagnification(double globalBrightness)
 	{
 		double visualFactor = 1.0;

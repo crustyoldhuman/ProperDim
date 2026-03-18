@@ -7,7 +7,6 @@ namespace ProperDim;
 
 public class AppSettings
 {
-	public bool SyncBrightness { get; set; } = true;
 	public bool ShowOnStartup { get; set; } = false;
 	public bool CloseToTray { get; set; } = false;
 	public bool HotkeysEnabled { get; set; } = false;
@@ -17,7 +16,6 @@ public class AppSettings
 	public double ControlPanelLeft { get; set; } = -1;
 	public double ControlPanelTop { get; set; } = -1;
 	public double LastOpacity { get; set; } = 1.0;
-	public string MonitorOffsets { get; set; } = "";
 	public List<DimSchedule> SavedSchedules { get; set; } = [];
 	public bool UseMilitaryTime { get; set; } = false;
 	public string LastScheduleDays { get; set; } = "Mo,Tu,We,Th,Fr,Sa,Su";
