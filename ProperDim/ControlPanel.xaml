@@ -149,7 +149,7 @@
 									<RowDefinition Height="Auto" />
 									<RowDefinition Height="*" />
 								</Grid.RowDefinitions>
-								<Grid Row="0" Margin="2,2,2,0" ZIndex="1">
+								<Grid Name="HeaderGrid" Row="0" Margin="2,2,2,0" ZIndex="1" Background="Transparent">
 									<TabPanel Name="HeaderPanel" IsItemsHost="True" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" />
 								</Grid>
 								<Border Name="ContentBorder" Grid.Row="1" Background="{TemplateBinding Control.Background}" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="0,3,3,3">
@@ -303,7 +303,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<TabControl Name="LeftTabs" Grid.Column="0" Grid.ColumnSpan="2" Background="#2D2D2D" HorizontalContentAlignment="Left" SelectionChanged="LeftTabs_SelectionChanged">
+				<TabControl Name="LeftTabs" Grid.Column="0" Grid.ColumnSpan="2" Background="#2D2D2D" HorizontalContentAlignment="Left" SelectionChanged="LeftTabs_SelectionChanged" PreviewMouseWheel="TabsArea_MouseWheel">
 					<TabItem Header="Controls">
 						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
 							<StackPanel Margin="20,12,20,0">
@@ -481,7 +481,7 @@
 						</Grid>
 					</TabItem>
 				</TabControl>
-				<TabControl Name="RightTabs" Background="#00FFFFFF" BorderThickness="0" HorizontalContentAlignment="Right" SelectedIndex="0" Grid.ColumnSpan="2" SelectionChanged="RightTabs_SelectionChanged">
+				<TabControl Name="RightTabs" Background="#00FFFFFF" BorderThickness="0" HorizontalContentAlignment="Right" SelectedIndex="0" Grid.ColumnSpan="2" SelectionChanged="RightTabs_SelectionChanged" PreviewMouseWheel="TabsArea_MouseWheel">
 					<TabItem Header="Options">
 						<Grid Margin="15,10,15,0">
 							<Grid.RowDefinitions>

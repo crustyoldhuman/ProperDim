@@ -576,6 +576,60 @@ public partial class ControlPanel : Window
 		}
 	}
 
+	private void TabsArea_MouseWheel(object sender, MouseWheelEventArgs e)
+	{
+		if (e.Handled) return;
+
+		// Restrict tab scrolling strictly to the header area (now includes the empty space)
+		DependencyObject hitTest = e.OriginalSource as DependencyObject;
+		bool isOverHeader = false;
+		while (hitTest != null)
+		{
+			if (hitTest is TabItem || (hitTest is FrameworkElement fe && fe.Name == "HeaderGrid"))
+			{
+				isOverHeader = true;
+				break;
+			}
+			hitTest = System.Windows.Media.VisualTreeHelper.GetParent(hitTest);
+		}
+
+		if (!isOverHeader) return;
+
+		// Map logical index: 0 = Controls, 1 = Schedule, 2 = Hotkeys, 3 = Options
+		int currentIndex = RightTabs.SelectedIndex == 0 ? 3 : Math.Max(0, LeftTabs.SelectedIndex);
+
+		if (e.Delta > 0) // Scroll Up -> Next Tab Right
+		{
+			currentIndex++;
+			if (currentIndex > 3) currentIndex = 0; // Wrap around to first
+		}
+		else // Scroll Down -> Previous Tab Left
+		{
+			currentIndex--;
+			if (currentIndex < 0) currentIndex = 3; // Wrap around to last
+		}
+
+		_suppressTabSync = true;
+
+		if (currentIndex < 3)
+		{
+			RightTabs.SelectedIndex = -1;
+			LeftTabs.SelectedIndex = currentIndex;
+			Panel.SetZIndex(LeftTabs, 2);
+			Panel.SetZIndex(RightTabs, 1);
+		}
+		else
+		{
+			LeftTabs.SelectedIndex = -1;
+			RightTabs.SelectedIndex = 0;
+			Panel.SetZIndex(RightTabs, 2);
+			Panel.SetZIndex(LeftTabs, 1);
+		}
+
+		_suppressTabSync = false;
+		e.Handled = true;
+	}
+
 	// --- APP INFO LOGIC ---
 
 	private void AppInfo_Click(object sender, RoutedEventArgs e)
