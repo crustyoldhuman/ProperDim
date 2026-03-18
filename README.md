@@ -52,7 +52,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 
 ## System Requirements
 - Windows 10 and up
-- .NET Desktop Runtime 10.0 (x64) [(Download)](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-10.0.3-windows-x64-installer)
+- .NET Desktop Runtime 10.0 (x64) [(Direct Download, 57.4 MB)](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-10.0.3-windows-x64-installer)
 - Between 6 MB and 140 MB of hard drive space, depending which installation method you use
 
 ## Installation & Download
