@@ -51,12 +51,12 @@ The main control hub of ProperDim sports a responsive brightness slider which ut
 ## System Requirements
 - Windows 10 and up
 - .NET Desktop Runtime 10.0 (x64) [(Download)](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-10.0.3-windows-x64-installer)
-- Between 6MB and 140MB of hard drive space, depending which installation method you use
+- Between 6 MB and 140 MB of hard drive space, depending which installation method you use
 
 ## Installation & Download
 The release page has two installation versions available: **Full** and **Lite**
-- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (45.1MB)
-- **Lite:** Nothing but ProperDim itself (4.36MB)
+- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (44.61 MB download)
+- **Lite:** Nothing but ProperDim itself (3.83 MB download)
 - The installers are available to download as **.exe's** or compressed in **.zip** format. **Right click -> Extract All** to unzip these files to access the installer.
 
 <h3 align="center">
