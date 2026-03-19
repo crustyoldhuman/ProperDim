@@ -20,7 +20,6 @@ public partial class ControlPanel : Window
 	private readonly MainWindow _mainWindow;
 	private bool _isSyncing = false;
 	private bool _isInitializing = true;
-	private bool _suppressTabSync = false; // Guard flag for tab selection loops
 	private bool _isDragging = false;
 	private bool _isScrolling = false;
 	private DispatcherTimer _scrollDebounceTimer;
@@ -106,7 +105,7 @@ public partial class ControlPanel : Window
 			this.Hide();
 			this.ShowInTaskbar = false;
 
-			LeftTabs.SelectedIndex = 0;
+			MainTabs.SelectedIndex = 0;
 
 			var scrollViewer = GetScrollViewer(ScheduleListBox);
 			scrollViewer?.ScrollToTop();
@@ -120,7 +119,7 @@ public partial class ControlPanel : Window
 			this.Hide();
 			this.ShowInTaskbar = false;
 
-			LeftTabs.SelectedIndex = 0;
+			MainTabs.SelectedIndex = 0;
 
 			var scrollViewer = GetScrollViewer(ScheduleListBox);
 			scrollViewer?.ScrollToTop();
@@ -546,87 +545,28 @@ public partial class ControlPanel : Window
 		e.Handled = true;
 	}
 
-	private void LeftTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		if (_suppressTabSync) return;
-
-		if (LeftTabs.SelectedIndex != -1)
-		{
-			_suppressTabSync = true;
-			RightTabs.SelectedIndex = -1;
-			_suppressTabSync = false;
-
-			Panel.SetZIndex(LeftTabs, 2);
-			Panel.SetZIndex(RightTabs, 1);
-		}
-	}
-
-	private void RightTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		if (_suppressTabSync) return;
-
-		if (RightTabs.SelectedIndex != -1)
-		{
-			_suppressTabSync = true;
-			LeftTabs.SelectedIndex = -1;
-			_suppressTabSync = false;
-
-			Panel.SetZIndex(RightTabs, 2);
-			Panel.SetZIndex(LeftTabs, 1);
-		}
-	}
-
 	private void TabsArea_MouseWheel(object sender, MouseWheelEventArgs e)
 	{
 		if (e.Handled) return;
 
-		// Restrict tab scrolling strictly to the header area (now includes the empty space)
-		DependencyObject hitTest = e.OriginalSource as DependencyObject;
-		bool isOverHeader = false;
-		while (hitTest != null)
-		{
-			if (hitTest is TabItem || (hitTest is FrameworkElement fe && fe.Name == "HeaderGrid"))
-			{
-				isOverHeader = true;
-				break;
-			}
-			hitTest = System.Windows.Media.VisualTreeHelper.GetParent(hitTest);
-		}
+		// Check if the mouse is hovering within the top 32 pixels (the tab header area)
+		Point pos = e.GetPosition((UIElement)sender);
+		if (pos.Y > 32) return;
 
-		if (!isOverHeader) return;
-
-		// Map logical index: 0 = Controls, 1 = Schedule, 2 = Hotkeys, 3 = Options
-		int currentIndex = RightTabs.SelectedIndex == 0 ? 3 : Math.Max(0, LeftTabs.SelectedIndex);
+		int currentIndex = MainTabs.SelectedIndex;
 
 		if (e.Delta > 0) // Scroll Up -> Next Tab Right
 		{
 			currentIndex++;
-			if (currentIndex > 3) currentIndex = 0; // Wrap around to first
+			if (currentIndex >= MainTabs.Items.Count) currentIndex = 0; // Wrap around to first
 		}
 		else // Scroll Down -> Previous Tab Left
 		{
 			currentIndex--;
-			if (currentIndex < 0) currentIndex = 3; // Wrap around to last
+			if (currentIndex < 0) currentIndex = MainTabs.Items.Count - 1; // Wrap around to last
 		}
 
-		_suppressTabSync = true;
-
-		if (currentIndex < 3)
-		{
-			RightTabs.SelectedIndex = -1;
-			LeftTabs.SelectedIndex = currentIndex;
-			Panel.SetZIndex(LeftTabs, 2);
-			Panel.SetZIndex(RightTabs, 1);
-		}
-		else
-		{
-			LeftTabs.SelectedIndex = -1;
-			RightTabs.SelectedIndex = 0;
-			Panel.SetZIndex(RightTabs, 2);
-			Panel.SetZIndex(LeftTabs, 1);
-		}
-
-		_suppressTabSync = false;
+		MainTabs.SelectedIndex = currentIndex;
 		e.Handled = true;
 	}
 
@@ -758,10 +698,7 @@ public partial class ControlPanel : Window
 		RegistryService.SetStartupRegistry(StartupCheckBox.IsChecked == true);
 
 		// --- Apply default tab selection ---
-		_suppressTabSync = true;
-		LeftTabs.SelectedIndex = 0;
-		RightTabs.SelectedIndex = -1;
-		_suppressTabSync = false;
+		MainTabs.SelectedIndex = 0;
 		_isInitializing = false;
 
 		// --- Register hotkeys and refresh list ---
@@ -791,12 +728,7 @@ public partial class ControlPanel : Window
 		// tab resetting logic
 		Dispatcher.BeginInvoke(new Action(() =>
 		{
-			_suppressTabSync = true;
-			LeftTabs.SelectedIndex = 0;      // Controls tab
-			RightTabs.SelectedIndex = -1;    // Options tab deselected
-			Panel.SetZIndex(LeftTabs, 2);
-			Panel.SetZIndex(RightTabs, 1);
-			_suppressTabSync = false;
+			MainTabs.SelectedIndex = 0;
 		}), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 	}
 

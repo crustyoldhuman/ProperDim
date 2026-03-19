@@ -149,10 +149,8 @@
 									<RowDefinition Height="Auto" />
 									<RowDefinition Height="*" />
 								</Grid.RowDefinitions>
-								<Grid Name="HeaderGrid" Row="0" Margin="2,2,2,0" ZIndex="1" Background="Transparent">
-									<TabPanel Name="HeaderPanel" IsItemsHost="True" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" />
-								</Grid>
-								<Border Name="ContentBorder" Grid.Row="1" Background="{TemplateBinding Control.Background}" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="0,3,3,3">
+								<ItemsPresenter Name="HeaderPanel" Grid.Row="0" Margin="2,2,2,0" Panel.ZIndex="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+								<Border Name="ContentBorder" Grid.Row="1" Background="{TemplateBinding Background}" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="0,3,3,3">
 									<ContentPresenter ContentSource="SelectedContent" />
 								</Border>
 							</Grid>
@@ -298,13 +296,15 @@
 					</StackPanel>
 				</Grid>
 			</Border>
-			<Grid Row="1" Margin="5">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-				<TabControl Name="LeftTabs" Grid.Column="0" Grid.ColumnSpan="2" Background="#2D2D2D" HorizontalContentAlignment="Left" SelectionChanged="LeftTabs_SelectionChanged" PreviewMouseWheel="TabsArea_MouseWheel">
-					<TabItem Header="Controls">
+			<Grid Row="1" Margin="5" PreviewMouseWheel="TabsArea_MouseWheel">
+				<TabControl Name="MainTabs" Background="#2D2D2D" HorizontalContentAlignment="Stretch">
+					<TabControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<DockPanel LastChildFill="False" Background="Transparent" />
+						</ItemsPanelTemplate>
+					</TabControl.ItemsPanel>
+
+					<TabItem Header="Controls" DockPanel.Dock="Left">
 						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
 							<StackPanel Margin="20,12,20,0">
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,14">
@@ -480,9 +480,7 @@
 							</Grid>
 						</Grid>
 					</TabItem>
-				</TabControl>
-				<TabControl Name="RightTabs" Background="#00FFFFFF" BorderThickness="0" HorizontalContentAlignment="Right" SelectedIndex="0" Grid.ColumnSpan="2" SelectionChanged="RightTabs_SelectionChanged" PreviewMouseWheel="TabsArea_MouseWheel">
-					<TabItem Header="Options">
+					<TabItem Header="Options" DockPanel.Dock="Right">
 						<Grid Margin="15,10,15,0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" />

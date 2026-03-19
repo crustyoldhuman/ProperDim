@@ -286,6 +286,12 @@ namespace ProperDim
 			_currentGlobalBrightness = brightness;
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
+
+			if (TrayIcon != null)
+			{
+				TrayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+			}
+
 			// --- APPLY GLOBAL BRIGHTNESS ---
 			foreach (var m in Monitors)
 			{
