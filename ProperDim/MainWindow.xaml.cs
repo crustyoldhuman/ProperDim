@@ -709,13 +709,32 @@ namespace ProperDim
 		// --- TRAY MENU HANDLERS ---
 		private void TrayIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
 		{
-			ToggleControlPanel();
+			if (ConfigManager.Settings.SwapTrayIconClicks)
+			{
+				HandleTrayMenuToggle();
+			}
+			else
+			{
+				ToggleControlPanel();
+			}
 		}
 
 		private TrayMenuWindow _currentTrayMenu;
 		private DateTime _lastTrayMenuCloseTime = DateTime.MinValue;
 
 		private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
+		{
+			if (ConfigManager.Settings.SwapTrayIconClicks)
+			{
+				ToggleControlPanel();
+			}
+			else
+			{
+				HandleTrayMenuToggle();
+			}
+		}
+
+		private void HandleTrayMenuToggle()
 		{
 			if (_currentTrayMenu != null)
 			{

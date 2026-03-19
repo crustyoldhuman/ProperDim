@@ -19,6 +19,7 @@ public class AppSettings
 	public List<DimSchedule> SavedSchedules { get; set; } = [];
 	public bool UseMilitaryTime { get; set; } = false;
 	public string LastScheduleDays { get; set; } = "Mo,Tu,We,Th,Fr,Sa,Su";
+	public bool SwapTrayIconClicks { get; set; } = false;
 
 	public void Save()
 	{
