@@ -27,7 +27,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <h3 align="center">Event Schedule</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/1a0d4ad3-1a0b-49b3-9ad5-f2cda1236071" /></p>
-<p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "+" button on the top right to open the Event Scheduler.</p>
+<p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "+" button on the top right to open the <b>Event Scheduler</b>.</p>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/d35beb3e-f273-4bad-b0cf-9b055a0eafcd" /></p>
 <p>The <b>Event Scheduler</b> window provides all the fields required for a valid event. Entry fields for the time of day, brightness level to adjust to, and what days of the week it should trigger on are all presented. Enabling or disabling the 24-hour clock checkbox will convert the time entry fields as well as the events in the schedule to 12 or 24-hour format, respectively. If you want to edit a previously added event, you can double-click the existing event in the full schedule list.</p>
