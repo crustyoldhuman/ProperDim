@@ -48,7 +48,8 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <h3 align="center">System Tray Control</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/d2465656-732b-4524-9d77-b8e9d662855a" /></p>
-<p>The right-click menu on the system tray icon houses expected ProperDim shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. Debatable on whether it's actually "quicker" than using the <b>Controls</b> tab or not, but... sometimes you just don't wanna open a whole window, ya know?</p>
+<p>The right-click menu on the system tray icon houses expected ProperDim shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. Debatable on whether it's actually "quicker" than using the <b>Controls</b> tab or not, but... sometimes you just don't wanna open a whole window, ya know? Clicking the icon with the left mouse button will open the main <b>Controls</b> window, and another click will close it again.</p>
+<b>Pro-tip:</b> check the Readme file for directions how to swap the left and right mouse button click actions for the system tray
 
 ## System Requirements
 - Windows 10 and up
