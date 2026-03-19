@@ -121,15 +121,14 @@ public class HardwareGammaService : IDisposable
 			return;
 		}
 
-		double gammaExponent = 1.0 / hardwareTarget;
-
 		lock (_rampLock)
 		{
 			for (int i = 0; i < 256; i++)
 			{
 				double normalized = i / 255.0;
-				double curved = Math.Pow(normalized, gammaExponent);
-				ushort value = (ushort)(curved * 65535);
+
+				// Linear scaling: Proportional reduction of the white point ceiling instead of crushing midtones
+				ushort value = (ushort)(normalized * hardwareTarget * 65535);
 
 				_sharedRamp.Red[i] = value;
 				_sharedRamp.Green[i] = value;
