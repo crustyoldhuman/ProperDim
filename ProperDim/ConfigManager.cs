@@ -8,7 +8,7 @@ namespace ProperDim;
 public class AppSettings
 {
 	public bool ShowOnStartup { get; set; } = false;
-	public bool CloseToTray { get; set; } = false;
+	public bool CloseToTray { get; set; } = true;
 	public bool HotkeysEnabled { get; set; } = false;
 	public string IncreaseHotkey { get; set; } = "";
 	public string DecreaseHotkey { get; set; } = "";
