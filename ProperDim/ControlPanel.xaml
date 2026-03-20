@@ -481,68 +481,71 @@
 						</Grid>
 					</TabItem>
 					<TabItem Header="Options" DockPanel.Dock="Right">
-						<Grid Margin="15,10,15,0">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="*" />
-							</Grid.RowDefinitions>
-							<StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="20,-6,0,0" Grid.RowSpan="2">
+						<Grid Margin="0,0,0,0">
+
+							<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="34,12,0,0">
 								<CheckBox Name="StartupCheckBox" 
 										  Content="Run ProperDim when Windows starts" 
-										  Margin="0,14,0,4" 
+										  Margin="0,0,0,4" 
 										  Checked="StartupCheckBox_Changed" 
 										  Unchecked="StartupCheckBox_Changed" />
 
 								<CheckBox Name="TrayCheckBox" 
 										  Content="Close button minimizes to system tray" 
 										  Margin="0,0,0,4" 
-										  IsChecked="True" 
 										  Checked="TrayCheckBox_Changed" 
 										  Unchecked="TrayCheckBox_Changed" />
 
 								<CheckBox Name="ShowStartupCheckBox" 
 										  Content="Show Controls window on app startup" 
+										  Margin="0,0,0,4"
 										  Checked="ShowStartupCheckBox_Changed" 
 										  Unchecked="ShowStartupCheckBox_Changed" />
+
+								<CheckBox Name="SwapTrayClicksCheckBox" 
+										  Content="Swap tray icon left/right click buttons" 
+										  Margin="0,0,0,4"
+										  Checked="SwapTrayClicksCheckBox_Changed" 
+										  Unchecked="SwapTrayClicksCheckBox_Changed" />
 							</StackPanel>
-							<StackPanel Grid.Row="1" VerticalAlignment="Bottom">
-								<UniformGrid Columns="2" HorizontalAlignment="Center" Margin="0,0,0,2">
-									<UniformGrid.Resources>
-										<Style TargetType="{x:Type Button}">
-											<Setter Property="Foreground" Value="#FFFFFFFF" />
-											<Setter Property="BorderBrush" Value="#555555" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="HorizontalContentAlignment" Value="Center" />
-											<Setter Property="VerticalContentAlignment" Value="Center" />
-											<Setter Property="Template">
-												<Setter.Value>
-													<ControlTemplate TargetType="{x:Type Button}">
-														<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
-															<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-														</Border>
-														<ControlTemplate.Triggers>
-															<Trigger Property="IsMouseOver" Value="True">
-																<Setter TargetName="border" Property="Background" Value="IndianRed" />
-																<Setter Property="Foreground" Value="#232324" />
-															</Trigger>
-															<Trigger Property="IsPressed" Value="True">
-																<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
-															</Trigger>
-														</ControlTemplate.Triggers>
-													</ControlTemplate>
-												</Setter.Value>
-											</Setter>
-										</Style>
-									</UniformGrid.Resources>
-									<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
-									<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
-								</UniformGrid>
-								<TextBlock HorizontalAlignment="Right" Margin="0,0,0,2">
-                  <Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
-                    <Run Text="App info..." FontSize="10" />
-                  </Hyperlink>
-								</TextBlock>
-							</StackPanel>
+
+							<UniformGrid Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8">
+								<UniformGrid.Resources>
+									<Style TargetType="{x:Type Button}">
+										<Setter Property="Foreground" Value="#FFFFFFFF" />
+										<Setter Property="BorderBrush" Value="#555555" />
+										<Setter Property="BorderThickness" Value="1" />
+										<Setter Property="HorizontalContentAlignment" Value="Center" />
+										<Setter Property="VerticalContentAlignment" Value="Center" />
+										<Setter Property="Template">
+											<Setter.Value>
+												<ControlTemplate TargetType="{x:Type Button}">
+													<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+														<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+													</Border>
+													<ControlTemplate.Triggers>
+														<Trigger Property="IsMouseOver" Value="True">
+															<Setter TargetName="border" Property="Background" Value="IndianRed" />
+															<Setter Property="Foreground" Value="#232324" />
+														</Trigger>
+														<Trigger Property="IsPressed" Value="True">
+															<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
+														</Trigger>
+													</ControlTemplate.Triggers>
+												</ControlTemplate>
+											</Setter.Value>
+										</Setter>
+									</Style>
+								</UniformGrid.Resources>
+								<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
+								<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
+							</UniformGrid>
+
+							<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
+								<Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
+									<Run Text="Info..." FontSize="10" />
+								</Hyperlink>
+							</TextBlock>
 						</Grid>
 					</TabItem>
 				</TabControl>

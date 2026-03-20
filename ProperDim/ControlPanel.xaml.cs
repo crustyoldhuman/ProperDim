@@ -42,6 +42,7 @@ public partial class ControlPanel : Window
 		StartupCheckBox.IsChecked = RegistryService.IsStartupEnabled();
 		ShowStartupCheckBox.IsChecked = ConfigManager.Settings.ShowOnStartup;
 		TrayCheckBox.IsChecked = ConfigManager.Settings.CloseToTray;
+		SwapTrayClicksCheckBox.IsChecked = ConfigManager.Settings.SwapTrayIconClicks;
 		EnableHotkeysCheckBox.IsChecked = ConfigManager.Settings.HotkeysEnabled;
 		IncreaseHotkeyText.Text = ConfigManager.Settings.IncreaseHotkey;
 		DecreaseHotkeyText.Text = ConfigManager.Settings.DecreaseHotkey;
@@ -269,6 +270,13 @@ public partial class ControlPanel : Window
 	{
 		if (_isInitializing) return;
 		ConfigManager.Settings.CloseToTray = TrayCheckBox.IsChecked == true;
+		ConfigManager.Settings.Save();
+	}
+
+	private void SwapTrayClicksCheckBox_Changed(object sender, RoutedEventArgs e)
+	{
+		if (_isInitializing) return;
+		ConfigManager.Settings.SwapTrayIconClicks = SwapTrayClicksCheckBox.IsChecked == true;
 		ConfigManager.Settings.Save();
 	}
 
