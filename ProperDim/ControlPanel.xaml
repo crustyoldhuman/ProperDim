@@ -509,7 +509,7 @@
 										  Unchecked="SwapTrayClicksCheckBox_Changed" />
 							</StackPanel>
 
-							<UniformGrid Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8">
+							<UniformGrid Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
 								<UniformGrid.Resources>
 									<Style TargetType="{x:Type Button}">
 										<Setter Property="Foreground" Value="#FFFFFFFF" />
