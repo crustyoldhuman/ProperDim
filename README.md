@@ -41,7 +41,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 
 <h3 align="center">Options</h3>
 
-<p align="center"><img width="425" src="" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/49835cf3-5513-428e-9361-a5dd81ad65e9" /></p>
 <p>The <b>Options</b> tab provides some quality of life options for the user. Here you can enable auto-start on system boot, change what closing the control window does, and whether or not to display the controls when ProperDim is opened. There are also buttons for resetting the displays within the dimming system as well as the event schedule, in case of dimming glitches or you want to start the schedule from a clean slate.</p>
 
 
