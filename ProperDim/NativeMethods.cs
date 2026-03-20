@@ -155,6 +155,18 @@ public struct MAGCOLOREFFECT
 
 public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RectStruct lprcMonitor, IntPtr dwData);
 
+public delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+[StructLayout(LayoutKind.Sequential)]
+public struct MSLLHOOKSTRUCT
+{
+	public POINTStruct pt;
+	public int mouseData;
+	public int flags;
+	public int time;
+	public IntPtr dwExtraInfo;
+}
+
 // --- NATIVE METHODS & CONSTANTS ---
 #pragma warning disable SYSLIB1054
 
@@ -275,5 +287,21 @@ internal static class NativeMethods
 	[DllImport("user32.dll", CharSet = CharSet.Unicode)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static extern bool EnumDisplayDevices(string lpDevice, uint iDevNum, ref DISPLAY_DEVICE lpDisplayDevice, uint dwFlags);
+
+	public const int WH_MOUSE_LL = 14;
+	public const int WM_MOUSEWHEEL = 0x020A;
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	internal static extern IntPtr SetWindowsHookEx(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	internal static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+	[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	internal static extern IntPtr GetModuleHandle(string lpModuleName);
 }
 #pragma warning restore SYSLIB1054

@@ -11,6 +11,48 @@ public partial class TrayMenuWindow : Window
 	private bool _isSyncing = true;
 	private DateTime _lastUserInteraction = DateTime.MinValue;
 
+	// --- HOOK FIELDS ---
+	private IntPtr _hookID = IntPtr.Zero;
+	private LowLevelMouseProc _proc; // Must be kept alive in memory so the GC doesn't collect the callback
+
+	private IntPtr SetHook(LowLevelMouseProc proc)
+	{
+		using var curProcess = System.Diagnostics.Process.GetCurrentProcess();
+		using var curModule = curProcess.MainModule;
+		return SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+	}
+
+	private void RemoveHook()
+	{
+		if (_hookID != IntPtr.Zero)
+		{
+			UnhookWindowsHookEx(_hookID);
+			_hookID = IntPtr.Zero;
+		}
+	}
+
+	private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+	{
+		if (nCode >= 0 && wParam == (IntPtr)WM_MOUSEWHEEL)
+		{
+			MSLLHOOKSTRUCT hookStruct = System.Runtime.InteropServices.Marshal.PtrToStructure<MSLLHOOKSTRUCT>(lParam);
+
+			// Extract the wheel delta (high-order word of mouseData)
+			int delta = (short)((hookStruct.mouseData >> 16) & 0xFFFF);
+
+			Dispatcher.Invoke(() =>
+			{
+				double step = 0.05;
+				if (delta > 0) MenuSlider.Value += step;
+				else MenuSlider.Value -= step;
+			});
+
+			// Return 1 to "eat" the message so the window underneath doesn't also scroll
+			return (IntPtr)1;
+		}
+		return CallNextHookEx(_hookID, nCode, wParam, lParam);
+	}
+
 	public TrayMenuWindow(MainWindow mainWindow)
 	{
 		InitializeComponent();
@@ -91,16 +133,20 @@ public partial class TrayMenuWindow : Window
 
 		var anim = new System.Windows.Media.Animation.DoubleAnimation(0.0, 1.0, TimeSpan.FromMilliseconds(150));
 		this.BeginAnimation(Window.OpacityProperty, anim);
+		_proc = HookCallback;
+		_hookID = SetHook(_proc);
 	}
 
 	protected override void OnClosed(EventArgs e)
 	{
+		RemoveHook();
 		_mainWindow.GlobalBrightnessChanged -= OnGlobalBrightnessChanged;
 		base.OnClosed(e);
 	}
 
 	private void Window_Deactivated(object sender, EventArgs e)
 	{
+		RemoveHook();
 		this.Close();
 	}
 
@@ -134,13 +180,6 @@ public partial class TrayMenuWindow : Window
 			_mainWindow.ApplyBrightnessAnimated(e.NewValue);
 			_mainWindow.TriggerSave();
 		}
-	}
-
-	private void MenuSlider_MouseWheel(object sender, MouseWheelEventArgs e)
-	{
-		double step = 0.05;
-		if (e.Delta > 0) MenuSlider.Value += step;
-		else MenuSlider.Value -= step;
 	}
 
 	private void MenuSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
