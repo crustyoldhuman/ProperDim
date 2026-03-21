@@ -39,16 +39,17 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <p>With <b>Hotkeys</b> enabled you can program ProperDim to accept global hotkey commands to increase or decrease your brightness anytime and anywhere without needing to interact with the program directly. When using your assigned hotkeys, adjustments are done in 5% increments by tapping, or by holding down your hotkeys for larger adjustment changes.</p>
 
 
-<h3 align="center">Options</h3>
-
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/49835cf3-5513-428e-9361-a5dd81ad65e9" /></p>
-<p>The <b>Options</b> tab provides some quality of life options for the user. Here you can enable auto-start on system boot, change what closing the control window does, and whether or not to display the controls when ProperDim is opened. There are also buttons for resetting the displays within the dimming system as well as the event schedule, in case of dimming glitches or you want to start the schedule from a clean slate. You can also swap the left & right mouse button actions when interacting with the system tray menu, if you want it to behave more like the windows volume icon.</p>
-
-
 <h3 align="center">System Tray Control</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/d2465656-732b-4524-9d77-b8e9d662855a" /></p>
 <p>The right-click menu on the system tray icon houses expected program shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. The <b>QuickDim</b> slider works a lot like the windows volume icon widget. When the slider is visible, the scroll wheel adjusts the brightness, so dimming your screen is just one right-click away at all times. Clicking the icon with the left mouse button once will open the main <b>Controls</b> window, and another left-click will close it again.</p>
+
+
+<h3 align="center">Options</h3>
+
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/49835cf3-5513-428e-9361-a5dd81ad65e9" /></p>
+<p>The <b>Options</b> tab provides some quality of life program features for the user. Here you can enable auto-start when Windows boots, change the behavior of the "Close" button on the Controls window, and whether to display or hide the main window when ProperDim starts up. You can also swap the left and right mouse click actions on the system tray icon if you'd like the tray menu behavior to match the Windows Volume icon. Finally, there are two red buttons for resetting the displays within the dimming system and clearing the event schedule. With these, you can reset the dimming system if something goes wonky or restart your schedule from a clean slate.</p>
+
 
 ## System Requirements
 - Windows 10 and up
