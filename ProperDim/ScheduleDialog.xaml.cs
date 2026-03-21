@@ -335,7 +335,7 @@ public partial class ScheduleDialog : Window
 
 		if (selectedDays.Count == 0)
 		{
-			WarningMessage.Show(this, "You forgot to select the days!", "Missing Information", true);
+			WarningMessage.Show(this, "You forgot to select the days!", "Missing Event Information", true);
 			return;
 		}
 
