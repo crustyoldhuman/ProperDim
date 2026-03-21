@@ -9,7 +9,7 @@ public partial class WarningMessage : Window
 {
 	public MessageBoxResult Result { get; private set; } = MessageBoxResult.No;
 
-	private WarningMessage(string message, string title, bool isOkOnly)
+	private WarningMessage(string message, string title, bool isOkOnly, string customButtonText)
 	{
 		InitializeComponent();
 		MessageText.Text = message;
@@ -17,7 +17,7 @@ public partial class WarningMessage : Window
 
 		if (isOkOnly)
 		{
-			PrimaryButton.Content = "OK";
+			PrimaryButton.Content = customButtonText;
 			PrimaryButton.Margin = new Thickness(0);
 			SecondaryButton.Visibility = Visibility.Collapsed;
 		}
@@ -30,9 +30,9 @@ public partial class WarningMessage : Window
 		};
 	}
 
-	public static MessageBoxResult Show(Window owner, string message, string title, bool isOkOnly = false)
+	public static MessageBoxResult Show(Window owner, string message, string title, bool isOkOnly = false, string customButtonText = "OK")
 	{
-		WarningMessage msgBox = new(message, title, isOkOnly)
+		WarningMessage msgBox = new(message, title, isOkOnly, customButtonText)
 		{
 			Owner = owner
 		};
