@@ -48,7 +48,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <h3 align="center">System Tray Control</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/d2465656-732b-4524-9d77-b8e9d662855a" /></p>
-<p>The right-click menu on the system tray icon houses expected ProperDim shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. The <b>QuickDim</b> slider works a lot like the windows volume icon widget. When the slider is visible, the scroll wheel adjusts the brightness, so dimming your screen is just one right-click away at all times. Clicking the icon with the left mouse button once will open the main <b>Controls</b> window, and another left-click will close it again.</p>
+<p>The right-click menu on the system tray icon houses expected program shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. The <b>QuickDim</b> slider works a lot like the windows volume icon widget. When the slider is visible, the scroll wheel adjusts the brightness, so dimming your screen is just one right-click away at all times. Clicking the icon with the left mouse button once will open the main <b>Controls</b> window, and another left-click will close it again.</p>
 
 ## System Requirements
 - Windows 10 and up
