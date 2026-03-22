@@ -50,7 +50,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/49835cf3-5513-428e-9361-a5dd81ad65e9" /></p>
 <p>The <b>Options</b> tab provides some quality of life program features for the user. Here you can enable auto-start when Windows boots, change the behavior of the "Close" button on the Controls window, and whether to display or hide the main window when ProperDim starts up. You can also swap the left and right mouse click actions on the system tray icon if you'd like the tray menu behavior to match the Windows Volume icon. Finally, there are two red buttons for resetting the displays within the dimming system and clearing the event schedule. With these, you can reset the dimming system if something goes wonky or restart your schedule from a clean slate.</p>
 
-<h3 align="center">Usage & Licensing</h3>
+## Usage & Licensing
 
 ProperDim is free to use, modify, and distribute without worry. The only thing you CAN'T do is use it to make money. This is a tool for humans, not for bank accounts. For full details & legal jargon, see the license document <a href="https://github.com/crustyoldhuman/ProperDim/blob/master/LICENSE">here</a>.
 
