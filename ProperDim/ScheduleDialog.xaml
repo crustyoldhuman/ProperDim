@@ -203,7 +203,7 @@
 				</Grid>
 			</Border>
 			<StackPanel Margin="20,10,20,15">
-				<TextBlock Text="Time" Margin="0,0,0,6" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" />
+				<TextBlock Text="Time" Margin="0,0,0,6" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Center" />
 				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
 					<ComboBox Name="HourBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
 
@@ -259,8 +259,8 @@
 				<Border Background="#00FFFFFF" Margin="0,0,0,2">
 					<StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,2" HorizontalAlignment="Center">
-							<TextBlock Text="Brightness: " FontWeight="Bold" IsHitTestVisible="False" />
-							<TextBlock Name="BrightnessLabel" IsHitTestVisible="False" Text="{Binding ElementName=DialogDimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
+							<TextBlock Text="Brightness: " FontWeight="SemiBold" IsHitTestVisible="False" />
+							<TextBlock Name="BrightnessLabel" FontWeight="SemiBold" IsHitTestVisible="False" Text="{Binding ElementName=DialogDimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 						</StackPanel>
 						<Border Background="#00FFFFFF">
 							<Grid>
@@ -297,7 +297,7 @@
 						</Border>
 					</StackPanel>
 				</Border>
-				<TextBlock Text="Days Active" Margin="0,0,0,8" FontWeight="Bold" HorizontalAlignment="Center" />
+				<TextBlock Text="Days Active" Margin="0,0,0,8" FontWeight="SemiBold" HorizontalAlignment="Center" />
 				<UniformGrid Columns="7" Margin="0,0,0,15">
 					<CheckBox Name="DayM" Content="M" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
 					<CheckBox Name="DayT" Content="T" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
