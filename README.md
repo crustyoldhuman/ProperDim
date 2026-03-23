@@ -13,7 +13,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 - Do you want to adjust your screens physical backlight? ***Then, NO!***
 - Are you looking for something with a blue light filter? ***Then, NO!***
 - Do you want your screen to go very dark? ***Then, YES!***
-- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see Main Controls section, second paragraph)
+- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> section below for details)
 
 ## What are the features?
 
