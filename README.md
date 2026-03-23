@@ -22,7 +22,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/b1909d21-73a2-4204-be46-592e1f855164" /></p>
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/073e8aac-ce71-4bce-9702-7971ba996d9c" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/c18664e7-8d8e-45af-a8d0-c8caaf4f5bc1" /></p>
 <p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
 
 <h3 align="center">Event Schedule</h3>
@@ -75,4 +75,4 @@ The release page has two installation versions available: **Full** and **Lite**
 </h3>
 Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.
 <br><br>
-<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, spread the word and tell a friend! I hope you have an awesome day.</i></p>
+<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, spread the word and tell a friend! I hope you have an awesome day/existence.</i></p>
