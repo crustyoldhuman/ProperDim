@@ -75,4 +75,4 @@ The release page has two installation versions available: **Full** and **Lite**
 </h3>
 Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.
 <br><br>
-<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, spread the word and tell a friend! I hope you have an awesome day.</i></p>
+<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, spread the word and tell a friend! I hope you have an awesome day/existence.</i></p>
