@@ -23,7 +23,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/e6b7eaf1-06ad-49d7-9d86-bda59b5d1aaa" /></p>
-<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value for your specific screen. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
+<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
 
 <h3 align="center">Event Schedule</h3>
 
