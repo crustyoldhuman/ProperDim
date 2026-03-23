@@ -19,8 +19,11 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 
 <h3 align="center">Main Controls</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/145be892-166a-49d0-a6ed-0a4596b6fccb" /></p>
-<p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels.</p>
+<p align="center"><img width="425" src="" /></p>
+<p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
+
+<p align="center"><img width="425" src="" /></p>
+<p>In the Minimum Brightness Adjustment window you can customize the minimum brightness value for your specific screen. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
 
 <p>Multiple monitors that are connected via traditional cables and natively support gamma adjustment are all fully supported. This represents the large majority of usage cases, so if you're plugging in with HDMI or similar, you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections typically lie to Windows about their capabilities, masquerading as genuine plug-n-play displays when they aren't. The only real solution that I found was maintaining a complete list of displays and their capabilities for reference, which is just not the intended scope of the project so I accepted defeat on this.</p>
 
@@ -29,7 +32,7 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/1a0d4ad3-1a0b-49b3-9ad5-f2cda1236071" /></p>
 <p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "<b>+</b>" button on the top right to open the <b>Event Scheduler</b>.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/d35beb3e-f273-4bad-b0cf-9b055a0eafcd" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The <b>Event Scheduler</b> window provides all the fields required for a valid event. Entry fields for the time of day, brightness level to adjust to, and what days of the week it should trigger on are all presented. Enabling or disabling the 24-hour clock checkbox will convert the time entry fields as well as the events in the schedule to 12 or 24-hour format, respectively. If you want to edit a previously added event, you can double-click the existing event in the full schedule list.</p>
 
 
