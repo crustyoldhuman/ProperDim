@@ -17,9 +17,16 @@ public partial class WarningMessage : Window
 
 		if (isOkOnly)
 		{
-			PrimaryButton.Content = customButtonText;
-			PrimaryButton.Margin = new Thickness(0);
-			SecondaryButton.Visibility = Visibility.Collapsed;
+			// Hide the red destructive button
+			PrimaryButton.Visibility = Visibility.Collapsed;
+
+			// Repurpose the gray secondary button as the main action
+			SecondaryButton.Content = customButtonText;
+			SecondaryButton.Visibility = Visibility.Visible;
+
+			// Rewire the click event to return 'Yes' instead of 'No'
+			SecondaryButton.Click -= No_Click;
+			SecondaryButton.Click += Yes_Click;
 		}
 
 		this.Opacity = 0;
