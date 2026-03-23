@@ -155,8 +155,23 @@ public partial class ControlPanel : Window
 	{
 		// Activate preview mode: Apply brightness to screen, but BLOCK slider updates
 		_isPreviewActive = true;
-		if (animate) _mainWindow.ApplyBrightnessAnimated(brightness);
-		else _mainWindow.ApplyBrightness(brightness);
+		if (animate) _mainWindow.ApplyBrightnessAnimated(brightness, ignoreMinimum: true);
+		else _mainWindow.ApplyBrightness(brightness, animate: false, linear: false, durationMs: 200, ignoreMinimum: true);
+	}
+
+	public async void EndPreview(bool animate = false)
+	{
+		// Dynamically pull the current setting so any hotkey adjustments are safely respected
+		double restoreBrightness = ConfigManager.Settings.LastOpacity;
+
+		if (animate) _mainWindow.ApplyBrightnessAnimated(restoreBrightness, ignoreMinimum: true);
+		else _mainWindow.ApplyBrightness(restoreBrightness, animate: false, linear: false, durationMs: 200, ignoreMinimum: true);
+
+		// Wait for the screen to finish animating before unfreezing the slider UI
+		if (animate) await System.Threading.Tasks.Task.Delay(250);
+
+		_isPreviewActive = false;
+		SyncSliderWithOpacity(restoreBrightness);
 	}
 
 	public void UpdateDimmerOpacityInstant(double brightness)
@@ -284,8 +299,6 @@ public partial class ControlPanel : Window
 
 	private void AddSchedule_Click(object sender, RoutedEventArgs e)
 	{
-		double currentOpacity = ConfigManager.Settings.LastOpacity;
-
 		try
 		{
 			ScheduleDialog dialog = new([.. _mainWindow.ActiveSchedules])
@@ -301,12 +314,7 @@ public partial class ControlPanel : Window
 		}
 		finally
 		{
-			_isPreviewActive = false;
-
-			_mainWindow.ApplyBrightness(currentOpacity);
-
-			// Force the main slider to sync back to the restored value immediately
-			SyncSliderWithOpacity(currentOpacity);
+			EndPreview(false);
 		}
 	}
 
@@ -324,8 +332,6 @@ public partial class ControlPanel : Window
 	{
 		if (ScheduleListBox.SelectedItem is DimSchedule selectedSchedule)
 		{
-			double currentOpacity = ConfigManager.Settings.LastOpacity;
-
 			try
 			{
 				ScheduleDialog dialog = new(selectedSchedule, [.. _mainWindow.ActiveSchedules])
@@ -345,17 +351,10 @@ public partial class ControlPanel : Window
 			}
 			finally
 			{
-				_isPreviewActive = false;
-
-				_mainWindow.ApplyBrightness(currentOpacity);
-
-				// Force the main slider to sync back to the restored value immediately
-				SyncSliderWithOpacity(currentOpacity);
+				EndPreview(false);
 			}
 		}
 	}
-
-	// --- UI HANDLERS ---
 
 	// --- UI HANDLERS ---
 
@@ -588,6 +587,25 @@ public partial class ControlPanel : Window
 			WindowStartupLocation = WindowStartupLocation.CenterOwner
 		};
 		infoWin.ShowDialog();
+	}
+
+	private void MinBrightnessLink_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			MinBrightnessDialog dialog = new()
+			{
+				Owner = this,
+				WindowStartupLocation = WindowStartupLocation.CenterOwner
+			};
+			dialog.ShowDialog();
+		}
+		finally
+		{
+			// Unfreeze the main UI slider and ensure brightness is restored safely 
+			// incase hotkeys were used while the dialog was open.
+			EndPreview(false);
+		}
 	}
 
 	private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)

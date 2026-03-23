@@ -262,7 +262,7 @@
 							<TextBlock Name="BrightnessLabel" IsHitTestVisible="False" Text="{Binding ElementName=DialogDimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 						</StackPanel>
 						<Border Background="#00FFFFFF">
-							<Slider Name="DialogDimmerSlider" Height="32" Background="#00FFFFFF" Minimum="0.05" Maximum="1.0" Value="1.0" IsDirectionReversed="False" ValueChanged="DialogSlider_ValueChanged" PreviewMouseWheel="DialogDimmerSlider_PreviewMouseWheel" PreviewMouseLeftButtonDown="DialogDimmerSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="DialogDimmerSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="DialogDimmerSlider_PreviewMouseLeftButtonUp" />
+							<Slider Name="DialogDimmerSlider" Height="32" Background="#00FFFFFF" Minimum="0.01" Maximum="1.0" Value="1.0" IsDirectionReversed="False" ValueChanged="DialogSlider_ValueChanged" PreviewMouseWheel="DialogDimmerSlider_PreviewMouseWheel" PreviewMouseLeftButtonDown="DialogDimmerSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="DialogDimmerSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="DialogDimmerSlider_PreviewMouseLeftButtonUp" />
 						</Border>
 					</StackPanel>
 				</Border>

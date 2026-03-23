@@ -258,10 +258,13 @@ namespace ProperDim
 			_saveDebouncer?.Start();
 		}
 
-		public void ApplyBrightness(double globalBrightness, bool animate = false, bool linear = false, int durationMs = 200)
+		public void ApplyBrightness(double globalBrightness, bool animate = false, bool linear = false, int durationMs = 200, bool ignoreMinimum = false)
 		{
-			// Clamp input to safe bounds (5% to 100%)
-			double brightness = Math.Max(0.05, Math.Min(1.0, globalBrightness));
+			// Determine the active floor limit. If ignoring minimum (preview mode), enforce an absolute 0% safety floor.
+			double activeFloor = ignoreMinimum ? 0.00 : Math.Max(0.00, ConfigManager.Settings.GlobalMinimum);
+
+			// Clamp input to safe bounds
+			double brightness = Math.Max(activeFloor, Math.Min(1.0, globalBrightness));
 
 			if (animate && Math.Abs(brightness - _currentGlobalBrightness) > 0.001)
 			{
@@ -270,13 +273,13 @@ namespace ProperDim
 				{
 					_isUpdatingFromAnimator = true;
 					_currentGlobalBrightness = val;
-					ApplyBrightness(val, animate: false);
+					ApplyBrightness(val, animate: false, ignoreMinimum: ignoreMinimum);
 					_isUpdatingFromAnimator = false;
 				},
 				() =>
 				{
 					_currentGlobalBrightness = brightness;
-					ApplyBrightness(brightness, animate: false);
+					ApplyBrightness(brightness, animate: false, ignoreMinimum: ignoreMinimum);
 				}, linear);
 				return;
 			}
@@ -287,9 +290,9 @@ namespace ProperDim
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
-			if (TrayIcon != null)
+			if (TrayIcon is { } trayIcon)
 			{
-				TrayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+				trayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
 			}
 
 			// --- APPLY GLOBAL BRIGHTNESS ---
@@ -302,9 +305,9 @@ namespace ProperDim
 			_gammaService.SetGlobalMagnification(_currentGlobalBrightness);
 		}
 
-		public void ApplyBrightnessAnimated(double opacity)
+		public void ApplyBrightnessAnimated(double opacity, bool ignoreMinimum = false)
 		{
-			ApplyBrightness(opacity, animate: true, linear: false);
+			ApplyBrightness(opacity, animate: true, linear: false, durationMs: 200, ignoreMinimum: ignoreMinimum);
 		}
 		private void SystemEvents_DisplaySettingsChanged(object _, EventArgs __)
 		{
@@ -502,8 +505,9 @@ namespace ProperDim
 			if (id == HOTKEY_ID_UP) targetPercent += 5;
 			else if (id == HOTKEY_ID_DOWN) targetPercent -= 5;
 
+			int minPercent = (int)Math.Round(ConfigManager.Settings.GlobalMinimum * 100);
 			if (targetPercent > 100) targetPercent = 100;
-			if (targetPercent < 5) targetPercent = 5;
+			if (targetPercent < minPercent) targetPercent = minPercent;
 
 			double finalTarget = targetPercent / 100.0;
 

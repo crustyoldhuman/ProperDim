@@ -69,16 +69,18 @@ public class HardwareGammaService : IDisposable
 
 		if (globalBrightness < 0.5)
 		{
-			// Normalize the 0.05 to 0.50 slider range to a 0.0 to 1.0 scale
-			double normalized = (globalBrightness - 0.05) / 0.45;
+			// Prevent negative numbers from reaching Math.Pow, which causes a NaN crash
+			double safeBrightness = Math.Max(0.0, globalBrightness);
+
+			// Normalize the full 0.00 to 0.50 range to a 0.0 to 1.0 scale
+			double normalized = safeBrightness / 0.5;
 
 			// Apply an easing exponent to accelerate the initial drop from 50%
-			// and slow down the changes near the 5% mark. 
-			// (Higher than 1.0 drops faster at the top; 1.5 is a standard heavy ease)
+			// and slow down the changes near the bottom. 
 			double eased = Math.Pow(normalized, 1.5);
 
 			// Map the eased value to the safe linear floor (0.4 to 1.0)
-			double linearFactor = 0.4 + (eased * 0.6);
+			double linearFactor = 0.2 + (eased * 0.8);
 
 			// Apply the 2.2 gamma curve to map the linear math to human perceptual brightness
 			visualFactor = Math.Pow(linearFactor, 2.2);

@@ -15,7 +15,7 @@
 			<StackPanel Background="Transparent">
 				<TextBlock Text="QuickDim" Foreground="White" Margin="30,8,30,8" FontWeight="SemiBold"/>
 
-				<Slider x:Name="MenuSlider" Minimum="0.05" Maximum="1.0" Height="120" Width="100" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,8" ValueChanged="MenuSlider_ValueChanged" PreviewMouseLeftButtonDown="MenuSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="MenuSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="MenuSlider_PreviewMouseLeftButtonUp">
+				<Slider x:Name="MenuSlider" Minimum="0.01" Maximum="1.0" Height="120" Width="100" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,8" ValueChanged="MenuSlider_ValueChanged" PreviewMouseLeftButtonDown="MenuSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="MenuSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="MenuSlider_PreviewMouseLeftButtonUp">
 					<Slider.Style>
 						<Style TargetType="Slider">
 							<Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -52,7 +52,7 @@
 														<Thumb.Template>
 															<ControlTemplate TargetType="{x:Type Thumb}">
 																<Grid Width="18" Height="18">
-																	<Ellipse Fill="#B8B8B8" Stroke="#7E7E7E" StrokeThickness="2"/>
+																	<Ellipse Fill="#B8B8B8" Stroke="#7E7E7E" StrokeThickness="2" Cursor="Hand"/>
 																</Grid>
 															</ControlTemplate>
 														</Thumb.Template>

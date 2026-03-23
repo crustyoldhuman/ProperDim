@@ -15,7 +15,7 @@ public partial class TrayMenuWindow : Window
 	private IntPtr _hookID = IntPtr.Zero;
 	private LowLevelMouseProc _proc; // Must be kept alive in memory so the GC doesn't collect the callback
 
-	private IntPtr SetHook(LowLevelMouseProc proc)
+	private static IntPtr SetHook(LowLevelMouseProc proc)
 	{
 		using var curProcess = System.Diagnostics.Process.GetCurrentProcess();
 		using var curModule = curProcess.MainModule;
@@ -187,8 +187,13 @@ public partial class TrayMenuWindow : Window
 		if (sender is System.Windows.Controls.Slider slider)
 		{
 			slider.CaptureMouse();
-			UpdateSliderFromMouse(slider, e);
 			_isDragging = true;
+
+			// Only snap to the pointer if clicking the track, ignore if clicking the Thumb itself
+			if (!(e.OriginalSource is FrameworkElement fe && (fe is System.Windows.Controls.Primitives.Thumb || fe.TemplatedParent is System.Windows.Controls.Primitives.Thumb)))
+			{
+				UpdateSliderFromMouse(slider, e);
+			}
 		}
 	}
 

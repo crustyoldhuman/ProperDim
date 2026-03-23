@@ -366,9 +366,11 @@ public partial class ScheduleDialog : Window
 			slider.CaptureMouse();
 			_hasDragged = false;
 
-			// Update the slider value BEFORE setting _isDragging = true
-			// This bypasses the preview logic inside ValueChanged for a simple click
-			UpdateScheduleSliderFromMouse(slider, e);
+			// Only snap to the pointer if clicking the track, ignore if clicking the Thumb itself
+			if (!(e.OriginalSource is FrameworkElement fe && (fe is Thumb || fe.TemplatedParent is Thumb)))
+			{
+				UpdateScheduleSliderFromMouse(slider, e);
+			}
 
 			_isDragging = true;
 		}
@@ -393,7 +395,7 @@ public partial class ScheduleDialog : Window
 			// Only restore original brightness if they actually dragged the slider
 			if (_hasDragged && Owner is ControlPanel main)
 			{
-				main.ApplyPreview(_originalBrightness);
+				main.EndPreview(false);
 			}
 			_hasDragged = false;
 		}

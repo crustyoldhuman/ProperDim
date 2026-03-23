@@ -192,7 +192,7 @@
 										<Thumb>
 											<Thumb.Template>
 												<ControlTemplate TargetType="{x:Type Thumb}">
-													<Ellipse Fill="#B8B8B8" Width="18" Height="18" Stroke="#7E7E7E" StrokeThickness="2" />
+													<Ellipse Fill="#B8B8B8" Width="18" Height="18" Stroke="#7E7E7E" StrokeThickness="2" Cursor="Hand" />
 												</ControlTemplate>
 											</Thumb.Template>
 										</Thumb>
@@ -307,17 +307,17 @@
 					<TabItem Header="Controls" DockPanel.Dock="Left">
 						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
 							<StackPanel Margin="20,12,20,0">
-								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,14">
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 								</StackPanel>
-								<Slider Name="DimmerSlider" Margin="0,0,0,12" Minimum="0.05" 
+								<Slider Name="DimmerSlider" Margin="0,2,0,12" Minimum="0.00" 
 									Maximum="1.0" Value="1.0" IsDirectionReversed="False" 
 									ValueChanged="Slider_ValueChanged"
 									PreviewMouseLeftButtonDown="DimmerSlider_PreviewMouseLeftButtonDown"
 									PreviewMouseMove="DimmerSlider_PreviewMouseMove"
 									PreviewMouseLeftButtonUp="DimmerSlider_PreviewMouseLeftButtonUp" />
-								<UniformGrid Columns="6" Margin="0,4,0,0">
+								<UniformGrid Columns="6" Margin="0,2,0,0">
 									<UniformGrid.Resources>
 										<Style TargetType="{x:Type Button}">
 											<Setter Property="Background" Value="#3E3E42" />
@@ -358,6 +358,13 @@
 									<Button Content="100%" Tag="1.0" Margin="2" Click="QuickSet_Click" />
 								</UniformGrid>
 							</StackPanel>
+
+							<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
+								<Hyperlink Name="MinBrightnessLink" Foreground="#FF909090" FontSize="12" TextDecorations="Underline" Click="MinBrightnessLink_Click">
+									<Run Text="Adjust Minimum" />
+								</Hyperlink>
+							</TextBlock>
+
 						</Grid>
 					</TabItem>
 					<TabItem Header="Schedule">
