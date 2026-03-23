@@ -51,7 +51,7 @@
 			<StackPanel Grid.Row="1" Margin="20" VerticalAlignment="Center" HorizontalAlignment="Center">
 				<Image Source="ProperDimIcon.ico" Width="65" Height="65" HorizontalAlignment="Center" Margin="0,0,0,0"/>
 				<TextBlock Text="ProperDim" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-				<TextBlock Text="Version 1.4" FontSize="10" Foreground="#888" HorizontalAlignment="Center" Margin="0,2,0,10"/>
+				<TextBlock Text="Version 1.4" FontSize="10" FontWeight="SemiBold" Foreground="#888" HorizontalAlignment="Center" Margin="0,2,0,10"/>
 
 				<TextBlock Text="Created on January 15th, 2026" Foreground="#CCC" HorizontalAlignment="Center"/>
 				<TextBlock Text="By Kevin Stanislawski" Foreground="#CCC" HorizontalAlignment="Center" Margin="0,2,0,0"/>

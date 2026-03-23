@@ -412,6 +412,26 @@ public partial class ScheduleDialog : Window
 		}
 	}
 
+	// --- PREVIEW BUTTON LOGIC ---
+
+	private void PreviewButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+	{
+		if (Owner is ControlPanel cp) cp.ApplyPreview(DialogDimmerSlider.Value, true);
+	}
+
+	private void PreviewButton_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	{
+		if (Owner is ControlPanel cp) cp.EndPreview(true);
+	}
+
+	private void PreviewButton_MouseLeave(object sender, MouseEventArgs e)
+	{
+		if (e.LeftButton == MouseButtonState.Pressed && Owner is ControlPanel cp)
+		{
+			cp.EndPreview(true);
+		}
+	}
+
 	private void ScrollBar_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 	{
 		if (sender is ScrollBar scrollBar && scrollBar.Template.FindName("PART_Track", scrollBar) is Track track)

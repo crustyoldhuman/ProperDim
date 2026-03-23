@@ -262,7 +262,37 @@
 							<TextBlock Name="BrightnessLabel" IsHitTestVisible="False" Text="{Binding ElementName=DialogDimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 						</StackPanel>
 						<Border Background="#00FFFFFF">
-							<Slider Name="DialogDimmerSlider" Height="32" Background="#00FFFFFF" Minimum="0.01" Maximum="1.0" Value="1.0" IsDirectionReversed="False" ValueChanged="DialogSlider_ValueChanged" PreviewMouseWheel="DialogDimmerSlider_PreviewMouseWheel" PreviewMouseLeftButtonDown="DialogDimmerSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="DialogDimmerSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="DialogDimmerSlider_PreviewMouseLeftButtonUp" />
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+
+								<Slider Name="DialogDimmerSlider" Grid.Column="0" Margin="0,0,6,0" Height="32" Background="#00FFFFFF" Minimum="0.01" Maximum="1.0" Value="1.0" IsDirectionReversed="False" ValueChanged="DialogSlider_ValueChanged" PreviewMouseWheel="DialogDimmerSlider_PreviewMouseWheel" PreviewMouseLeftButtonDown="DialogDimmerSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="DialogDimmerSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="DialogDimmerSlider_PreviewMouseLeftButtonUp" />
+
+								<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Margin="0,0,4,0" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555" Cursor="Hand"
+										PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
+										PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
+										MouseLeave="PreviewButton_MouseLeave">
+									<Button.Template>
+										<ControlTemplate TargetType="{x:Type Button}">
+											<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter TargetName="border" Property="Background" Value="#4E4E52" />
+													<Setter TargetName="border" Property="BorderBrush" Value="#6D6D72" />
+													<Setter Property="Foreground" Value="White" />
+												</Trigger>
+												<Trigger Property="IsPressed" Value="True">
+													<Setter TargetName="border" Property="Background" Value="#2D2D2D" />
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</Grid>
 						</Border>
 					</StackPanel>
 				</Border>

@@ -307,7 +307,7 @@
 					<TabItem Header="Controls" DockPanel.Dock="Left">
 						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
 							<StackPanel Margin="20,12,20,0">
-								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,8">
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 								</StackPanel>
