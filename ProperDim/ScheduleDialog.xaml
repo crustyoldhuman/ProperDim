@@ -103,6 +103,12 @@
 											<Border Name="Border" CornerRadius="2" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1">
 												<Path Name="Arrow" Fill="#FFFFFFFF" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Data="M0,0 L4,4 L8,0" />
 											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter TargetName="Border" Property="Background" Value="#454549" />
+													<Setter TargetName="Border" Property="BorderBrush" Value="#6D6D72" />
+												</Trigger>
+											</ControlTemplate.Triggers>
 										</ControlTemplate>
 									</Control.Template>
 								</ToggleButton>
