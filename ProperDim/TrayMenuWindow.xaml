@@ -28,7 +28,7 @@
 												<RowDefinition Height="Auto" />
 											</Grid.RowDefinitions>
 											<Border Grid.Row="0" Background="#3E3E42" Width="5" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,6,0,6"/>
-											<Track x:Name="PART_Track" Grid.Row="0" HorizontalAlignment="Center">
+											<Track x:Name="PART_Track" Grid.Row="0" HorizontalAlignment="Center" Cursor="Hand">
 												<Track.DecreaseRepeatButton>
 													<RepeatButton Command="Slider.DecreaseLarge">
 														<RepeatButton.Template>
@@ -71,7 +71,7 @@
 
 			<Rectangle Height="1" Fill="#80444444" Margin="2,4" HorizontalAlignment="Stretch"/>
 
-			<Button Content="Controls" Click="Controls_Click" Foreground="White" BorderThickness="0" Padding="26,5" Cursor="Hand">
+			<Button Content="Controls" Click="Controls_Click" Foreground="White" BorderThickness="0" Padding="26,5">
 				<Button.Style>
 					<Style TargetType="Button">
 						<Setter Property="Background" Value="Transparent"/>
@@ -93,7 +93,7 @@
 				</Button.Style>
 			</Button>
 
-			<Button Content="Exit" Click="Exit_Click" Foreground="White" BorderThickness="0" Padding="26,5" Cursor="Hand">
+			<Button Content="Exit" Click="Exit_Click" Foreground="White" BorderThickness="0" Padding="26,5">
 				<Button.Style>
 					<Style TargetType="Button">
 						<Setter Property="Background" Value="Transparent"/>

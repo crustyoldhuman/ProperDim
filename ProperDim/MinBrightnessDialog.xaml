@@ -20,27 +20,6 @@
 					<TextBlock Text="Adjust Minimum Brightness" Foreground="#AAAAAA" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" IsHitTestVisible="False" />
 
 					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-						<Button Content="−" Width="45" Height="30" Background="Transparent" Foreground="White" BorderThickness="0" Click="Minimize_Click">
-							<Button.Style>
-								<Style TargetType="Button">
-									<Setter Property="Template">
-										<Setter.Value>
-											<ControlTemplate TargetType="Button">
-												<Border x:Name="ButtonBorder" Background="{TemplateBinding Background}">
-													<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-												</Border>
-												<ControlTemplate.Triggers>
-													<Trigger Property="IsMouseOver" Value="True">
-														<Setter TargetName="ButtonBorder" Property="Background" Value="#3F3F46"/>
-													</Trigger>
-												</ControlTemplate.Triggers>
-											</ControlTemplate>
-										</Setter.Value>
-									</Setter>
-								</Style>
-							</Button.Style>
-						</Button>
-
 						<Button Content="✕" Width="45" Height="30" Background="Transparent" Foreground="White" BorderThickness="0" Click="Close_Click">
 							<Button.Style>
 								<Style TargetType="Button">
@@ -96,6 +75,7 @@
 								PreviewMouseLeftButtonUp="MinSlider_PreviewMouseLeftButtonUp">
 							<Slider.Style>
 								<Style TargetType="{x:Type Slider}">
+									<Setter Property="Cursor" Value="Hand" />
 									<Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
 									<Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
 									<Setter Property="Template">
@@ -140,7 +120,7 @@
 							</Slider.Style>
 						</Slider>
 
-						<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555" Cursor="Hand"
+						<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555"
 								PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
 								PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
 								MouseLeave="PreviewButton_MouseLeave">
@@ -175,7 +155,6 @@
 							<Setter Property="Foreground" Value="#FFFFFFFF" />
 							<Setter Property="BorderBrush" Value="#555555" />
 							<Setter Property="BorderThickness" Value="1" />
-							<Setter Property="Cursor" Value="Hand" />
 							<Setter Property="Template">
 								<Setter.Value>
 									<ControlTemplate TargetType="{x:Type Button}">

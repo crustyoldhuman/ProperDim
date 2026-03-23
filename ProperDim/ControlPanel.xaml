@@ -164,6 +164,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type Slider}" TargetType="{x:Type Slider}">
+				<Setter Property="Cursor" Value="Hand" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type Slider}">
@@ -326,7 +327,6 @@
 											<Setter Property="BorderBrush" Value="#555555" />
 											<Setter Property="Height" Value="22" />
 											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="Cursor" Value="Hand" />
 											<Setter Property="Padding" Value="1" />
 											<Setter Property="HorizontalContentAlignment" Value="Center" />
 											<Setter Property="VerticalContentAlignment" Value="Center" />
@@ -382,7 +382,7 @@
 										  FontWeight="SemiBold"
 										  Checked="ScheduleCheckbox_Checked" 
 										  Unchecked="ScheduleCheckbox_Unchecked" />
-								<Button Name="AddScheduleButton" Style="{StaticResource RoundedAddButton}" Content="+" FontSize="14" FontWeight="SemiBold" Width="25" Height="25" Margin="0,-1,4,0" Background="#3E3E42" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Add New Schedule" Click="AddSchedule_Click" />
+								<Button Name="AddScheduleButton" Style="{StaticResource RoundedAddButton}" Content="+" FontSize="14" FontWeight="SemiBold" Width="25" Height="25" Margin="0,-1,4,0" Cursor="Hand" Background="#3E3E42" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Add New Schedule" Click="AddSchedule_Click" />
 							</Grid>
 							<Grid Grid.Row="1" Margin="0,1,0,-3">
 								<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,15" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
