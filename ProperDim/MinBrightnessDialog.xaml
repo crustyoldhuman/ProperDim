@@ -52,7 +52,7 @@
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Foreground="#FF909090" FontStyle="Italic" TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,10">
+				<TextBlock Grid.Row="0" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,10">
 					Adjust the slider below to set the absolute minimum brightness. 
 				</TextBlock>
 
@@ -145,8 +145,8 @@
 					</Grid>
 				</StackPanel>
 
-				<TextBlock Grid.Row="2" Foreground="#FF909090" FontStyle="Italic" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,16">
-					TIP: Setup your hotkeys before saving changes here so you can't accidentally blackout your screen.
+				<TextBlock Grid.Row="2" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,16">
+					TIP: Enable hotkeys before saving changes here so you can't accidentally blackout your screen.
 				</TextBlock>
 
 				<UniformGrid Grid.Row="3" Columns="2" HorizontalAlignment="Center" Margin="0,0,0,5">
