@@ -217,19 +217,32 @@
 
 					<ComboBox Name="MinuteBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
 
-					<Border Name="AmPmContainer" Width="65" Margin="8,0,0,0" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="3">
+					<Border Name="AmPmContainer" Width="65" Margin="8,0,0,0" Background="#3E3E42" BorderThickness="1" CornerRadius="3">
+						<Border.Style>
+							<Style TargetType="Border">
+								<Setter Property="BorderBrush" Value="#3F3F46" />
+								<Style.Triggers>
+									<Trigger Property="IsMouseOver" Value="True">
+										<Setter Property="BorderBrush" Value="#6D6D72" />
+									</Trigger>
+								</Style.Triggers>
+							</Style>
+						</Border.Style>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
-							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
+							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click" Cursor="Hand">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="AmBg" Background="Transparent" CornerRadius="2,0,0,2">
 											<TextBlock Name="AmText" Text="AM" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF808080" FontWeight="Normal" FontSize="11" Opacity="0.5"/>
 										</Border>
 										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="AmBg" Property="Background" Value="#454549"/>
+											</Trigger>
 											<Trigger Property="IsChecked" Value="True">
 												<Setter TargetName="AmBg" Property="Background" Value="#555555"/>
 												<Setter TargetName="AmText" Property="Foreground" Value="LightGray"/>
@@ -241,13 +254,16 @@
 								</RadioButton.Template>
 							</RadioButton>
 
-							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
+							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click" Cursor="Hand">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="PmBg" Background="Transparent" CornerRadius="0,2,2,0">
 											<TextBlock Name="PmText" Text="PM" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF808080" FontWeight="Normal" FontSize="11" Opacity="0.5"/>
 										</Border>
 										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="PmBg" Property="Background" Value="#454549"/>
+											</Trigger>
 											<Trigger Property="IsChecked" Value="True">
 												<Setter TargetName="PmBg" Property="Background" Value="#555555"/>
 												<Setter TargetName="PmText" Property="Foreground" Value="LightGray"/>
