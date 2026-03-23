@@ -5,7 +5,7 @@
 &nbsp;
 
 ## What is ProperDim?
-ProperDim is a screen brightness management and automation utility for Windows 10 and up that includes a scheduler, hotkeys, and multi-monitor support all packaged in a clean, intuitive interface that won't get in your way. 
+ProperDim is a tiny-but-mighty screen brightness management and automation utility for Windows 10 and up that includes a scheduler, hotkeys, and minimum brightness adjustment all packaged in a clean interface that won't get in your way. 
 
 ## Is ProperDim for me?
 - Are you running at least Windows 10? ***Then, YES!***
@@ -13,17 +13,17 @@ ProperDim is a screen brightness management and automation utility for Windows 1
 - Do you want to adjust your screens physical backlight? ***Then, NO!***
 - Are you looking for something with a blue light filter? ***Then, NO!***
 - Do you want your screen to go very dark? ***Then, YES!***
-- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see Main Controls section, second paragraph)
+- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> section below for details)
 
 ## What are the features?
 
 <h3 align="center">Main Controls</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/b1909d21-73a2-4204-be46-592e1f855164" /></p>
-<p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for easy, instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
+<p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/e6b7eaf1-06ad-49d7-9d86-bda59b5d1aaa" /></p>
-<p>In the <b>Minimum Brightness Adjustment</b> window you can customize the minimum brightness value for your specific screen. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
+<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
 
 <h3 align="center">Event Schedule</h3>
 
