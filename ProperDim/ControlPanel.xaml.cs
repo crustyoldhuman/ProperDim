@@ -546,9 +546,33 @@ public partial class ControlPanel : Window
 		_scrollDebounceTimer?.Stop();
 		_scrollDebounceTimer?.Start();
 
-		double step = 0.05;
-		if (e.Delta > 0) DimmerSlider.Value += step;
-		else DimmerSlider.Value -= step;
+		int currentPercent = (int)Math.Round(DimmerSlider.Value * 100);
+		int newPercent;
+
+		if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+		{
+			if (e.Delta > 0) newPercent = currentPercent + 1;
+			else newPercent = currentPercent - 1;
+		}
+		else
+		{
+			if (e.Delta > 0)
+			{
+				newPercent = ((currentPercent + 4) / 5) * 5;
+				if (newPercent == currentPercent) newPercent += 5;
+			}
+			else
+			{
+				newPercent = ((currentPercent - 1) / 5) * 5;
+			}
+		}
+
+		int minPercent = (int)Math.Round(DimmerSlider.Minimum * 100);
+		int maxPercent = (int)Math.Round(DimmerSlider.Maximum * 100);
+
+		newPercent = Math.Max(minPercent, Math.Min(maxPercent, newPercent));
+
+		DimmerSlider.Value = newPercent / 100.0;
 		e.Handled = true;
 	}
 

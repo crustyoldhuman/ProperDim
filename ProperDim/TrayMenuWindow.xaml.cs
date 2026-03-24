@@ -42,9 +42,33 @@ public partial class TrayMenuWindow : Window
 
 			Dispatcher.Invoke(() =>
 			{
-				double step = 0.05;
-				if (delta > 0) MenuSlider.Value += step;
-				else MenuSlider.Value -= step;
+				int currentPercent = (int)Math.Round(MenuSlider.Value * 100);
+				int newPercent;
+
+				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+				{
+					if (delta > 0) newPercent = currentPercent + 1;
+					else newPercent = currentPercent - 1;
+				}
+				else
+				{
+					if (delta > 0)
+					{
+						newPercent = ((currentPercent + 4) / 5) * 5;
+						if (newPercent == currentPercent) newPercent += 5;
+					}
+					else
+					{
+						newPercent = ((currentPercent - 1) / 5) * 5;
+					}
+				}
+
+				int minPercent = (int)Math.Round(MenuSlider.Minimum * 100);
+				int maxPercent = (int)Math.Round(MenuSlider.Maximum * 100);
+
+				newPercent = Math.Max(minPercent, Math.Min(maxPercent, newPercent));
+
+				MenuSlider.Value = newPercent / 100.0;
 			});
 
 			// Return 1 to "eat" the message so the window underneath doesn't also scroll
