@@ -5,7 +5,7 @@
 &nbsp;
 
 ## What is ProperDim?
-ProperDim is a tiny-but-mighty screen brightness management and automation utility for Windows 10 and up that includes a scheduler, hotkeys, and minimum brightness adjustment all packaged in a clean interface that won't get in your way. 
+ProperDim is a tiny-but-mighty screen brightness management and automation utility that includes a scheduler, hotkeys, and minimum brightness adjustment all packaged in a clean interface that won't get in your way. 
 
 ## Is ProperDim for me?
 - Are you running at least Windows 10? ***Then, YES!***
@@ -13,6 +13,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 - Do you want to adjust your screens physical backlight? ***Then, NO!***
 - Are you looking for something with a blue light filter? ***Then, NO!***
 - Do you want your screen to go very dark? ***Then, YES!***
+- Do you want to adjust your screens contrast, saturation, or that sort of thing? ***Then, NO!***
 - Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> section below for details)
 
 ## What are the features?
@@ -23,7 +24,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/c18664e7-8d8e-45af-a8d0-c8caaf4f5bc1" /></p>
-<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can get it dialed in exactly how you want it.</p>
+<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can dial it in exactly how you want it.</p>
 
 <h3 align="center">Event Schedule</h3>
 
@@ -75,4 +76,4 @@ The release page has two installation versions available: **Full** and **Lite**
 </h3>
 Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.
 <br><br>
-<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, spread the word and tell a friend! I hope you have an awesome day/existence.</i></p>
+<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, help spread the word and tell a friend! Their eyeballs will thank you. I hope you have an awesome day/existence.</i></p>
