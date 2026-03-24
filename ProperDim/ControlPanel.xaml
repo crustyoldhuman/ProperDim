@@ -359,7 +359,7 @@
 								</UniformGrid>
 							</StackPanel>
 
-							<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
+							<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">
 								<Hyperlink Name="MinBrightnessLink" Foreground="#FF909090" FontSize="12" TextDecorations="Underline" Click="MinBrightnessLink_Click">
 									<Run Text="Adjust Minimum" />
 								</Hyperlink>

@@ -233,7 +233,7 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
-							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click" Cursor="Hand">
+							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="AmBg" Background="Transparent" CornerRadius="2,0,0,2">
@@ -254,7 +254,7 @@
 								</RadioButton.Template>
 							</RadioButton>
 
-							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click" Cursor="Hand">
+							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="PmBg" Background="Transparent" CornerRadius="0,2,2,0">
