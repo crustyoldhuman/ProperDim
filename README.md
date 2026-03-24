@@ -24,7 +24,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/d23ed3d1-b28f-47f4-9807-cac9d7c0b095" /></p>
-<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can dial it in exactly how you want it.</p>
+<p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can dial it in exactly how you want it. The available minimum is *quite* dark so be sure to take precautions against blacking out your screen by accident and enable the <b>Hotkeys</b> feature.</p>
 
 <h3 align="center">Event Schedule</h3>
 
