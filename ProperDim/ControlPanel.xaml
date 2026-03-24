@@ -312,7 +312,7 @@
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
 									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
 								</StackPanel>
-								<Slider Name="DimmerSlider" Margin="0,2,0,12" Minimum="0.00" 
+								<Slider Name="DimmerSlider" Margin="0,2,0,12" Minimum="0.01" 
 									Maximum="1.0" Value="1.0" IsDirectionReversed="False" 
 									ValueChanged="Slider_ValueChanged"
 									PreviewMouseLeftButtonDown="DimmerSlider_PreviewMouseLeftButtonDown"

@@ -80,7 +80,7 @@ public class HardwareGammaService : IDisposable
 			double eased = Math.Pow(normalized, 1.5);
 
 			// Map the eased value to the safe linear floor (0.4 to 1.0)
-			double linearFactor = 0.2 + (eased * 0.8);
+			double linearFactor = 0.05 + (eased * 0.95);
 
 			// Apply the 2.2 gamma curve to map the linear math to human perceptual brightness
 			visualFactor = Math.Pow(linearFactor, 2.2);
