@@ -290,7 +290,7 @@ namespace ProperDim
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
-			if (TrayIcon is { } trayIcon)
+			if (TrayIcon is { } trayIcon && _currentTrayMenu == null)
 			{
 				trayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
 			}
@@ -757,7 +757,13 @@ namespace ProperDim
 			{
 				_currentTrayMenu = null;
 				_lastTrayMenuCloseTime = DateTime.Now;
+				// Restore tooltip when menu closes
+				if (TrayIcon != null) TrayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
 			};
+
+			// Suppress tooltip while menu is open
+			if (TrayIcon != null) TrayIcon.ToolTipText = "";
+
 			_currentTrayMenu.Show();
 		}
 
