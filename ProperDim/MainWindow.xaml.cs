@@ -260,16 +260,16 @@ namespace ProperDim
 
 		public void ApplyBrightness(double globalBrightness, bool animate = false, bool linear = false, int durationMs = 200, bool ignoreMinimum = false)
 		{
-			// Determine the active floor limit. If ignoring minimum (preview mode), enforce an absolute 0% safety floor.
-			double activeFloor = ignoreMinimum ? 0.00 : Math.Max(0.00, ConfigManager.Settings.GlobalMinimum);
+			// 1. Separate Logical UI Brightness from Physical Hardware Brightness
+			// If not previewing, clamp the UI value to the slider's absolute 1% (0.01) floor.
+			double logicalBrightness = ignoreMinimum
+				? Math.Max(0.00, Math.Min(1.0, globalBrightness))
+				: Math.Max(0.01, Math.Min(1.0, globalBrightness));
 
-			// Clamp input to safe bounds
-			double brightness = Math.Max(activeFloor, Math.Min(1.0, globalBrightness));
-
-			if (animate && Math.Abs(brightness - _currentGlobalBrightness) > 0.001)
+			if (animate && Math.Abs(logicalBrightness - _currentGlobalBrightness) > 0.001)
 			{
 				_gammaAnimator.Stop();
-				_gammaAnimator.Start(_currentGlobalBrightness, brightness, TimeSpan.FromMilliseconds(durationMs), (val) =>
+				_gammaAnimator.Start(_currentGlobalBrightness, logicalBrightness, TimeSpan.FromMilliseconds(durationMs), (val) =>
 				{
 					_isUpdatingFromAnimator = true;
 					_currentGlobalBrightness = val;
@@ -278,15 +278,16 @@ namespace ProperDim
 				},
 				() =>
 				{
-					_currentGlobalBrightness = brightness;
-					ApplyBrightness(brightness, animate: false, ignoreMinimum: ignoreMinimum);
+					_currentGlobalBrightness = logicalBrightness;
+					ApplyBrightness(logicalBrightness, animate: false, ignoreMinimum: ignoreMinimum);
 				}, linear);
 				return;
 			}
 
 			if (!_isUpdatingFromAnimator) _gammaAnimator.Stop();
 
-			_currentGlobalBrightness = brightness;
+			// Sync the memory bank, sliders, and tooltip using the Logical 1-100% value
+			_currentGlobalBrightness = logicalBrightness;
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
@@ -296,13 +297,29 @@ namespace ProperDim
 			}
 
 			// --- APPLY GLOBAL BRIGHTNESS ---
+
+			// 2. Map the Logical value to the physical Hardware limitations
+			double activeFloor = ignoreMinimum ? 0.00 : Math.Max(0.00, ConfigManager.Settings.GlobalMinimum);
+			double hardwareBrightness;
+
+			if (ignoreMinimum)
+			{
+				hardwareBrightness = logicalBrightness;
+			}
+			else
+			{
+				// Proportional Mapping: Maps the 0.01-1.0 slider range perfectly into the activeFloor-1.0 hardware range
+				double ratio = (logicalBrightness - 0.01) / 0.99;
+				hardwareBrightness = activeFloor + (ratio * (1.0 - activeFloor));
+			}
+
 			foreach (var m in Monitors)
 			{
-				_gammaService.SetTargetGamma(m.DeviceName, _currentGlobalBrightness);
+				_gammaService.SetTargetGamma(m.DeviceName, hardwareBrightness);
 			}
 
 			// Delegate dimming below 50% to the global Magnification API
-			_gammaService.SetGlobalMagnification(_currentGlobalBrightness);
+			_gammaService.SetGlobalMagnification(hardwareBrightness);
 		}
 
 		public void ApplyBrightnessAnimated(double opacity, bool ignoreMinimum = false)
