@@ -251,6 +251,7 @@ namespace ProperDim
 		}
 
 		private double _currentGlobalBrightness = 1.0;
+		private double _lastAppliedHardwareBrightness = 1.0;
 
 		public void TriggerSave()
 		{
@@ -261,24 +262,58 @@ namespace ProperDim
 		public void ApplyBrightness(double globalBrightness, bool animate = false, bool linear = false, int durationMs = 200, bool ignoreMinimum = false)
 		{
 			// 1. Separate Logical UI Brightness from Physical Hardware Brightness
-			// If not previewing, clamp the UI value to the slider's absolute 1% (0.01) floor.
 			double logicalBrightness = ignoreMinimum
 				? Math.Max(0.00, Math.Min(1.0, globalBrightness))
 				: Math.Max(0.01, Math.Min(1.0, globalBrightness));
 
-			if (animate && Math.Abs(logicalBrightness - _currentGlobalBrightness) > 0.001)
+			// 2. Calculate the physical Hardware target
+			double activeFloor = ignoreMinimum ? 0.00 : Math.Max(0.00, ConfigManager.Settings.GlobalMinimum);
+			double targetHardwareBrightness;
+
+			if (ignoreMinimum)
 			{
+				targetHardwareBrightness = logicalBrightness;
+			}
+			else
+			{
+				// Proportional Mapping: Maps the 0.01-1.0 slider range perfectly into the activeFloor-1.0 hardware range
+				double ratio = (logicalBrightness - 0.01) / 0.99;
+				targetHardwareBrightness = activeFloor + (ratio * (1.0 - activeFloor));
+			}
+
+			if (animate && Math.Abs(targetHardwareBrightness - _lastAppliedHardwareBrightness) > 0.001)
+			{
+				// Translate current hardware brightness into the NEW logical coordinate system
+				// so the animator starts exactly where the screen is physically at, preventing flashes.
+				double startingLogicalForAnimation;
+				if (ignoreMinimum)
+				{
+					startingLogicalForAnimation = _lastAppliedHardwareBrightness;
+				}
+				else
+				{
+					if (1.0 - activeFloor <= 0)
+					{
+						startingLogicalForAnimation = 1.0;
+					}
+					else
+					{
+						double currentRatio = (_lastAppliedHardwareBrightness - activeFloor) / (1.0 - activeFloor);
+						startingLogicalForAnimation = 0.01 + (currentRatio * 0.99);
+					}
+				}
+
+				startingLogicalForAnimation = Math.Max(0.00, Math.Min(1.0, startingLogicalForAnimation));
+
 				_gammaAnimator.Stop();
-				_gammaAnimator.Start(_currentGlobalBrightness, logicalBrightness, TimeSpan.FromMilliseconds(durationMs), (val) =>
+				_gammaAnimator.Start(startingLogicalForAnimation, logicalBrightness, TimeSpan.FromMilliseconds(durationMs), (val) =>
 				{
 					_isUpdatingFromAnimator = true;
-					_currentGlobalBrightness = val;
 					ApplyBrightness(val, animate: false, ignoreMinimum: ignoreMinimum);
 					_isUpdatingFromAnimator = false;
 				},
 				() =>
 				{
-					_currentGlobalBrightness = logicalBrightness;
 					ApplyBrightness(logicalBrightness, animate: false, ignoreMinimum: ignoreMinimum);
 				}, linear);
 				return;
@@ -288,6 +323,7 @@ namespace ProperDim
 
 			// Sync the memory bank, sliders, and tooltip using the Logical 1-100% value
 			_currentGlobalBrightness = logicalBrightness;
+			_lastAppliedHardwareBrightness = targetHardwareBrightness;
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
@@ -297,29 +333,13 @@ namespace ProperDim
 			}
 
 			// --- APPLY GLOBAL BRIGHTNESS ---
-
-			// 2. Map the Logical value to the physical Hardware limitations
-			double activeFloor = ignoreMinimum ? 0.00 : Math.Max(0.00, ConfigManager.Settings.GlobalMinimum);
-			double hardwareBrightness;
-
-			if (ignoreMinimum)
-			{
-				hardwareBrightness = logicalBrightness;
-			}
-			else
-			{
-				// Proportional Mapping: Maps the 0.01-1.0 slider range perfectly into the activeFloor-1.0 hardware range
-				double ratio = (logicalBrightness - 0.01) / 0.99;
-				hardwareBrightness = activeFloor + (ratio * (1.0 - activeFloor));
-			}
-
 			foreach (var m in Monitors)
 			{
-				_gammaService.SetTargetGamma(m.DeviceName, hardwareBrightness);
+				_gammaService.SetTargetGamma(m.DeviceName, targetHardwareBrightness);
 			}
 
 			// Delegate dimming below 50% to the global Magnification API
-			_gammaService.SetGlobalMagnification(hardwareBrightness);
+			_gammaService.SetGlobalMagnification(targetHardwareBrightness);
 		}
 
 		public void ApplyBrightnessAnimated(double opacity, bool ignoreMinimum = false)

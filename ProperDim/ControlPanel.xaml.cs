@@ -164,8 +164,9 @@ public partial class ControlPanel : Window
 		// Dynamically pull the current setting so any hotkey adjustments are safely respected
 		double restoreBrightness = ConfigManager.Settings.LastOpacity;
 
-		if (animate) _mainWindow.ApplyBrightnessAnimated(restoreBrightness, ignoreMinimum: true);
-		else _mainWindow.ApplyBrightness(restoreBrightness, animate: false, linear: false, durationMs: 200, ignoreMinimum: true);
+		// BUGFIX: Set ignoreMinimum to FALSE so the screen properly respects the floor again
+		if (animate) _mainWindow.ApplyBrightnessAnimated(restoreBrightness, ignoreMinimum: false);
+		else _mainWindow.ApplyBrightness(restoreBrightness, animate: false, linear: false, durationMs: 200, ignoreMinimum: false);
 
 		// Wait for the screen to finish animating before unfreezing the slider UI
 		if (animate) await System.Threading.Tasks.Task.Delay(250);
