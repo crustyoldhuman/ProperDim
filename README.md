@@ -23,7 +23,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/b1909d21-73a2-4204-be46-592e1f855164" /></p>
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/d23ed3d1-b28f-47f4-9807-cac9d7c0b095" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/e50e46c3-97fa-40ed-8b10-60defcc64680" /> </p>
 <p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can dial it in exactly how you want it. The available minimum is *quite* dark so be sure to take precautions against blacking out your screen by accident and enable the <b>Hotkeys</b> feature.</p>
 
 <h3 align="center">Event Schedule</h3>
@@ -70,10 +70,11 @@ The release page has two installation versions available: **Full** and **Lite**
 - **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (44.61 MB download)
 - **Lite:** Nothing but ProperDim itself (3.83 MB download)
 - The installers are available to download as **.exe's** or compressed in **.zip** format. **Right click -> Extract All** to unzip these files to access the installer.
-
+- Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.
 <h3 align="center">
   <a href="https://github.com/crustyoldhuman/ProperDim/releases">Click here to download an installer from the Release page</a>
 </h3>
-Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.
-<br><br>
+
+<p><b>**Honorable mention to Chiko for the invaluable bug testing. This would def be more broken without their eye.</b></p>
+<br>
 <p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, help spread the word and tell a friend! Their eyeballs will thank you. I hope you have an awesome day/existence.</i></p>
