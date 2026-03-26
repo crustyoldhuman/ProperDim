@@ -35,6 +35,23 @@ public partial class ControlPanel : Window
 		_mainWindow.ScheduleTriggered += RefreshList;
 		_mainWindow.ScheduleEvaluated += RefreshList;
 		ScheduleListBox.ItemsSource = _displaySchedules;
+
+		this.IsVisibleChanged += ControlPanel_IsVisibleChanged;
+	}
+
+	private void ControlPanel_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+	{
+		if (!this.IsVisible)
+		{
+			var childWindows = Application.Current.Windows.OfType<Window>()
+				.Where(w => w is MinBrightnessDialog || w is ScheduleDialog || w is AppInfoWindow)
+				.ToList();
+
+			foreach (var win in childWindows)
+			{
+				win.Close();
+			}
+		}
 	}
 
 	private void InitializeFromSettings()
