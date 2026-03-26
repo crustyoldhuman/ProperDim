@@ -20,36 +20,36 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 <h3 align="center">Main Controls</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/b1909d21-73a2-4204-be46-592e1f855164" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The <b>Controls</b> tab in ProperDim is home to a responsive brightness slider which utilizes a hybrid dimming method that takes advantage of gamma adjustments in tandem with RGB manipulation to bring as accurate of an image as possible without sacrificing how low the brightness goes. Six QuickSet buttons are provided for instant access to common brightness levels. Below these you can find a link to open the minimum adjustment settings window.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/e50e46c3-97fa-40ed-8b10-60defcc64680" /> </p>
+<p align="center"><img width="425" src="" /></p>
 <p>In the <b>Adjust Minimum Brightness</b> window you can customize the minimum brightness value to whatever you see fit. Having a nice, dark black was important for me and the only way to ensure it was right for every screen was to allow adjustment of the minimum value. If the default setting is too bright or too dark for you, this is where you can dial it in exactly how you want it. The available minimum is *quite* dark, so be sure to take precautions against blacking out your screen by accident and enable the <b>Hotkeys</b> feature.</p>
 
 <h3 align="center">Event Schedule</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/1a0d4ad3-1a0b-49b3-9ad5-f2cda1236071" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "<b>+</b>" button on the top right to open the <b>Event Scheduler</b>.</p>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/ae1d40de-7a32-4971-a099-37bc51c7b0cf" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The <b>Event Scheduler</b> window provides all the fields required for a valid event. Entry fields for the time of day, brightness level to adjust to, and what days of the week it should trigger on are all presented. Enabling or disabling the 24-hour clock checkbox will convert the time entry fields as well as the events in the schedule to 12 or 24-hour format, respectively. The blue "Eyeball" icon will show you a preview of the brightness level. If you want to edit a previously added event, you can double-click the existing event in the full schedule list.</p>
 
 
 <h3 align="center">Hotkeys</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/9e6938f5-c8d5-42f0-98b1-0413bfa4aaaa" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>With <b>Hotkeys</b> enabled you can program ProperDim to accept global hotkey commands to increase or decrease your brightness anytime and anywhere without needing to interact with the program directly. When using your assigned hotkeys, adjustments are done in 5% increments by tapping, or by holding down your hotkeys for larger adjustment changes.</p>
 
 
 <h3 align="center">System Tray Control</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/d2465656-732b-4524-9d77-b8e9d662855a" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The right-click menu on the system tray icon houses expected program shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. The <b>QuickDim</b> slider works a lot like the windows volume icon widget. When the slider is visible, the scroll wheel adjusts the brightness, so dimming your screen is just one right-click away at all times. Clicking the icon with the left mouse button once will open the main <b>Controls</b> window, and another left-click will close it again.</p>
 
 
 <h3 align="center">Options</h3>
 
-<p align="center"><img width="425" src="https://github.com/user-attachments/assets/49835cf3-5513-428e-9361-a5dd81ad65e9" /></p>
+<p align="center"><img width="425" src="" /></p>
 <p>The <b>Options</b> tab provides some quality of life program features for the user. Here you can enable auto-start when Windows boots, change the behavior of the "Close" button on the Controls window, and whether to display or hide the main window when ProperDim starts up. You can also swap the left and right mouse click actions on the system tray icon if you'd like the tray menu behavior to match the Windows Volume icon. Finally, there are two red buttons for resetting the displays within the dimming system and clearing the event schedule. With these, you can reset the dimming system if something goes wonky or restart your schedule from a clean slate.</p>
 
 
