@@ -778,14 +778,20 @@ public partial class ControlPanel : Window
 	{
 		if (!this.IsVisible)
 		{
-			this.Opacity = 0;
-			this.Show();
-
-			// This reads the current registry theme AND recalculates the frame
-			ApplyThemeShadow();
-
-			DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
-			this.BeginAnimation(Window.OpacityProperty, anim);
+			if (SystemParameters.ClientAreaAnimation)
+			{
+				this.Opacity = 0;
+				this.Show();
+				ApplyThemeShadow();
+				DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+				this.BeginAnimation(Window.OpacityProperty, anim);
+			}
+			else
+			{
+				this.Opacity = 1.0;
+				this.Show();
+				ApplyThemeShadow();
+			}
 		}
 
 		this.ShowInTaskbar = true;

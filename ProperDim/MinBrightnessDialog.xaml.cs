@@ -11,13 +11,15 @@ public partial class MinBrightnessDialog : Window
 	{
 		InitializeComponent();
 
-		// Fade-in animation
-		this.Opacity = 0;
-		this.Loaded += (s, e) =>
+		if (SystemParameters.ClientAreaAnimation)
 		{
-			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
-			this.BeginAnimation(Window.OpacityProperty, anim);
-		};
+			this.Opacity = 0;
+			this.Loaded += (s, e) =>
+			{
+				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+				this.BeginAnimation(Window.OpacityProperty, anim);
+			};
+		}
 	}
 
 	protected override void OnSourceInitialized(EventArgs e)

@@ -155,8 +155,16 @@ public partial class TrayMenuWindow : Window
 		this.Activate();
 		this.Focus();
 
-		var anim = new System.Windows.Media.Animation.DoubleAnimation(0.0, 1.0, TimeSpan.FromMilliseconds(150));
-		this.BeginAnimation(Window.OpacityProperty, anim);
+		if (SystemParameters.ClientAreaAnimation)
+		{
+			var anim = new System.Windows.Media.Animation.DoubleAnimation(0.0, 1.0, TimeSpan.FromMilliseconds(150));
+			this.BeginAnimation(Window.OpacityProperty, anim);
+		}
+		else
+		{
+			this.Opacity = 1.0;
+		}
+
 		_proc = HookCallback;
 		_hookID = SetHook(_proc);
 	}
