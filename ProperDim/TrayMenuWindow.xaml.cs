@@ -110,44 +110,67 @@ public partial class TrayMenuWindow : Window
 		double cursorX = pt.X / dpiX;
 		double cursorY = pt.Y / dpiY;
 
-		// Default to full virtual screen bounds
-		double screenTop = SystemParameters.VirtualScreenTop;
-		double screenBottom = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight;
-		double screenRight = SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth;
+		RectStruct workArea = new() { Left = 0, Top = 0, Right = 1920, Bottom = 1080 };
+		RectStruct monitorArea = workArea;
 
-		// Pinpoint the exact monitor the cursor is on using MainWindow's tracked monitors
-		foreach (var m in _mainWindow.Monitors)
+		EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RectStruct lprcMonitor, IntPtr dwData)
 		{
-			if (pt.X >= m.Bounds.Left && pt.X <= m.Bounds.Right &&
-				pt.Y >= m.Bounds.Top && pt.Y <= m.Bounds.Bottom)
+			if (pt.X >= lprcMonitor.Left && pt.X <= lprcMonitor.Right && pt.Y >= lprcMonitor.Top && pt.Y <= lprcMonitor.Bottom)
 			{
-				screenTop = m.Bounds.Top / dpiY;
-				screenBottom = m.Bounds.Bottom / dpiY;
-				screenRight = m.Bounds.Right / dpiX;
-				break;
+				MONITORINFOEX mi = new() { cbSize = System.Runtime.InteropServices.Marshal.SizeOf<MONITORINFOEX>() };
+				if (GetMonitorInfo(hMonitor, ref mi))
+				{
+					workArea = mi.rcWork;
+					monitorArea = mi.rcMonitor;
+				}
 			}
-		}
+			return true;
+		}, IntPtr.Zero);
 
-		double newLeft = cursorX - 10;
-		double newTop = cursorY - this.ActualHeight;
+		double workBottom = workArea.Bottom / dpiY;
+		double workRight = workArea.Right / dpiX;
+		double workTop = workArea.Top / dpiY;
+		double workLeft = workArea.Left / dpiX;
 
-		// If the taskbar is at the top, rendering upwards pushes the menu off-screen.
-		// Render downwards from the cursor instead.
-		if (newTop < screenTop)
+		bool isTop = workArea.Top > monitorArea.Top;
+		bool isLeft = workArea.Left > monitorArea.Left;
+		bool isRight = workArea.Right < monitorArea.Right;
+
+		// The XAML has a 10px margin around the border for the drop shadow.
+		// To make the visible UI physically flush with the taskbar, we pull the window into the taskbar boundary by 10px.
+		double edgeOffset = -10;
+
+		double newLeft, newTop;
+
+		if (isLeft)
 		{
-			newTop = cursorY;
+			newLeft = workLeft + edgeOffset;
+			newTop = cursorY - this.ActualHeight + 20; // Align bottom of menu upwards from cursor
+		}
+		else if (isRight)
+		{
+			newLeft = workRight - this.ActualWidth - edgeOffset;
+			newTop = cursorY - this.ActualHeight + 20; // Align bottom of menu upwards from cursor
+		}
+		else if (isTop)
+		{
+			newTop = workTop + edgeOffset;
+			newLeft = cursorX - (this.ActualWidth / 2);
+		}
+		else // Bottom (or auto-hide)
+		{
+			newTop = workBottom - this.ActualHeight - edgeOffset;
+			newLeft = cursorX - (this.ActualWidth / 2);
 		}
 
-		// Safety clamp to ensure it doesn't bleed off the bottom or right edges
-		if (newTop + this.ActualHeight > screenBottom)
-		{
-			newTop = screenBottom - this.ActualHeight;
-		}
+		// Final safety clamps must use the raw Monitor Area so the shadow bounding box can safely enter the taskbar space
+		double screenRight = monitorArea.Right / dpiX;
+		double screenBottom = monitorArea.Bottom / dpiY;
+		double screenLeft = monitorArea.Left / dpiX;
+		double screenTop = monitorArea.Top / dpiY;
 
-		if (newLeft + this.ActualWidth > screenRight)
-		{
-			newLeft = screenRight - this.ActualWidth - 5;
-		}
+		newLeft = Math.Max(screenLeft, Math.Min(screenRight - this.ActualWidth, newLeft));
+		newTop = Math.Max(screenTop, Math.Min(screenBottom - this.ActualHeight, newTop));
 
 		this.Left = newLeft;
 		this.Top = newTop;
