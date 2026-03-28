@@ -136,13 +136,22 @@ public partial class TrayMenuWindow : Window
 		bool isLeft = workArea.Left > monitorArea.Left;
 		bool isRight = workArea.Right < monitorArea.Right;
 
+		// If the cursor clicked inside the Work Area, the icon is inside the Overflow Menu flyout, not on the Taskbar.
+		bool isInOverflow = pt.X >= workArea.Left && pt.X <= workArea.Right && pt.Y >= workArea.Top && pt.Y <= workArea.Bottom;
+
 		// The XAML has a 10px margin around the border for the drop shadow.
 		// To make the visible UI physically flush with the taskbar, we pull the window into the taskbar boundary by 10px.
 		double edgeOffset = -10;
 
 		double newLeft, newTop;
 
-		if (isLeft)
+		if (isInOverflow)
+		{
+			// Position the window so its bottom-left visual corner sits to the right of the cursor
+			newLeft = cursorX;
+			newTop = cursorY - this.ActualHeight + 20; // Align visual bottom with the cursor
+		}
+		else if (isLeft)
 		{
 			newLeft = workLeft + edgeOffset;
 			newTop = cursorY - this.ActualHeight + 20; // Align bottom of menu upwards from cursor
