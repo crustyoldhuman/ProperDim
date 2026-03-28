@@ -43,7 +43,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 <h3 align="center">System Tray Control</h3>
 
-<p align="center"><img width="425" src="" /></p>
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/a0a8e4c3-15ad-480e-b0a1-2e404d091fb1" /></p>
 <p>The right-click menu on the system tray icon houses expected program shortcuts as well as the <b>QuickDim</b> widget — an easy-to-access slider that lives directly in the right-click menu. The <b>QuickDim</b> slider works a lot like the windows volume icon widget. When the slider is visible, the scroll wheel adjusts the brightness, so dimming your screen is just one right-click away at all times. Clicking the icon with the left mouse button once will open the main <b>Controls</b> window, and another left-click will close it again.</p>
 
 
