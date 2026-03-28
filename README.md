@@ -14,7 +14,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 - Are you looking for something with a blue light filter? ***Then, NO!***
 - Do you want your screen to go very dark? ***Then, YES!***
 - Do you want to adjust your screens contrast, saturation, or that sort of thing? ***Then, NO!***
-- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> section below for details)
+- Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see [<b>Multiple Monitor Support</b>](https://github.com/crustyoldhuman/ProperDim#multiple-monitor-support) below for details)
 
 ## What are the features?
 
