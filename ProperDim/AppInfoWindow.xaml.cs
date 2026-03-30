@@ -10,7 +10,9 @@ public partial class AppInfoWindow : Window
 {
 	public AppInfoWindow()
 	{
+		NativeMethods.PrepareWindowForOS(this, "#252525");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 
 		this.Opacity = 0;
 		this.Loaded += (s, e) =>

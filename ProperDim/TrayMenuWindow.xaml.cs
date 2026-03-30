@@ -80,6 +80,12 @@ public partial class TrayMenuWindow : Window
 	public TrayMenuWindow(MainWindow mainWindow)
 	{
 		InitializeComponent();
+
+		if (!SystemParameters.DropShadow && this.Content is FrameworkElement root)
+		{
+			root.Effect = null;
+		}
+
 		_mainWindow = mainWindow;
 		MenuSlider.Value = ConfigManager.Settings.LastOpacity;
 		_mainWindow.GlobalBrightnessChanged += OnGlobalBrightnessChanged;
@@ -141,15 +147,30 @@ public partial class TrayMenuWindow : Window
 
 		// The XAML has a 10px margin around the border for the drop shadow.
 		// To make the visible UI physically flush with the taskbar, we pull the window into the taskbar boundary by 10px.
-		double edgeOffset = -10;
+		double edgeOffset = -28;
 
 		double newLeft, newTop;
 
 		if (isInOverflow)
 		{
-			// Position the window so its bottom-left visual corner sits to the right of the cursor
-			newLeft = cursorX;
-			newTop = cursorY - this.ActualHeight + 20; // Align visual bottom with the cursor
+			if (isRight)
+			{
+				// Position the window so its bottom-right visual corner sits to the left of the cursor
+				newLeft = cursorX - this.ActualWidth;
+				newTop = cursorY - this.ActualHeight + 20;
+			}
+			else if (isTop)
+			{
+				// Position the window so it opens downwards from the cursor
+				newLeft = cursorX;
+				newTop = cursorY;
+			}
+			else
+			{
+				// Default (Bottom or Left Taskbar): Position bottom-left corner to the right of the cursor
+				newLeft = cursorX;
+				newTop = cursorY - this.ActualHeight + 20;
+			}
 		}
 		else if (isLeft)
 		{

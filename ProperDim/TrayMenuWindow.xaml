@@ -6,7 +6,7 @@
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
         Opacity="0" 
         Deactivated="Window_Deactivated" Loaded="Window_Loaded">
-	<Border Background="#2D2D2D" BorderBrush="#444" BorderThickness="1" CornerRadius="3" Margin="10">
+	<Border Background="#2D2D2D" BorderBrush="#444" BorderThickness="1" CornerRadius="3" Margin="28">
 		<Border.Effect>
 			<DropShadowEffect BlurRadius="5" Opacity="0.4" ShadowDepth="2"/>
 		</Border.Effect>

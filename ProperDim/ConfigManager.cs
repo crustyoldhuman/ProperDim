@@ -20,7 +20,7 @@ public class AppSettings
 	public bool UseMilitaryTime { get; set; } = false;
 	public string LastScheduleDays { get; set; } = "Mo,Tu,We,Th,Fr,Sa,Su";
 	public bool SwapTrayIconClicks { get; set; } = false;
-	public double GlobalMinimum { get; set; } = 0.25;
+	public double GlobalMinimum { get; set; } = 0.30;
 	public void Save()
 	{
 		ConfigManager.SaveInstance(this);

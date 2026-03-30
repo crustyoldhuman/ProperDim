@@ -29,7 +29,9 @@ public partial class ControlPanel : Window
 
 	public ControlPanel(MainWindow mainWindow)
 	{
+		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 		_mainWindow = mainWindow;
 		_mainWindow.GlobalBrightnessChanged += OnGlobalBrightnessChanged;
 		_mainWindow.ScheduleTriggered += RefreshList;

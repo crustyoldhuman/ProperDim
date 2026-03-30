@@ -11,7 +11,9 @@ public partial class WarningMessage : Window
 
 	private WarningMessage(string message, string title, bool isOkOnly, string customButtonText)
 	{
+		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 		MessageText.Text = message;
 		TitleText.Text = title;
 

@@ -4,9 +4,8 @@
         Title="ProperDim Info" 
         Height="384" Width="320"
         MinHeight="384" MaxHeight="384"
-        MinWidth="320" MaxWidth="320"
+		MinWidth="320" MaxWidth="320"
         WindowStyle="None"
-        Background="#252525"
         WindowStartupLocation="CenterScreen">
 	<WindowChrome.WindowChrome>
 		<WindowChrome GlassFrameThickness="1" CornerRadius="0" CaptionHeight="0" UseAeroCaptionButtons="False" ResizeBorderThickness="0" />

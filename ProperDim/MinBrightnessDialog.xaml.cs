@@ -9,7 +9,9 @@ public partial class MinBrightnessDialog : Window
 {
 	public MinBrightnessDialog()
 	{
+		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 
 		if (SystemParameters.ClientAreaAnimation)
 		{

@@ -5,8 +5,7 @@
         Title="Event Scheduler" 
         Height="280" Width="320" 
         MinHeight="280" MaxHeight="280"
-        MinWidth="320" MaxWidth="320"
-        Background="#2D2D2D" 
+		MinWidth="320" MaxWidth="320"
         Foreground="#FFFFFFFF" 
         WindowStyle="None" 
         WindowStartupLocation="CenterOwner">

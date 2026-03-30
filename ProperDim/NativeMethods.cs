@@ -301,7 +301,65 @@ internal static class NativeMethods
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	internal static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
-	[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
 	internal static extern IntPtr GetModuleHandle(string lpModuleName);
+
+	public static void PrepareWindowForOS(System.Windows.Window window, string win11BackgroundHex = "#2D2D2D")
+	{
+		if (Environment.OSVersion.Version.Build < 22000)
+		{
+			window.AllowsTransparency = true;
+			window.Background = System.Windows.Media.Brushes.Transparent;
+		}
+		else
+		{
+			window.AllowsTransparency = false;
+			window.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(win11BackgroundHex));
+		}
+	}
+
+	public static void ApplyWindows10Shadow(System.Windows.Window window)
+	{
+		if (Environment.OSVersion.Version.Build >= 22000) return;
+		if (!System.Windows.SystemParameters.DropShadow) return;
+
+		if (window.Content is System.Windows.FrameworkElement root)
+		{
+			// Margin expanded to 28 to accommodate BlurRadius (24) + ShadowDepth (3)
+			root.Margin = new System.Windows.Thickness(28);
+
+			var shadow = new System.Windows.Media.Effects.DropShadowEffect
+			{
+				BlurRadius = window.IsActive ? 24 : 14,
+				ShadowDepth = window.IsActive ? 3 : 1,
+				Opacity = window.IsActive ? 0.70 : 0.60,
+				Direction = 270
+			};
+			root.Effect = shadow;
+
+			var duration = TimeSpan.FromMilliseconds(150);
+
+			window.Activated += (s, e) =>
+			{
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.BlurRadiusProperty, new System.Windows.Media.Animation.DoubleAnimation(24, duration));
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.ShadowDepthProperty, new System.Windows.Media.Animation.DoubleAnimation(3, duration));
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, new System.Windows.Media.Animation.DoubleAnimation(0.70, duration));
+			};
+
+			window.Deactivated += (s, e) =>
+			{
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.BlurRadiusProperty, new System.Windows.Media.Animation.DoubleAnimation(14, duration));
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.ShadowDepthProperty, new System.Windows.Media.Animation.DoubleAnimation(1, duration));
+				shadow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, new System.Windows.Media.Animation.DoubleAnimation(0.60, duration));
+			};
+
+			if (!double.IsNaN(window.Width)) window.Width += 56;
+			if (!double.IsNaN(window.Height)) window.Height += 56;
+			if (window.MinWidth > 0) window.MinWidth += 56;
+			if (window.MinHeight > 0) window.MinHeight += 56;
+			if (window.MaxWidth > 0 && window.MaxWidth < double.PositiveInfinity) window.MaxWidth += 56;
+			if (window.MaxHeight > 0 && window.MaxHeight < double.PositiveInfinity) window.MaxHeight += 56;
+		}
+	}
 }
 #pragma warning restore SYSLIB1054

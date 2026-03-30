@@ -23,7 +23,9 @@ public partial class ScheduleDialog : Window
 	// 1. THIS IS FOR ADDING NEW SCHEDULES
 	public ScheduleDialog(List<DimSchedule> existingSchedules)
 	{
+		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 
 		if (SystemParameters.ClientAreaAnimation)
 		{
@@ -63,7 +65,9 @@ public partial class ScheduleDialog : Window
 	// 2. THIS IS FOR EDITING EXISTING SCHEDULES
 	public ScheduleDialog(DimSchedule existing, List<DimSchedule> existingSchedules)
 	{
+		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
+		NativeMethods.ApplyWindows10Shadow(this);
 
 		if (SystemParameters.ClientAreaAnimation)
 		{

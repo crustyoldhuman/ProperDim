@@ -13,7 +13,7 @@
 		<Description>ProperDim Window Dimmer</Description>
 		<AssemblyTitle>ProperDim</AssemblyTitle>
 		<ApplicationIcon>ProperDimIcon.ico</ApplicationIcon>
-		<ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
