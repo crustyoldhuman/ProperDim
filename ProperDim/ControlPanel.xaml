@@ -261,7 +261,7 @@
 			<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" CornerRadius="7,7,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 				<Grid>
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
-						<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" />
+						<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
 						<TextBlock Text="ProperDim" Foreground="#AAAAAA" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center" />
 					</StackPanel>
 					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
