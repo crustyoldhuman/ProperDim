@@ -304,6 +304,12 @@ internal static class NativeMethods
 	[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
 	internal static extern IntPtr GetModuleHandle(string lpModuleName);
 
+	[System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+	public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+	[System.Runtime.InteropServices.DllImport("user32.dll")]
+	public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
 	public static void PrepareWindowForOS(System.Windows.Window window, string win11BackgroundHex = "#2D2D2D")
 	{
 		if (Environment.OSVersion.Version.Build < 22000)

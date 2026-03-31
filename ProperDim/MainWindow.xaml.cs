@@ -791,7 +791,7 @@ namespace ProperDim
 				return;
 			}
 
-			if ((DateTime.Now - _lastTrayMenuCloseTime).TotalMilliseconds < 200)
+			if ((DateTime.Now - _lastTrayMenuCloseTime).TotalMilliseconds < 500)
 			{
 				return;
 			}
@@ -801,8 +801,16 @@ namespace ProperDim
 			{
 				_currentTrayMenu = null;
 				_lastTrayMenuCloseTime = DateTime.Now;
+
 				// Restore tooltip when menu closes
 				if (TrayIcon != null) TrayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+
+				// Force the Windows Taskbar Overflow flyout to collapse
+				IntPtr overflowWin10 = FindWindow("NotifyIconOverflowWindow", null);
+				if (overflowWin10 != IntPtr.Zero) ShowWindow(overflowWin10, 0); // SW_HIDE
+
+				IntPtr overflowWin11 = FindWindow("TopLevelWindowForOverflowDropShadow", null);
+				if (overflowWin11 != IntPtr.Zero) ShowWindow(overflowWin11, 0); // SW_HIDE
 			};
 
 			// Suppress tooltip while menu is open

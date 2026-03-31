@@ -156,20 +156,20 @@ public partial class TrayMenuWindow : Window
 			if (isRight)
 			{
 				// Position the window so its bottom-right visual corner sits to the left of the cursor
-				newLeft = cursorX - this.ActualWidth;
-				newTop = cursorY - this.ActualHeight + 20;
+				newLeft = cursorX - this.ActualWidth - edgeOffset;
+				newTop = cursorY - this.ActualHeight - edgeOffset;
 			}
 			else if (isTop)
 			{
-				// Position the window so it opens downwards from the cursor
-				newLeft = cursorX;
-				newTop = cursorY;
+				// Position the window so its top-left visual corner sits at the cursor
+				newLeft = cursorX + edgeOffset;
+				newTop = cursorY + edgeOffset;
 			}
 			else
 			{
-				// Default (Bottom or Left Taskbar): Position bottom-left corner to the right of the cursor
-				newLeft = cursorX;
-				newTop = cursorY - this.ActualHeight + 20;
+				// Default (Bottom or Left Taskbar): Position bottom-left visual corner at the cursor
+				newLeft = cursorX + edgeOffset;
+				newTop = cursorY - this.ActualHeight - edgeOffset;
 			}
 		}
 		else if (isLeft)
