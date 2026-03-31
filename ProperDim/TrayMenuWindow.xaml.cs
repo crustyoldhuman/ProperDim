@@ -153,23 +153,25 @@ public partial class TrayMenuWindow : Window
 
 		if (isInOverflow)
 		{
+			int cursorClearance = 2; // Prevents the transparent shadow margin from intercepting the toggle click
+
 			if (isRight)
 			{
-				// Position the window so its bottom-right visual corner sits to the left of the cursor
-				newLeft = cursorX - this.ActualWidth - edgeOffset;
-				newTop = cursorY - this.ActualHeight - edgeOffset;
+				// Position the window so its bottom-right visual corner sits left and up from the cursor
+				newLeft = cursorX - this.ActualWidth - edgeOffset - cursorClearance;
+				newTop = cursorY - this.ActualHeight - edgeOffset - cursorClearance;
 			}
 			else if (isTop)
 			{
-				// Position the window so its top-left visual corner sits at the cursor
-				newLeft = cursorX + edgeOffset;
-				newTop = cursorY + edgeOffset;
+				// Position the window so its top-left visual corner sits right and down from the cursor
+				newLeft = cursorX + edgeOffset + cursorClearance;
+				newTop = cursorY + edgeOffset + cursorClearance;
 			}
 			else
 			{
-				// Default (Bottom or Left Taskbar): Position bottom-left visual corner at the cursor
-				newLeft = cursorX + edgeOffset;
-				newTop = cursorY - this.ActualHeight - edgeOffset;
+				// Default (Bottom or Left Taskbar): Position bottom-left visual corner right and up from the cursor
+				newLeft = cursorX + edgeOffset + cursorClearance;
+				newTop = cursorY - this.ActualHeight - edgeOffset - cursorClearance;
 			}
 		}
 		else if (isLeft)

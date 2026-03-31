@@ -803,18 +803,30 @@ namespace ProperDim
 				_lastTrayMenuCloseTime = DateTime.Now;
 
 				// Restore tooltip when menu closes
-				if (TrayIcon != null) TrayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+				if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
 
-				// Force the Windows Taskbar Overflow flyout to collapse
-				IntPtr overflowWin10 = FindWindow("NotifyIconOverflowWindow", null);
-				if (overflowWin10 != IntPtr.Zero) ShowWindow(overflowWin10, 0); // SW_HIDE
+				GetCursorPos(out POINTStruct cursorPos);
 
-				IntPtr overflowWin11 = FindWindow("TopLevelWindowForOverflowDropShadow", null);
-				if (overflowWin11 != IntPtr.Zero) ShowWindow(overflowWin11, 0); // SW_HIDE
+				void CheckAndCloseOverflow(string className)
+				{
+					IntPtr hwnd = FindWindow(className, null);
+					if (hwnd != IntPtr.Zero && IsWindowVisible(hwnd))
+					{
+						GetWindowRect(hwnd, out RectStruct rect);
+						// Only close the overflow if the click was strictly OUTSIDE of it
+						if (cursorPos.X < rect.Left || cursorPos.X > rect.Right || cursorPos.Y < rect.Top || cursorPos.Y > rect.Bottom)
+						{
+							ShowWindow(hwnd, 0); // SW_HIDE
+						}
+					}
+				}
+
+				CheckAndCloseOverflow("NotifyIconOverflowWindow");
+				CheckAndCloseOverflow("TopLevelWindowForOverflowDropShadow");
 			};
 
 			// Suppress tooltip while menu is open
-			if (TrayIcon != null) TrayIcon.ToolTipText = "";
+			if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = "";
 
 			_currentTrayMenu.Show();
 		}
