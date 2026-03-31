@@ -14,7 +14,15 @@ public partial class App : Application
 		base.OnStartup(e);
 
 		AppDomain.CurrentDomain.UnhandledException += (s, args) => EmergencyReset();
-		this.DispatcherUnhandledException += (s, args) => EmergencyReset();
+		this.DispatcherUnhandledException += (s, args) =>
+		{
+			if (args.Exception is InvalidOperationException && args.Exception.Message.Contains("UpdateToolTip"))
+			{
+				args.Handled = true;
+				return;
+			}
+			EmergencyReset();
+		};
 
 		try
 		{

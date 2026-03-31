@@ -327,9 +327,16 @@ namespace ProperDim
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
-			if (TrayIcon is { } trayIcon && _currentTrayMenu == null)
+			if (!_isUpdatingFromAnimator && TrayIcon is { } trayIcon && _currentTrayMenu == null)
 			{
-				trayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+				try
+				{
+					trayIcon.ToolTipText = $"ProperDim: {Math.Round(_currentGlobalBrightness * 100)}%";
+				}
+				catch (InvalidOperationException)
+				{
+					// Suppress UI update failures when the Windows session is locked
+				}
 			}
 
 			// --- APPLY GLOBAL BRIGHTNESS ---
