@@ -16,7 +16,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 - Do you want to adjust your screens contrast, saturation, or that sort of thing? ***Then, NO!***
 - Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> below for details)
 
-## What are the features?
+## What are the features of ProperDim?
 
 <h3 align="center">Main Controls</h3>
 
