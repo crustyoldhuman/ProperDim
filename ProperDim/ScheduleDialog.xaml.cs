@@ -538,7 +538,7 @@ public partial class ScheduleDialog : Window
 				}
 
 				// 3. Conditional Speed: Scroll 8 lines for Minutes, 4 lines for Hours
-				double linesToScroll = (cb.Name == "MinuteBox") ? 8 : 4;
+				double linesToScroll = (cb.Name == "MinuteBox") ? 4 : 4;
 				double scrollChange = (e.Delta > 0) ? -(ItemHeight * linesToScroll) : (ItemHeight * linesToScroll);
 
 				// 4. Determine Target
@@ -549,8 +549,8 @@ public partial class ScheduleDialog : Window
 				{
 					From = currentAttached,
 					To = newTarget,
-					Duration = TimeSpan.FromMilliseconds(300),
-					EasingFunction = new QuarticEase { EasingMode = EasingMode.EaseOut }
+					Duration = TimeSpan.FromMilliseconds(150),
+					EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
 				};
 
 				sv.BeginAnimation(ScrollViewerBehavior.VerticalOffsetProperty, animation);
