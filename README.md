@@ -16,7 +16,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 - Do you want to adjust your screens contrast, saturation, or that sort of thing? ***Then, NO!***
 - Do you use multiple screens with one of them being a virtual (wireless) or USB connected device? ***Then, MAYBE!*** (see <b>Multiple Monitor Support</b> below for details)
 
-## What are the features?
+## What are the features of ProperDim?
 
 <h3 align="center">Main Controls</h3>
 
@@ -54,7 +54,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 
 <h3 align="center">Multiple Monitor Support</h3>
-<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are all fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely oustide the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
+<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't which makes any "detection" logic unreliable at best. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely oustide the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
 
 ## Usage & Licensing
 
@@ -77,4 +77,4 @@ The release page has two installation versions available: **Full** and **Lite**
 <br>
 <p><b>**Honorable mention to Chiko for the invaluable bug testing. This would def be more broken without their eye.</b></p>
 <br>
-<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, help spread the word and tell a friend! Their eyeballs will thank you. I hope you have an awesome day/existence.</i></p>
+<p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, help spread the word and save another pair of eyeballs by telling a friend! I hope you have an awesome day/existence.</i></p>
