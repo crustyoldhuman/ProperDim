@@ -302,6 +302,8 @@
                                         PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
                                         PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
                                         MouseLeave="PreviewButton_MouseLeave"
+                                        PreviewKeyDown="PreviewButton_PreviewKeyDown"
+                                        PreviewKeyUp="PreviewButton_PreviewKeyUp"
                                         FocusVisualStyle="{StaticResource GrayFocusVisual}">
 									<Button.Template>
 										<ControlTemplate TargetType="{x:Type Button}">

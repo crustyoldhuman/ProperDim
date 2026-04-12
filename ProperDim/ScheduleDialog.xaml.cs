@@ -441,21 +441,31 @@ public partial class ScheduleDialog : Window
 
 	// --- PREVIEW BUTTON LOGIC ---
 
-	private void PreviewButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+	private void StartPreview()
 	{
 		if (Owner is ControlPanel cp) cp.ApplyPreview(DialogDimmerSlider.Value, true);
 	}
 
-	private void PreviewButton_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	private void StopPreview()
 	{
 		if (Owner is ControlPanel cp) cp.EndPreview(true);
 	}
 
+	private void PreviewButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+	{
+		StartPreview();
+	}
+
+	private void PreviewButton_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	{
+		StopPreview();
+	}
+
 	private void PreviewButton_MouseLeave(object sender, MouseEventArgs e)
 	{
-		if (e.LeftButton == MouseButtonState.Pressed && Owner is ControlPanel cp)
+		if (e.LeftButton == MouseButtonState.Pressed)
 		{
-			cp.EndPreview(true);
+			StopPreview();
 		}
 	}
 
@@ -575,6 +585,26 @@ public partial class ScheduleDialog : Window
 				// 6. Update the attached property immediately for the next tick
 				ScrollViewerBehavior.SetVerticalOffset(sv, newTarget);
 			}
+		}
+	}
+
+	private void PreviewButton_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+	{
+		if (e.IsRepeat) return;
+
+		if (e.Key == System.Windows.Input.Key.Enter || e.Key == System.Windows.Input.Key.Space)
+		{
+			StartPreview();
+			e.Handled = true;
+		}
+	}
+
+	private void PreviewButton_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+	{
+		if (e.Key == System.Windows.Input.Key.Enter || e.Key == System.Windows.Input.Key.Space)
+		{
+			StopPreview();
+			e.Handled = true;
 		}
 	}
 	public static class ScrollViewerBehavior

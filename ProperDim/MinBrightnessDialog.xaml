@@ -125,7 +125,9 @@ Title="ProperDim" Height="260" Width="300"
 						<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555"
 								PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
 								PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
-								MouseLeave="PreviewButton_MouseLeave"
+                                        MouseLeave="PreviewButton_MouseLeave"
+                                        PreviewKeyDown="PreviewButton_PreviewKeyDown"
+                                        PreviewKeyUp="PreviewButton_PreviewKeyUp"
 								FocusVisualStyle="{StaticResource GrayFocusVisual}">
 							<Button.Template>
 								<ControlTemplate TargetType="{x:Type Button}">
