@@ -19,7 +19,7 @@ Title="ProperDim" Height="150" Width="300"
 			</Border>
 			<TextBlock Name="MessageText" Grid.Row="1" Foreground="White" TextWrapping="Wrap" Margin="15,15,15,0" TextAlignment="Center" VerticalAlignment="Center" />
 			<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-				<Button x:Name="PrimaryButton" Content="It is" Width="75" Height="25" Background="#993333" Foreground="White" BorderBrush="#555" BorderThickness="1" Margin="0,0,15,0" Cursor="Hand" Click="Yes_Click">
+				<Button x:Name="PrimaryButton" Content="It is" Width="75" Height="25" Background="#993333" Foreground="White" BorderBrush="#555" BorderThickness="1" Margin="0,0,15,0" Cursor="Hand" Click="Yes_Click" FocusVisualStyle="{StaticResource GrayFocusVisual}">
 					<Button.Template>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
@@ -33,7 +33,7 @@ Title="ProperDim" Height="150" Width="300"
 						</ControlTemplate>
 					</Button.Template>
 				</Button>
-				<Button x:Name="SecondaryButton" Content="It's not" Width="75" Height="25" Background="#3E3E42" Foreground="White" BorderBrush="#555" BorderThickness="1" Cursor="Hand" Click="No_Click">
+				<Button x:Name="SecondaryButton" Content="It's not" Width="75" Height="25" Background="#3E3E42" Foreground="White" BorderBrush="#555" BorderThickness="1" Cursor="Hand" Click="No_Click" FocusVisualStyle="{StaticResource GrayFocusVisual}">
 					<Button.Template>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">

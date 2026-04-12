@@ -23,6 +23,7 @@ Title="ProperDim" Height="260" Width="300"
 						<Button Content="✕" Width="45" Height="30" Background="Transparent" Foreground="White" BorderThickness="0" Click="Close_Click">
 							<Button.Style>
 								<Style TargetType="Button">
+									<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 									<Setter Property="Template">
 										<Setter.Value>
 											<ControlTemplate TargetType="Button">
@@ -75,6 +76,7 @@ Title="ProperDim" Height="260" Width="300"
 								PreviewMouseLeftButtonUp="MinSlider_PreviewMouseLeftButtonUp">
 							<Slider.Style>
 								<Style TargetType="{x:Type Slider}">
+									<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 									<Setter Property="Cursor" Value="Hand" />
 									<Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
 									<Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
@@ -85,7 +87,7 @@ Title="ProperDim" Height="260" Width="300"
 													<Border Name="TrackBackground" Background="#3E3E42" Height="6" CornerRadius="3" VerticalAlignment="Center" Margin="4,0" />
 													<Track Name="PART_Track">
 														<Track.DecreaseRepeatButton>
-															<RepeatButton Command="Slider.DecreaseLarge">
+															<RepeatButton Command="Slider.DecreaseLarge" Focusable="False" IsTabStop="False">
 																<RepeatButton.Template>
 																	<ControlTemplate TargetType="{x:Type RepeatButton}">
 																		<Border Background="Transparent" />
@@ -94,7 +96,7 @@ Title="ProperDim" Height="260" Width="300"
 															</RepeatButton>
 														</Track.DecreaseRepeatButton>
 														<Track.IncreaseRepeatButton>
-															<RepeatButton Command="Slider.IncreaseLarge">
+															<RepeatButton Command="Slider.IncreaseLarge" Focusable="False" IsTabStop="False">
 																<RepeatButton.Template>
 																	<ControlTemplate TargetType="{x:Type RepeatButton}">
 																		<Border Background="Transparent" />
@@ -123,7 +125,8 @@ Title="ProperDim" Height="260" Width="300"
 						<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555"
 								PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
 								PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
-								MouseLeave="PreviewButton_MouseLeave">
+								MouseLeave="PreviewButton_MouseLeave"
+								FocusVisualStyle="{StaticResource GrayFocusVisual}">
 							<Button.Template>
 								<ControlTemplate TargetType="{x:Type Button}">
 									<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
@@ -152,6 +155,7 @@ Title="ProperDim" Height="260" Width="300"
 				<UniformGrid Grid.Row="3" Columns="2" HorizontalAlignment="Center" Margin="0,0,0,5">
 					<UniformGrid.Resources>
 						<Style TargetType="{x:Type Button}">
+							<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 							<Setter Property="Foreground" Value="#FFFFFFFF" />
 							<Setter Property="BorderBrush" Value="#555555" />
 							<Setter Property="BorderThickness" Value="1" />

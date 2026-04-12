@@ -15,6 +15,7 @@
 	<FrameworkElement.Resources>
 		<ResourceDictionary>
 			<Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<EventSetter Event="PreviewMouseLeftButtonDown" Handler="ScrollBar_PreviewMouseLeftButtonDown" />
 				<EventSetter Event="PreviewMouseLeftButtonUp" Handler="ScrollBar_PreviewMouseLeftButtonUp" />
 				<Setter Property="Background" Value="#00FFFFFF" />
@@ -40,6 +41,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type Slider}" TargetType="{x:Type Slider}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Cursor" Value="Hand" />
 				<Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
 				<Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
@@ -53,7 +55,7 @@
 								</Canvas>
 								<Track Name="PART_Track">
 									<Track.DecreaseRepeatButton>
-										<RepeatButton Command="Slider.DecreaseLarge">
+										<RepeatButton Command="Slider.DecreaseLarge" Focusable="False" IsTabStop="False">
 											<RepeatButton.Template>
 												<ControlTemplate TargetType="{x:Type RepeatButton}">
 													<Border Background="Transparent" />
@@ -62,7 +64,7 @@
 										</RepeatButton>
 									</Track.DecreaseRepeatButton>
 									<Track.IncreaseRepeatButton>
-										<RepeatButton Command="Slider.IncreaseLarge">
+										<RepeatButton Command="Slider.IncreaseLarge" Focusable="False" IsTabStop="False">
 											<RepeatButton.Template>
 												<ControlTemplate TargetType="{x:Type RepeatButton}">
 													<Border Background="Transparent" />
@@ -71,7 +73,7 @@
 										</RepeatButton>
 									</Track.IncreaseRepeatButton>
 									<Track.Thumb>
-										<Thumb Name="Thumb">
+										<Thumb Name="Thumb" Focusable="False" IsTabStop="False">
 											<Thumb.Template>
 												<ControlTemplate TargetType="{x:Type Thumb}">
 													<Ellipse Fill="#B8B8B8" Width="18" Height="18" Stroke="#7E7E7E" StrokeThickness="2" Cursor="Hand" />
@@ -86,6 +88,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Background" Value="#3E3E42" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="BorderBrush" Value="#3F3F46" />
@@ -126,6 +129,7 @@
 				</Setter>
 			</Style>
 			<Style TargetType="{x:Type ComboBoxItem}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Background" Value="Transparent" />
 				<Setter Property="Foreground" Value="White" />
 				<Setter Property="Padding" Value="5,2" />
@@ -149,6 +153,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -185,6 +190,7 @@
 					<Button Content="✕" HorizontalAlignment="Right" Width="32" Height="32" Foreground="#FFFFFFFF" BorderThickness="0" Click="Close_Click">
 						<FrameworkElement.Style>
 							<Style TargetType="{x:Type Button}">
+								<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 								<Setter Property="Template">
 									<Setter.Value>
 										<ControlTemplate TargetType="{x:Type Button}">
@@ -210,11 +216,11 @@
 			<StackPanel Margin="20,10,20,15">
 				<TextBlock Text="Time" Margin="0,0,0,6" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Center" />
 				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
-					<ComboBox Name="HourBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
+					<ComboBox Name="HourBox" Width="65" SelectionChanged="TimeSelection_Changed" />
 
 					<TextBlock Text=":" VerticalAlignment="Center" Margin="5,0,5,0" FontWeight="Bold" />
 
-					<ComboBox Name="MinuteBox" Width="65" SelectionChanged="TimeSelection_Changed" Focusable="False" />
+					<ComboBox Name="MinuteBox" Width="65" SelectionChanged="TimeSelection_Changed" />
 
 					<Border Name="AmPmContainer" Width="65" Margin="8,0,0,0" Background="#3E3E42" BorderThickness="1" CornerRadius="3">
 						<Border.Style>
@@ -232,7 +238,7 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
-							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
+							<RadioButton Name="AmRadio" Grid.Column="0" GroupName="AmPm" FocusVisualStyle="{StaticResource GrayFocusVisual}" Click="AmPmRadio_Click">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="AmBg" Background="Transparent" CornerRadius="2,0,0,2">
@@ -253,7 +259,7 @@
 								</RadioButton.Template>
 							</RadioButton>
 
-							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" Focusable="False" Click="AmPmRadio_Click">
+							<RadioButton Name="PmRadio" Grid.Column="1" GroupName="AmPm" FocusVisualStyle="{StaticResource GrayFocusVisual}" Click="AmPmRadio_Click">
 								<RadioButton.Template>
 									<ControlTemplate TargetType="{x:Type RadioButton}">
 										<Border Name="PmBg" Background="Transparent" CornerRadius="0,2,2,0">
@@ -293,9 +299,10 @@
 								<Slider Name="DialogDimmerSlider" Grid.Column="0" Margin="0,0,6,0" Height="32" Background="#00FFFFFF" Minimum="0.01" Maximum="1.0" Value="1.0" IsDirectionReversed="False" ValueChanged="DialogSlider_ValueChanged" PreviewMouseWheel="DialogDimmerSlider_PreviewMouseWheel" PreviewMouseLeftButtonDown="DialogDimmerSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="DialogDimmerSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="DialogDimmerSlider_PreviewMouseLeftButtonUp" />
 
 								<Button x:Name="PreviewButton" Grid.Column="1" Content="👁" Width="24" Height="20" Margin="0,0,4,0" Background="#3E3E42" Foreground="#5777a3" BorderThickness="1" BorderBrush="#555"
-										PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
-										PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
-										MouseLeave="PreviewButton_MouseLeave">
+                                        PreviewMouseLeftButtonDown="PreviewButton_PreviewMouseLeftButtonDown"
+                                        PreviewMouseLeftButtonUp="PreviewButton_PreviewMouseLeftButtonUp"
+                                        MouseLeave="PreviewButton_MouseLeave"
+                                        FocusVisualStyle="{StaticResource GrayFocusVisual}">
 									<Button.Template>
 										<ControlTemplate TargetType="{x:Type Button}">
 											<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
@@ -328,7 +335,7 @@
 					<CheckBox Name="DayS" Content="S" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
 					<CheckBox Name="DaySu" Content="Su" IsChecked="True" HorizontalAlignment="Center" Checked="DayCheck_Changed" Unchecked="DayCheck_Changed" />
 				</UniformGrid>
-				<Button Name="ActionButton" Content="Add to Schedule" Background="#3E3E42" Foreground="#FFFFFFFF" Height="25" Padding="20,0" HorizontalAlignment="Center" BorderBrush="#3F3F46" Click="Add_Click" Margin="0,5,0,0">
+				<Button Name="ActionButton" Content="Add to Schedule" Background="#3E3E42" Foreground="#FFFFFFFF" Height="25" Padding="20,0" HorizontalAlignment="Center" BorderBrush="#3F3F46" Click="Add_Click" Margin="0,5,0,0" FocusVisualStyle="{StaticResource GrayFocusVisual}">
 					<Control.Template>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<Border Name="BtnBorder" Background="{TemplateBinding Control.Background}" BorderBrush="#555" BorderThickness="1" CornerRadius="0">

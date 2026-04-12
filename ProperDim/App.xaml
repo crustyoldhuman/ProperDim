@@ -3,5 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown">
 	<Application.Resources>
+		<Style x:Key="GrayFocusVisual">
+			<Setter Property="Control.Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Rectangle Margin="-2" StrokeThickness="1" Stroke="#888888" StrokeDashArray="1 2" SnapsToDevicePixels="True"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type CheckBox}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type TextBox}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type ListBoxItem}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type Slider}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type TabItem}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
+		<Style TargetType="{x:Type Hyperlink}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+		</Style>
 	</Application.Resources>
 </Application>

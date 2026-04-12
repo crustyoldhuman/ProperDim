@@ -39,6 +39,15 @@ public partial class ControlPanel : Window
 		ScheduleListBox.ItemsSource = _displaySchedules;
 
 		this.IsVisibleChanged += ControlPanel_IsVisibleChanged;
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				HandleClosure();
+				e.Handled = true;
+			}
+		};
 	}
 
 	private void ControlPanel_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -350,6 +359,23 @@ public partial class ControlPanel : Window
 
 	private void ScheduleList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 	{
+		EditSelectedSchedule();
+	}
+
+	private void ScheduleList_PreviewKeyDown(object sender, KeyEventArgs e)
+	{
+		if (e.Key == Key.Enter || e.Key == Key.Space)
+		{
+			// Allow the Delete button to natively handle the keystroke if it has focus
+			if (e.OriginalSource is System.Windows.Controls.Button) return;
+
+			EditSelectedSchedule();
+			e.Handled = true;
+		}
+	}
+
+	private void EditSelectedSchedule()
+	{
 		if (ScheduleListBox.SelectedItem is DimSchedule selectedSchedule)
 		{
 			try
@@ -595,6 +621,41 @@ public partial class ControlPanel : Window
 		DimmerSlider.Value = newPercent / 100.0;
 		e.Handled = true;
 	}
+
+	private void MainTabs_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        // Only intercept keys if the focus is actually resting on the Tab Header itself
+        if (e.OriginalSource is TabItem)
+        {
+            if (e.Key == Key.Left)
+            {
+                int newIndex = MainTabs.SelectedIndex - 1;
+                if (newIndex < 0) newIndex = MainTabs.Items.Count - 1; // Wrap around
+                
+                MainTabs.SelectedIndex = newIndex;
+
+                // Force the gray highlight to follow you to the new tab header
+                if (MainTabs.ItemContainerGenerator.ContainerFromIndex(newIndex) is TabItem newTab)
+                {
+                    newTab.Focus();
+                }
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Right)
+            {
+                int newIndex = MainTabs.SelectedIndex + 1;
+                if (newIndex >= MainTabs.Items.Count) newIndex = 0; // Wrap around
+                
+                MainTabs.SelectedIndex = newIndex;
+
+                if (MainTabs.ItemContainerGenerator.ContainerFromIndex(newIndex) is TabItem newTab)
+                {
+                    newTab.Focus();
+                }
+                e.Handled = true;
+            }
+        }
+    }
 
 	private void TabsArea_MouseWheel(object sender, MouseWheelEventArgs e)
 	{

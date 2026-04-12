@@ -20,6 +20,15 @@ public partial class AppInfoWindow : Window
 			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
 			this.BeginAnimation(Window.OpacityProperty, anim);
 		};
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				this.Close();
+				e.Handled = true;
+			}
+		};
 	}
 
 	protected override void OnSourceInitialized(System.EventArgs e)

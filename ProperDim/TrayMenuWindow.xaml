@@ -15,9 +15,10 @@
 			<StackPanel Background="Transparent">
 				<TextBlock Text="QuickDim" Foreground="White" Margin="30,8,30,8" FontWeight="SemiBold"/>
 
-				<Slider x:Name="MenuSlider" Minimum="0.01" Maximum="1.0" Height="120" Width="100" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,8" ValueChanged="MenuSlider_ValueChanged" PreviewMouseLeftButtonDown="MenuSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="MenuSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="MenuSlider_PreviewMouseLeftButtonUp">
+				<Slider x:Name="MenuSlider" Minimum="0.01" Maximum="1.0" SmallChange="0.01" LargeChange="0.05" Height="120" Width="100" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,8" ValueChanged="MenuSlider_ValueChanged" PreviewMouseLeftButtonDown="MenuSlider_PreviewMouseLeftButtonDown" PreviewMouseMove="MenuSlider_PreviewMouseMove" PreviewMouseLeftButtonUp="MenuSlider_PreviewMouseLeftButtonUp">
 					<Slider.Style>
 						<Style TargetType="Slider">
+							<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 							<Setter Property="OverridesDefaultStyle" Value="True"/>
 							<Setter Property="Template">
 								<Setter.Value>
@@ -30,7 +31,7 @@
 											<Border Grid.Row="0" Background="#3E3E42" Width="5" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,6,0,6"/>
 											<Track x:Name="PART_Track" Grid.Row="0" HorizontalAlignment="Center" Cursor="Hand">
 												<Track.DecreaseRepeatButton>
-													<RepeatButton Command="Slider.DecreaseLarge">
+													<RepeatButton Command="Slider.DecreaseLarge" Focusable="False" IsTabStop="False">
 														<RepeatButton.Template>
 															<ControlTemplate TargetType="{x:Type RepeatButton}">
 																<Border Background="Transparent" />
@@ -39,7 +40,7 @@
 													</RepeatButton>
 												</Track.DecreaseRepeatButton>
 												<Track.IncreaseRepeatButton>
-													<RepeatButton Command="Slider.IncreaseLarge">
+													<RepeatButton Command="Slider.IncreaseLarge" Focusable="False" IsTabStop="False">
 														<RepeatButton.Template>
 															<ControlTemplate TargetType="{x:Type RepeatButton}">
 																<Border Background="Transparent" />
@@ -48,7 +49,7 @@
 													</RepeatButton>
 												</Track.IncreaseRepeatButton>
 												<Track.Thumb>
-													<Thumb>
+													<Thumb Focusable="False" IsTabStop="False">
 														<Thumb.Template>
 															<ControlTemplate TargetType="{x:Type Thumb}">
 																<Grid Width="18" Height="18">
@@ -74,6 +75,7 @@
 			<Button Content="Controls" Click="Controls_Click" Foreground="White" BorderThickness="0" Padding="26,5">
 				<Button.Style>
 					<Style TargetType="Button">
+						<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 						<Setter Property="Background" Value="Transparent"/>
 						<Setter Property="Template">
 							<Setter.Value>
@@ -96,6 +98,7 @@
 			<Button Content="Exit" Click="Exit_Click" Foreground="White" BorderThickness="0" Padding="26,5">
 				<Button.Style>
 					<Style TargetType="Button">
+						<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 						<Setter Property="Background" Value="Transparent"/>
 						<Setter Property="Template">
 							<Setter.Value>

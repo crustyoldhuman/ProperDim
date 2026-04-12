@@ -32,8 +32,17 @@ public partial class ScheduleDialog : Window
 			this.Opacity = 0;
 			this.Loaded += (s, e) =>
 			{
-				DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
 				this.BeginAnimation(Window.OpacityProperty, anim);
+			};
+
+			this.PreviewKeyDown += (s, e) =>
+			{
+				if (e.Key == Key.Escape)
+				{
+					this.Close();
+					e.Handled = true;
+				}
 			};
 		}
 
@@ -98,6 +107,14 @@ public partial class ScheduleDialog : Window
 		SetDayCheckboxes(existing.Days);
 
 		ValidateTime();
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				this.Close();
+				e.Handled = true;
+			}
+		};
 	}
 
 	private void SetTimeUI(int h, int m)

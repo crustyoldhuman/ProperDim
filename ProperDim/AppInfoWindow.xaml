@@ -27,6 +27,7 @@
                             Click="Close_Click" Cursor="Hand">
 						<Button.Style>
 							<Style TargetType="Button">
+								<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 								<Setter Property="Template">
 									<Setter.Value>
 										<ControlTemplate TargetType="Button">

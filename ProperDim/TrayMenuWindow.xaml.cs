@@ -90,6 +90,45 @@ public partial class TrayMenuWindow : Window
 		MenuSlider.Value = ConfigManager.Settings.LastOpacity;
 		_mainWindow.GlobalBrightnessChanged += OnGlobalBrightnessChanged;
 		_isSyncing = false;
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				this.Close();
+				e.Handled = true;
+			}
+			else if (e.Key == Key.Up || e.Key == Key.Down)
+			{
+				int currentPercent = (int)Math.Round(MenuSlider.Value * 100);
+				int newPercent;
+
+				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+				{
+					newPercent = currentPercent + (e.Key == Key.Up ? 1 : -1);
+				}
+				else
+				{
+					if (e.Key == Key.Up)
+					{
+						newPercent = ((currentPercent + 4) / 5) * 5;
+						if (newPercent == currentPercent) newPercent += 5;
+					}
+					else
+					{
+						newPercent = ((currentPercent - 1) / 5) * 5;
+					}
+				}
+
+				int minPercent = (int)Math.Round(MenuSlider.Minimum * 100);
+				int maxPercent = (int)Math.Round(MenuSlider.Maximum * 100);
+
+				newPercent = Math.Max(minPercent, Math.Min(maxPercent, newPercent));
+
+				MenuSlider.Value = newPercent / 100.0;
+				e.Handled = true;
+			}
+		};
 	}
 
 	private void OnGlobalBrightnessChanged(double newBrightness)

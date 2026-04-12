@@ -18,6 +18,7 @@
 	<FrameworkElement.Resources>
 		<ResourceDictionary>
 			<Style x:Key="TitleBarButtonStyle" TargetType="{x:Type Button}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Background" Value="#00FFFFFF" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="Width" Value="45" />
@@ -45,6 +46,7 @@
 				</Style.Triggers>
 			</Style>
 			<Style x:Key="ModernScrollBar" TargetType="{x:Type ScrollBar}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<EventSetter Event="PreviewMouseLeftButtonDown" Handler="ScheduleScrollBar_PreviewMouseLeftButtonDown" />
 				<EventSetter Event="PreviewMouseMove" Handler="ScheduleScrollBar_PreviewMouseMove" />
 				<EventSetter Event="PreviewMouseLeftButtonUp" Handler="ScheduleScrollBar_PreviewMouseLeftButtonUp" />
@@ -89,6 +91,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -117,6 +120,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type TabItem}" TargetType="{x:Type TabItem}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type TabItem}">
@@ -131,6 +135,7 @@
 									<Setter Property="Foreground" Value="#FFD3D3D3" />
 								</Trigger>
 								<Trigger Property="TabItem.IsSelected" Value="False">
+									<Setter Property="IsTabStop" Value="False" />
 									<Setter Property="Foreground" Value="#FF808080" />
 									<Setter TargetName="Border" Property="Margin" Value="2,0,2,0" />
 								</Trigger>
@@ -143,7 +148,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type TabControl}">
-							<Grid KeyboardNavigation.TabNavigation="Local">
+							<Grid KeyboardNavigation.TabNavigation="Continue">
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto" />
 									<RowDefinition Height="*" />
@@ -163,6 +168,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="{x:Type Slider}" TargetType="{x:Type Slider}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Cursor" Value="Hand" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -171,7 +177,7 @@
 								<Border Background="#3E3E42" Height="6" CornerRadius="3" VerticalAlignment="Center" />
 								<Track Name="PART_Track" IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
 									<Track.DecreaseRepeatButton>
-										<RepeatButton Command="Slider.DecreaseLarge">
+										<RepeatButton Command="Slider.DecreaseLarge" Focusable="False" IsTabStop="False">
 											<RepeatButton.Template>
 												<ControlTemplate TargetType="{x:Type RepeatButton}">
 													<Border Background="Transparent" />
@@ -180,7 +186,7 @@
 										</RepeatButton>
 									</Track.DecreaseRepeatButton>
 									<Track.IncreaseRepeatButton>
-										<RepeatButton Command="Slider.IncreaseLarge">
+										<RepeatButton Command="Slider.IncreaseLarge" Focusable="False" IsTabStop="False">
 											<RepeatButton.Template>
 												<ControlTemplate TargetType="{x:Type RepeatButton}">
 													<Border Background="Transparent" />
@@ -204,6 +210,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="RoundedAddButton" TargetType="{x:Type Button}">
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Background" Value="#3E3E42" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="BorderBrush" Value="#3F3F46" />
@@ -224,6 +231,8 @@
 				</Setter>
 			</Style>
 			<Style x:Key="HotkeyTextBoxStyle" TargetType="{x:Type TextBox}">
+				<Setter Property="IsTabStop" Value="False" />
+				<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 				<Setter Property="Background" Value="#3E3E42" />
 				<Setter Property="Foreground" Value="#FFFFFFFF" />
 				<Setter Property="BorderBrush" Value="#3F3F46" />
@@ -269,6 +278,7 @@
 						<Button Content="✕" Click="Close_Click">
 							<Button.Style>
 								<Style TargetType="Button">
+									<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 									<Setter Property="Background" Value="Transparent"/>
 									<Setter Property="Foreground" Value="White"/>
 									<Setter Property="Width" Value="45"/>
@@ -297,7 +307,7 @@
 				</Grid>
 			</Border>
 			<Grid Row="1" Margin="5" PreviewMouseWheel="TabsArea_MouseWheel">
-				<TabControl Name="MainTabs" Background="#2D2D2D" HorizontalContentAlignment="Stretch">
+				<TabControl Name="MainTabs" Background="#2D2D2D" HorizontalContentAlignment="Stretch" PreviewKeyDown="MainTabs_PreviewKeyDown" KeyboardNavigation.TabNavigation="Continue">
 					<TabControl.ItemsPanel>
 						<ItemsPanelTemplate>
 							<DockPanel LastChildFill="False" Background="Transparent" />
@@ -320,6 +330,7 @@
 								<UniformGrid Columns="6" Margin="0,2,0,0">
 									<UniformGrid.Resources>
 										<Style TargetType="{x:Type Button}">
+											<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 											<Setter Property="Background" Value="#3E3E42" />
 											<Setter Property="Foreground" Value="#FFFFFFFF" />
 											<Setter Property="FontWeight" Value="SemiBold" />
@@ -385,7 +396,7 @@
 							</Grid>
 							<Grid Grid.Row="1" Margin="0,1,0,-3">
 								<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,15" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
-								<ListBox Name="ScheduleListBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" Margin="0,2,0,0" AlternationCount="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.ScrollUnit="Pixel" MouseDoubleClick="ScheduleList_MouseDoubleClick" PreviewMouseWheel="ScheduleList_PreviewMouseWheel">
+								<ListBox Name="ScheduleListBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" Margin="0,2,0,0" AlternationCount="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.ScrollUnit="Pixel" KeyboardNavigation.TabNavigation="Continue" MouseDoubleClick="ScheduleList_MouseDoubleClick" PreviewMouseWheel="ScheduleList_PreviewMouseWheel" PreviewKeyDown="ScheduleList_PreviewKeyDown">
 									<ListBox.ItemsPanel>
 										<ItemsPanelTemplate>
 											<VirtualizingStackPanel Name="ScheduleStackPanel" />
@@ -418,6 +429,7 @@
 									</ItemsControl.ItemTemplate>
 									<ItemsControl.ItemContainerStyle>
 										<Style TargetType="{x:Type ListBoxItem}">
+											<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 											<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 											<Setter Property="Padding" Value="0" />
 											<Setter Property="Background" Value="#292929" />
@@ -518,6 +530,7 @@
 							<UniformGrid Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
 								<UniformGrid.Resources>
 									<Style TargetType="{x:Type Button}">
+										<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 										<Setter Property="Foreground" Value="#FFFFFFFF" />
 										<Setter Property="BorderBrush" Value="#555555" />
 										<Setter Property="BorderThickness" Value="1" />
