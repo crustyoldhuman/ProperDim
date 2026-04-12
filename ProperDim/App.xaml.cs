@@ -12,6 +12,8 @@ public partial class App : Application
 	protected override void OnStartup(StartupEventArgs e)
 	{
 		base.OnStartup(e);
+		EventManager.RegisterClassHandler(typeof(System.Windows.Controls.CheckBox), System.Windows.UIElement.PreviewKeyDownEvent, new System.Windows.Input.KeyEventHandler(GlobalCheckBox_PreviewKeyDown));
+		EventManager.RegisterClassHandler(typeof(System.Windows.Documents.Hyperlink), System.Windows.ContentElement.PreviewKeyDownEvent, new System.Windows.Input.KeyEventHandler(GlobalHyperlink_PreviewKeyDown));
 
 		AppDomain.CurrentDomain.UnhandledException += (s, args) => EmergencyReset();
 		this.DispatcherUnhandledException += (s, args) =>
@@ -72,5 +74,23 @@ public partial class App : Application
 			_mainWindow?.ShutdownApp();
 		}
 		catch { }
+	}
+
+	private void GlobalCheckBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+	{
+		if (e.Key == System.Windows.Input.Key.Enter && sender is System.Windows.Controls.CheckBox checkBox)
+		{
+			checkBox.IsChecked = !checkBox.IsChecked;
+			e.Handled = true;
+		}
+	}
+
+	private void GlobalHyperlink_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+	{
+		if ((e.Key == System.Windows.Input.Key.Enter || e.Key == System.Windows.Input.Key.Space) && sender is System.Windows.Documents.Hyperlink hyperlink)
+		{
+			hyperlink.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Documents.Hyperlink.ClickEvent));
+			e.Handled = true;
+		}
 	}
 }
