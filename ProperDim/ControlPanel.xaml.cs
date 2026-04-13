@@ -839,6 +839,9 @@ public partial class ControlPanel : Window
 
 	public void ShowControlPanel()
 	{
+		// 1. MUST be set BEFORE showing to prevent WPF from silently destroying and rebuilding the window handle!
+		this.ShowInTaskbar = true;
+
 		if (!this.IsVisible)
 		{
 			if (SystemParameters.ClientAreaAnimation)
@@ -857,9 +860,12 @@ public partial class ControlPanel : Window
 			}
 		}
 
-		this.ShowInTaskbar = true;
 		this.WindowState = WindowState.Normal;
+
+		// 2. The proper sequence to steal focus from the tray without flashing:
 		this.Activate();
+		this.Topmost = true;
+		this.Topmost = false;
 		this.Focus();
 
 		// tab resetting logic
