@@ -78,3 +78,5 @@ The release page has two installation versions available: **Full** and **Lite**
 <p><b>**Honorable mention to Chiko for the invaluable bug testing. This would def be more broken without their eye.</b></p>
 <br>
 <p align="center"><i>After a lifetime of using HD TV's for PC screens due to minimal funds and living space, ProperDim feels like home to me. If you like ProperDim too, help spread the word and save another pair of eyeballs by telling a friend! I hope you have an awesome day/existence.</i></p>
+
+<p align="center"><img src="https://github.com/user-attachments/assets/1e2011c2-b9b0-4c53-9b67-6c13ab03582b" /></p>
