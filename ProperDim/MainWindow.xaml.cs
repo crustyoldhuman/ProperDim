@@ -833,13 +833,6 @@ namespace ProperDim
 
 		public void ToggleControlPanel()
 		{
-			// Force the Windows Taskbar Overflow flyout to collapse immediately
-			IntPtr overflowWin10 = FindWindow("NotifyIconOverflowWindow", null);
-			if (overflowWin10 != IntPtr.Zero && IsWindowVisible(overflowWin10)) ShowWindow(overflowWin10, 0); // SW_HIDE
-
-			IntPtr overflowWin11 = FindWindow("TopLevelWindowForOverflowDropShadow", null);
-			if (overflowWin11 != IntPtr.Zero && IsWindowVisible(overflowWin11)) ShowWindow(overflowWin11, 0); // SW_HIDE
-
 			ControlPanel cp = Application.Current.Windows.OfType<ControlPanel>().FirstOrDefault();
 			if (cp?.IsVisible == true)
 			{
