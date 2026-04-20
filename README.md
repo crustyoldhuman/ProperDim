@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to ProperDim 1.4!</h1>
 <br>
-<p align="center"><img width="300" src="" /></p>
+<p align="center"><img width="300" src="https://github.com/user-attachments/assets/95d60503-fa29-4c5f-a5d8-fd218671ed2d" /></p>
 <h4 align="center">Now you can dim your screen. Properly.</h4>
 &nbsp;
 
