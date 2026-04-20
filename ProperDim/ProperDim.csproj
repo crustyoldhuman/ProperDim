@@ -14,6 +14,7 @@
 		<AssemblyTitle>ProperDim</AssemblyTitle>
 		<ApplicationIcon>ProperDimIcon.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 	</PropertyGroup>
 
 	<ItemGroup>

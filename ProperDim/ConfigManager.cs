@@ -30,8 +30,37 @@ public class AppSettings
 public static class ConfigManager
 {
 	private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
-	private static readonly string ConfigFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
-	private static readonly string ConfigFilePath = Path.Combine(ConfigFolder, "settings.json");
+	private static readonly string ConfigFilePath = GetSettingsFilePath();
+
+	private static string GetSettingsFilePath()
+	{
+		string exePath = Environment.ProcessPath ?? string.Empty;
+		string exeFolder = Path.GetDirectoryName(exePath) ?? string.Empty;
+		string portablePath = Path.Combine(exeFolder, "settings.json");
+
+		if (!string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
+		{
+			return portablePath;
+		}
+
+		string appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
+		return Path.Combine(appDataFolder, "settings.json");
+	}
+
+	private static bool CanWriteToDirectory(string directoryPath)
+	{
+		try
+		{
+			string testFile = Path.Combine(directoryPath, Path.GetRandomFileName());
+			File.WriteAllText(testFile, "test");
+			File.Delete(testFile);
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
 
 	public static AppSettings Settings { get; private set; } = new AppSettings();
 
@@ -60,7 +89,12 @@ public static class ConfigManager
 	{
 		try
 		{
-			Directory.CreateDirectory(ConfigFolder);
+			string directory = Path.GetDirectoryName(ConfigFilePath);
+			if (!string.IsNullOrEmpty(directory))
+			{
+				Directory.CreateDirectory(directory);
+			}
+
 			string json = JsonSerializer.Serialize(instance, _jsonOptions);
 			File.WriteAllText(ConfigFilePath, json);
 		}
