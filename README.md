@@ -54,7 +54,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 
 <h3 align="center">Multiple Monitor Support</h3>
-<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't which makes any "detection" logic unreliable at best. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely oustide the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
+<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't which makes any "detection" logic unreliable at best. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely outside the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
 
 ## Usage & Licensing
 
