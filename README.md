@@ -1,6 +1,7 @@
 <h1 align="center">Welcome to ProperDim 1.4!</h1>
+
 <br>
-<p align="center"><img width="300" src="https://github.com/user-attachments/assets/2042d664-0af5-4fbd-928d-c8187db1a3ab" /></p>
+<p align="center"><img width="300" src="https://github.com/user-attachments/assets/4afd88c2-d12e-44c9-9911-b756c12561f7" /></p>
 <h4 align="center">Now you can dim your screen. Properly.</h4>
 &nbsp;
 
@@ -54,7 +55,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 
 <h3 align="center">Multiple Monitor Support</h3>
-<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't which makes any "detection" logic unreliable at best. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely oustide the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
+<p>Additional screens that are connected via traditional cables (HDMI, etc.) and natively support gamma adjustment are fully supported. This represents the large majority of usage cases, so you should be fine. If you are using a USB cable or wireless methods to connect to your secondary displays, they will likely ignore the first half of the brightness slider entirely. These types of connections will straight up lie to Windows about their capabilities, masquerading as genuine displays when they aren't which makes any "detection" logic unreliable at best. The only real solution I found was maintaining a complete list of displays and their functions on a cloud server for reference which is completely outside the intended scope of the project, so I begrudgingly accepted defeat on this.</p>
 
 ## Usage & Licensing
 
@@ -67,10 +68,10 @@ ProperDim is free to use, modify, and distribute without worry. The only thing y
 
 ## Installation & Download
 The release page has two installation versions available: **Full** and **Lite**
-- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (44.61 MB download)
-- **Lite:** Nothing but ProperDim itself (3.83 MB download)
-- **Portable:** Everything packaged in one .EXE, no install required (136 MB download)
-<p>The installers are available to download as **.exe's** or compressed in **.zip** format. **Right click -> Extract All** to unzip these files to access the installer.</p>
+- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (45.9 MB download)
+- **Lite:** Nothing but ProperDim itself (4.8 MB download)
+- **Portable:** Everything packaged in one <b>.EXE</b>, no install required (58.1 MB download)
+<p>The installers are available to download as <b>.EXE</b>'s or compressed in <b>.ZIP</b> format. <b>Right click -> Extract All</b> to unzip these files to access the installer.</p>
 <p>Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.</p>
 <h3 align="center">
   <a href="https://github.com/crustyoldhuman/ProperDim/releases"> > > > Click here to download an installer from the Release page < < < </a>
