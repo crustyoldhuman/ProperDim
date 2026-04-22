@@ -283,19 +283,50 @@ public partial class ControlPanel : Window
 
 	// --- STARTUP REGISTRY LOGIC (Run with Windows) ---
 
-	private void StartupCheckBox_Changed(object sender, RoutedEventArgs e)
+	private async void StartupCheckBox_Changed(object sender, RoutedEventArgs e)
 	{
 		if (_isInitializing) return;
 
 		bool shouldRun = StartupCheckBox.IsChecked == true;
-		bool success = RegistryService.SetStartupRegistry(shouldRun);
+		bool success;
+
+		if (NativeMethods.IsRunningAsMsix())
+		{
+			success = await HandleMsixStartupAsync(shouldRun);
+		}
+		else
+		{
+			success = RegistryService.SetStartupRegistry(shouldRun);
+		}
 
 		if (!success)
 		{
-			// Revert the checkbox if the registry write failed, preventing UI desync
 			_isInitializing = true;
 			StartupCheckBox.IsChecked = !shouldRun;
 			_isInitializing = false;
+		}
+	}
+
+	private static async System.Threading.Tasks.Task<bool> HandleMsixStartupAsync(bool enable)
+	{
+		try
+		{
+			var startupTask = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupId");
+
+			if (enable)
+			{
+				var state = await startupTask.RequestEnableAsync();
+				return state is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+			}
+			else
+			{
+				startupTask.Disable();
+				return true;
+			}
+		}
+		catch
+		{
+			return false;
 		}
 	}
 

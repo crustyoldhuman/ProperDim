@@ -318,6 +318,17 @@ internal static class NativeMethods
 	[return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
 	public static extern bool GetWindowRect(IntPtr hWnd, out RectStruct lpRect);
 
+	[System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, ExactSpelling = true)]
+	private static extern int GetCurrentPackageFullName(ref int packagePathLength, System.Text.StringBuilder packagePath);
+
+	public static bool IsRunningAsMsix()
+	{
+		int length = 0;
+		int result = GetCurrentPackageFullName(ref length, null);
+		// 15700 (0x3D54) is APPMODEL_ERROR_NO_PACKAGE. If we get anything else, we are in a container.
+		return result != 15700;
+	}
+
 	public static void PrepareWindowForOS(System.Windows.Window window, string win11BackgroundHex = "#2D2D2D")
 	{
 		if (Environment.OSVersion.Version.Build < 22000)
