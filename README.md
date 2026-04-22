@@ -68,9 +68,9 @@ ProperDim is free to use, modify, and distribute without worry. The only thing y
 
 ## Installation & Download
 The release page has two installation versions available: **Full** and **Lite**
-- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (45.9 MB download)
-- **Lite:** Nothing but ProperDim itself (4.8 MB download)
-- **Portable:** Everything packaged in one <b>.EXE</b>, no install required (58.1 MB download)
+- **Full:** The complete package including all Windows dependencies. Grab this if you don't wanna worry about anything (49.3 MB download)
+- **Lite:** Nothing but ProperDim itself (8.29 MB download)
+- **Portable:** Everything packaged in one <b>.EXE</b>, no install required (64.1 MB download)
 <p>The installers are available to download as <b>.EXE</b>'s or compressed in <b>.ZIP</b> format. <b>Right click -> Extract All</b> to unzip these files to access the installer.</p>
 <p>Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.</p>
 <h3 align="center">
