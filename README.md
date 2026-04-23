@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to ProperDim 1.4!</h1>
+<h1 align="center">Welcome to ProperDim 1.4.1!</h1>
 
 <br>
 <p align="center"><img width="300" src="https://github.com/user-attachments/assets/4afd88c2-d12e-44c9-9911-b756c12561f7" /></p>
