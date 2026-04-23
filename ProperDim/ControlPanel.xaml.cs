@@ -65,9 +65,21 @@ public partial class ControlPanel : Window
 		}
 	}
 
-	private void InitializeFromSettings()
+	private async System.Threading.Tasks.Task InitializeFromSettingsAsync()
 	{
-		StartupCheckBox.IsChecked = RegistryService.IsStartupEnabled();
+		if (NativeMethods.IsRunningAsMsix())
+		{
+			try
+			{
+				var startupTask = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupId");
+				StartupCheckBox.IsChecked = startupTask.State is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+			}
+			catch { StartupCheckBox.IsChecked = false; }
+		}
+		else
+		{
+			StartupCheckBox.IsChecked = RegistryService.IsStartupEnabled();
+		}
 		ShowStartupCheckBox.IsChecked = ConfigManager.Settings.ShowOnStartup;
 		TrayCheckBox.IsChecked = ConfigManager.Settings.CloseToTray;
 		SwapTrayClicksCheckBox.IsChecked = ConfigManager.Settings.SwapTrayIconClicks;
@@ -817,7 +829,7 @@ public partial class ControlPanel : Window
 
 	// --- WINDOW LIFECYCLE ---
 
-	private void Window_Loaded(object sender, RoutedEventArgs e)
+	private async void Window_Loaded(object sender, RoutedEventArgs e)
 	{
 		_scrollDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
 		_scrollDebounceTimer.Tick += (s, args) =>
@@ -852,12 +864,15 @@ public partial class ControlPanel : Window
 		}
 
 		// --- Sync checkboxes and hotkeys ---
-		InitializeFromSettings();
+		await InitializeFromSettingsAsync();
 
 		// SELF-REPAIR: Enforce the registry state matches the user's setting immediately.
 		// This ensures the Registry always points to THIS executable (if true), 
 		// or removes the key (if false), killing any "Zombie" references to old versions.
-		RegistryService.SetStartupRegistry(StartupCheckBox.IsChecked == true);
+		if (!NativeMethods.IsRunningAsMsix())
+		{
+			RegistryService.SetStartupRegistry(StartupCheckBox.IsChecked == true);
+		}
 
 		// --- Apply default tab selection ---
 		MainTabs.SelectedIndex = 0;

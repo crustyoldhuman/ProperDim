@@ -478,25 +478,6 @@ namespace ProperDim
 			if (listChanged) MonitorsChanged?.Invoke();
 		}
 
-		public void HardResetOverlays()
-		{
-			// 1. Reset hardware gamma and magnification
-			foreach (var m in Monitors)
-			{
-				_gammaService.SetTargetGamma(m.DeviceName, 1.0);
-			}
-			_gammaService.SetGlobalMagnification(1.0);
-
-			// 2. Clear out the tracked monitors and animation states
-			Monitors.Clear();
-
-			// 4. Force a clean re-detection
-			RefreshMonitors();
-
-			// 5. Apply 100% brightness instantly to the new clean state
-			ApplyBrightness(1.0);
-		}
-
 		// OPTIMIZATION: Parse once to dictionary, then read from it
 
 		protected override void OnSourceInitialized(EventArgs e)

@@ -28,6 +28,29 @@ public partial class App : Application
 
 		try
 		{
+
+			// --- HEADLESS UNINSTALLER RESET (INNO SETUP) ---
+			bool isReset = false;
+			if (e.Args != null)
+			{
+				foreach (string arg in e.Args)
+				{
+					if (arg.Contains("reset", StringComparison.OrdinalIgnoreCase))
+					{
+						isReset = true;
+						break;
+					}
+				}
+			}
+
+			if (isReset)
+			{
+				PerformSynchronousReset();
+				// Immediately self-terminate to release the Inno Setup lock
+				Environment.Exit(0);
+				return;
+			}
+
 			// 1. Singleton Check
 			_mutex = new(true, "ProperDim_Unique_Mutex", out bool createdNew);
 			if (!createdNew)
@@ -72,6 +95,25 @@ public partial class App : Application
 		try
 		{
 			_mainWindow?.ShutdownApp();
+		}
+		catch { }
+	}
+
+	private static void PerformSynchronousReset()
+	{
+		try
+		{
+			using var gamma = new HardwareGammaService();
+			gamma.SetGlobalMagnification(1.0);
+			NativeMethods.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RectStruct lprcMonitor, IntPtr dwData)
+			{
+				MONITORINFOEX mi = new() { cbSize = System.Runtime.InteropServices.Marshal.SizeOf<MONITORINFOEX>() };
+				if (NativeMethods.GetMonitorInfo(hMonitor, ref mi))
+				{
+					gamma.SetTargetGamma(mi.szDevice, 1.0);
+				}
+				return true;
+			}, IntPtr.Zero);
 		}
 		catch { }
 	}

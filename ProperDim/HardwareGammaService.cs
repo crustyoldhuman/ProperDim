@@ -6,8 +6,6 @@ namespace ProperDim;
 
 public class HardwareGammaService : IDisposable
 {
-	public event Action WatchdogTicked;
-
 	private Timer _watchdogTimer;
 	private bool _isRunning;
 	private readonly int _intervalMs = 1000;
@@ -110,7 +108,6 @@ public class HardwareGammaService : IDisposable
 		{
 			ApplyGamma(kvp.Key, kvp.Value, force: true);
 		}
-		WatchdogTicked?.Invoke();
 	}
 
 	private void ApplyGamma(string deviceName, double targetGamma, bool force = false)
