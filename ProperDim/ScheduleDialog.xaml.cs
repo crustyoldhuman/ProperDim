@@ -371,7 +371,8 @@ public partial class ScheduleDialog : Window
 		{
 			Time = new TimeSpan(hour, minute, 0),
 			Brightness = DialogDimmerSlider.Value,
-			Days = string.Join(", ", selectedDays)
+			Days = string.Join(", ", selectedDays),
+			LastTriggered = _editingItem != null ? _editingItem.LastTriggered : DateTime.Now
 		};
 
 		ConfigManager.Settings.LastScheduleDays = Result.Days;

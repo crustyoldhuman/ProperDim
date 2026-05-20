@@ -628,6 +628,12 @@ namespace ProperDim
 
 			foreach (var s in ActiveSchedules)
 			{
+				// Self-repair: Prevent newly created schedules from infinitely looking backward
+				if (s.LastTriggered == DateTime.MinValue)
+				{
+					s.LastTriggered = now;
+				}
+
 				if (string.IsNullOrEmpty(s.Days)) continue;
 
 				// Look back over the last 7 days to find the most recent time this specific schedule should have fired
