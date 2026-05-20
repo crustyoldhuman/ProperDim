@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to ProperDim 1.4.1!</h1>
+<h1 align="center">Welcome to ProperDim 1.4.2!</h1>
 
 <br>
 <p align="center"><img width="300" src="https://github.com/user-attachments/assets/4afd88c2-d12e-44c9-9911-b756c12561f7" /></p>
@@ -30,7 +30,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 <h3 align="center">Event Schedule</h3>
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/180e8acb-eff3-454d-82b9-31961fcce3f7" /></p>
-<p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "<b>+</b>" button on the top right to open the <b>Event Scheduler</b>.</p>
+<p>The <b>Schedule</b> tab allows you to add events to the schedule list which will be automatically triggered when the set time comes to pass. The event list is sorted from top to bottom in chronological order, with upcoming events showing at the top and recently triggered events at the bottom. You can add new events by pressing the "<b>+</b>" button on the top right to open the <b>Event Scheduler</b>.</p> The scheduler will fire the last unfired event on system start or awake, making it immune to missing events during shutdown or sleep periods. 
 
 <p align="center"><img width="425" src="https://github.com/user-attachments/assets/a402cb95-434b-4537-b1d0-0c4214395724" /></p>
 <p>The <b>Event Scheduler</b> window provides all the fields required for a valid event. Entry fields for the time of day, brightness level to adjust to, and what days of the week it should trigger on are all presented. Enabling or disabling the 24-hour clock checkbox will convert the time entry fields as well as the events in the schedule to 12 or 24-hour format, respectively. The blue "Eyeball" icon will show you a preview of the brightness level. If you want to edit a previously added event, you can double-click the existing event in the full schedule list.</p>
