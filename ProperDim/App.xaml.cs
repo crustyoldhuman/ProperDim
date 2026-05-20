@@ -23,6 +23,22 @@ public partial class App : Application
 				args.Handled = true;
 				return;
 			}
+
+			// Prevent WPF from panic-shutting down during a DWM crash or GPU driver restart
+			if (args.Exception is System.Runtime.InteropServices.COMException comEx)
+			{
+				// 0x88980406: UCEERR_RENDERTHREADFAILURE
+				// 0x80263001: Desktop composition is disabled (DWM_E_COMPOSITIONDISABLED)
+				// 0x88980096: D3DERR_NOTAVAILABLE
+				if (comEx.ErrorCode == unchecked((int)0x88980406) ||
+					comEx.ErrorCode == unchecked((int)0x80263001) ||
+					comEx.ErrorCode == unchecked((int)0x88980096))
+				{
+					args.Handled = true;
+					return; // WPF will automatically recreate the render target when DWM returns
+				}
+			}
+
 			EmergencyReset();
 		};
 

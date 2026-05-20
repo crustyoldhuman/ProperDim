@@ -145,7 +145,7 @@ namespace ProperDim
 			};
 			RefreshMonitors();
 
-			ApplyBrightness(ConfigManager.Settings.LastOpacity);
+			EvaluateMissedSchedules();
 		}
 
 		private static bool IsVirtualDisplay(params string[] hardwareStrings)
@@ -597,6 +597,9 @@ namespace ProperDim
 			_lastTriggeredHour = h;
 			_lastTriggeredMinute = m;
 
+			triggeredSchedule.LastTriggered = now;
+			SaveSchedules();
+
 			double val = triggeredSchedule.Brightness;
 			ApplyBrightnessAnimated(val);
 
@@ -611,13 +614,77 @@ namespace ProperDim
 			return _shortDays[(int)d];
 		}
 
+		private void EvaluateMissedSchedules()
+		{
+			if (!ConfigManager.Settings.ScheduleToggle || ActiveSchedules.Count == 0)
+			{
+				ApplyBrightness(ConfigManager.Settings.LastOpacity);
+				return;
+			}
+
+			DateTime now = DateTime.Now;
+			DimSchedule mostRecentMissed = null;
+			DateTime mostRecentTargetTime = DateTime.MinValue;
+
+			foreach (var s in ActiveSchedules)
+			{
+				if (string.IsNullOrEmpty(s.Days)) continue;
+
+				// Look back over the last 7 days to find the most recent time this specific schedule should have fired
+				for (int i = 0; i < 7; i++)
+				{
+					DateTime checkDate = now.Date.AddDays(-i);
+					string checkShortDay = GetShortDay(checkDate.DayOfWeek);
+					string checkFullDay = checkDate.DayOfWeek.ToString();
+
+					if (s.Days.Contains(checkFullDay) || s.Days.Contains(checkShortDay))
+					{
+						DateTime targetTime = checkDate + s.Time;
+
+						// We only care about scheduled times that have already passed
+						if (targetTime <= now)
+						{
+							// Is this the most recent one we've found overall?
+							if (targetTime > mostRecentTargetTime)
+							{
+								// Did we miss it? (The last time it fired is older than the time it was supposed to fire)
+								if (s.LastTriggered < targetTime)
+								{
+									mostRecentMissed = s;
+									mostRecentTargetTime = targetTime;
+								}
+							}
+							break; // We found the most recent occurrence for THIS specific schedule, no need to look further back
+						}
+					}
+				}
+			}
+
+			if (mostRecentMissed != null)
+			{
+				mostRecentMissed.LastTriggered = now;
+				SaveSchedules();
+
+				ConfigManager.Settings.LastOpacity = mostRecentMissed.Brightness;
+				ConfigManager.Settings.Save();
+
+				ApplyBrightnessAnimated(mostRecentMissed.Brightness);
+				ScheduleTriggered?.Invoke();
+			}
+			else
+			{
+				// Nothing was missed, just restore whatever the opacity was before sleep
+				ApplyBrightness(ConfigManager.Settings.LastOpacity);
+			}
+		}
+
 		private void SystemEvents_SessionSwitch(object _, SessionSwitchEventArgs e)
 		{
 			if (e.Reason == SessionSwitchReason.SessionUnlock)
 			{
 				Dispatcher.Invoke(() =>
 				{
-					ApplyBrightness(ConfigManager.Settings.LastOpacity);
+					EvaluateMissedSchedules();
 
 					if (TrayIcon != null)
 					{
@@ -638,7 +705,7 @@ namespace ProperDim
 			{
 				Dispatcher.Invoke(() =>
 				{
-					ApplyBrightness(ConfigManager.Settings.LastOpacity);
+					EvaluateMissedSchedules();
 				});
 			}
 		}

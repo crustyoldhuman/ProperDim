@@ -8,8 +8,8 @@ public class DimSchedule
 	public TimeSpan Time { get; set; }
 	public double Brightness { get; set; }
 	public string Days { get; set; }
+	public DateTime LastTriggered { get; set; } = DateTime.MinValue;
 
-	// Helper properties for display in lists
 	// Helper properties for display in lists
 	public string DisplayTime
 	{
