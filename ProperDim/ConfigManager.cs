@@ -38,7 +38,7 @@ public static class ConfigManager
 		string exeFolder = Path.GetDirectoryName(exePath) ?? string.Empty;
 		string portablePath = Path.Combine(exeFolder, "settings.json");
 
-		if (!string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
+		if (!NativeMethods.IsRunningAsMsix() && !string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
 		{
 			return portablePath;
 		}
