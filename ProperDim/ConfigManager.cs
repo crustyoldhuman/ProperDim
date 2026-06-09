@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright 2026 Kevin Stanislawski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * As an exception, this software is subject to the Commons Clause License Condition v1.0.
+ * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -34,17 +53,23 @@ public static class ConfigManager
 
 	private static string GetSettingsFilePath()
 	{
-		string exePath = Environment.ProcessPath ?? string.Empty;
-		string exeFolder = Path.GetDirectoryName(exePath) ?? string.Empty;
-		string portablePath = Path.Combine(exeFolder, "settings.json");
+		string appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
+		string appDataPath = Path.Combine(appDataFolder, "settings.json");
 
-		if (!NativeMethods.IsRunningAsMsix() && !string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
+		if (NativeMethods.IsRunningAsMsix())
 		{
-			return portablePath;
+			return appDataPath;
 		}
 
-		string appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
-		return Path.Combine(appDataFolder, "settings.json");
+		string exePath = Environment.ProcessPath ?? string.Empty;
+		string exeFolder = Path.GetDirectoryName(exePath) ?? string.Empty;
+
+		if (!string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
+		{
+			return Path.Combine(exeFolder, "settings.json");
+		}
+
+		return appDataPath;
 	}
 
 	private static bool CanWriteToDirectory(string directoryPath)
