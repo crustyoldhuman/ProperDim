@@ -20,6 +20,7 @@
 using System;
 using System.Windows;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace ProperDim;
 
@@ -28,8 +29,21 @@ public static class RegistryService
 	private const string StartupKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 	private const string AppName = "ProperDim";
 
-	public static bool IsStartupEnabled()
+	public static async Task<bool> IsStartupEnabledAsync()
 	{
+		if (NativeMethods.IsRunningAsMsix())
+		{
+			try
+			{
+				var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
+				return task.State is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		try
 		{
 			using RegistryKey key = Registry.CurrentUser.OpenSubKey(StartupKey, false);
@@ -41,8 +55,31 @@ public static class RegistryService
 		}
 	}
 
-	public static bool SetStartupRegistry(bool enable)
+	public static async Task<bool> SetStartupAsync(bool enable)
 	{
+		if (NativeMethods.IsRunningAsMsix())
+		{
+			try
+			{
+				var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
+				if (enable)
+				{
+					var state = await task.RequestEnableAsync();
+					return state is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+				}
+				else
+				{
+					task.Disable();
+					return true;
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to update packaged startup settings: " + ex.Message);
+				return false;
+			}
+		}
+
 		try
 		{
 			using RegistryKey key = Registry.CurrentUser.OpenSubKey(StartupKey, true);

@@ -82,19 +82,7 @@ public partial class ControlPanel : Window
 
 	private async System.Threading.Tasks.Task InitializeFromSettingsAsync()
 	{
-		if (NativeMethods.IsRunningAsMsix())
-		{
-			try
-			{
-				var startupTask = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupId");
-				StartupCheckBox.IsChecked = startupTask.State is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
-			}
-			catch { StartupCheckBox.IsChecked = false; }
-		}
-		else
-		{
-			StartupCheckBox.IsChecked = RegistryService.IsStartupEnabled();
-		}
+		StartupCheckBox.IsChecked = await RegistryService.IsStartupEnabledAsync();
 		ShowStartupCheckBox.IsChecked = ConfigManager.Settings.ShowOnStartup;
 		TrayCheckBox.IsChecked = ConfigManager.Settings.CloseToTray;
 		SwapTrayClicksCheckBox.IsChecked = ConfigManager.Settings.SwapTrayIconClicks;
@@ -315,45 +303,13 @@ public partial class ControlPanel : Window
 		if (_isInitializing) return;
 
 		bool shouldRun = StartupCheckBox.IsChecked == true;
-		bool success;
-
-		if (NativeMethods.IsRunningAsMsix())
-		{
-			success = await HandleMsixStartupAsync(shouldRun);
-		}
-		else
-		{
-			success = RegistryService.SetStartupRegistry(shouldRun);
-		}
+		bool success = await RegistryService.SetStartupAsync(shouldRun);
 
 		if (!success)
 		{
 			_isInitializing = true;
 			StartupCheckBox.IsChecked = !shouldRun;
 			_isInitializing = false;
-		}
-	}
-
-	private static async System.Threading.Tasks.Task<bool> HandleMsixStartupAsync(bool enable)
-	{
-		try
-		{
-			var startupTask = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupId");
-
-			if (enable)
-			{
-				var state = await startupTask.RequestEnableAsync();
-				return state is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
-			}
-			else
-			{
-				startupTask.Disable();
-				return true;
-			}
-		}
-		catch
-		{
-			return false;
 		}
 	}
 
@@ -886,7 +842,7 @@ public partial class ControlPanel : Window
 		// or removes the key (if false), killing any "Zombie" references to old versions.
 		if (!NativeMethods.IsRunningAsMsix())
 		{
-			RegistryService.SetStartupRegistry(StartupCheckBox.IsChecked == true);
+			await RegistryService.SetStartupAsync(StartupCheckBox.IsChecked == true);
 		}
 
 		// --- Apply default tab selection ---

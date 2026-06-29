@@ -64,7 +64,7 @@ public static class ConfigManager
 		string exePath = Environment.ProcessPath ?? string.Empty;
 		string exeFolder = Path.GetDirectoryName(exePath) ?? string.Empty;
 
-		if (!string.IsNullOrEmpty(exeFolder) && CanWriteToDirectory(exeFolder))
+		if (!string.IsNullOrEmpty(exeFolder) && !exeFolder.Contains("WindowsApps", StringComparison.OrdinalIgnoreCase) && CanWriteToDirectory(exeFolder))
 		{
 			return Path.Combine(exeFolder, "settings.json");
 		}

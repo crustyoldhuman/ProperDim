@@ -368,7 +368,7 @@ namespace ProperDim
 		}
 		private void SystemEvents_DisplaySettingsChanged(object _, EventArgs __)
 		{
-			Dispatcher.Invoke(() =>
+			Dispatcher.InvokeAsync(() =>
 			{
 				RefreshMonitors();
 			});
@@ -666,11 +666,16 @@ namespace ProperDim
 							// Is this the most recent one we've found overall?
 							if (targetTime > mostRecentTargetTime)
 							{
+								mostRecentTargetTime = targetTime;
+
 								// Did we miss it? (The last time it fired is older than the time it was supposed to fire)
 								if (s.LastTriggered < targetTime)
 								{
 									mostRecentMissed = s;
-									mostRecentTargetTime = targetTime;
+								}
+								else
+								{
+									mostRecentMissed = null;
 								}
 							}
 							break; // We found the most recent occurrence for THIS specific schedule, no need to look further back
@@ -701,13 +706,18 @@ namespace ProperDim
 		{
 			if (e.Reason == SessionSwitchReason.SessionUnlock)
 			{
-				Dispatcher.Invoke(() =>
+				// Run asynchronously to allow delays without blocking the UI thread
+				Dispatcher.InvokeAsync(async () =>
 				{
+					// 1-second delay to allow Windows DWM and hardware handles to fully restore
+					await System.Threading.Tasks.Task.Delay(1000);
+
+					// Force a fresh detection of hardware handles
+					RefreshMonitors();
 					EvaluateMissedSchedules();
 
 					if (TrayIcon != null)
 					{
-						// Force the Win32 shell to re-register the tray icon after lock screen suspension
 						var iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/ProperDimIcon.ico"))?.Stream;
 						if (iconStream != null)
 						{
@@ -722,8 +732,10 @@ namespace ProperDim
 		{
 			if (e.Mode == PowerModes.Resume)
 			{
-				Dispatcher.Invoke(() =>
+				Dispatcher.InvokeAsync(async () =>
 				{
+					await System.Threading.Tasks.Task.Delay(1000);
+					RefreshMonitors();
 					EvaluateMissedSchedules();
 				});
 			}
