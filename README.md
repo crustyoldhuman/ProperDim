@@ -74,7 +74,7 @@ The release page has two installation versions available: **Full** and **Lite**
 <p>The installers are available to download as <b>.EXE</b>'s or compressed in <b>.ZIP</b> format. <b>Right click -> Extract All</b> to unzip these files to access the installer.</p>
 <p>Additional setup instructions are provided on the release page as well as in the accompanying Tutorial (readme) file in the installation download.</p>
 <h3 align="center">
-  <a href="https://github.com/crustyoldhuman/ProperDim/releases"> > > > Click here to download an installer from the Release page < < < </a>
+  <a href="https://github.com/crustyoldhuman/ProperDim/releases"> > > > Click here to download an installer from the Releases page < < < </a>
 </h3>
 <br>
 <p><b>**Honorable mention to Chiko for the invaluable bug testing. This would def be more broken without their eye.</b></p>
