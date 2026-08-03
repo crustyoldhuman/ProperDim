@@ -12,3 +12,6 @@ ProperDim.MSIXPackage/
 /Inno_FullSetup.iss
 /ProperDim/.vs
 /ProperDim/obj
+.gitignore
+/.gitignore
+/ProperDim/ProperDim.csproj.user

@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>portable</DebugType>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
@@ -18,10 +20,20 @@
 		<ApplicationIcon>ProperDimIcon.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<Version>1.4.2</Version>
-		<AssemblyVersion>1.4.2</AssemblyVersion>
-		<FileVersion>1.4.2</FileVersion>
+		<Version>1.4.40</Version>
+		<AssemblyVersion>1.4.40</AssemblyVersion>
+		<FileVersion>1.4.40</FileVersion>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="ProperDim_README.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="ProperDim_README.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="H.GeneratedIcons.System.Drawing" Version="2.4.1" />

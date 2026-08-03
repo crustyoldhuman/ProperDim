@@ -110,6 +110,8 @@ public static class ConfigManager
 		SaveInstance(Settings);
 	}
 
+	private static readonly object _saveLock = new();
+
 	internal static void SaveInstance(AppSettings instance)
 	{
 		try
@@ -121,7 +123,17 @@ public static class ConfigManager
 			}
 
 			string json = JsonSerializer.Serialize(instance, _jsonOptions);
-			File.WriteAllText(ConfigFilePath, json);
+			System.Threading.Tasks.Task.Run(() =>
+			{
+				lock (_saveLock)
+				{
+					try
+					{
+						File.WriteAllText(ConfigFilePath, json);
+					}
+					catch { }
+				}
+			});
 		}
 		catch { }
 	}

@@ -60,12 +60,13 @@ public partial class TrayMenuWindow : Window
 			// Extract the wheel delta (high-order word of mouseData)
 			int delta = (short)((hookStruct.mouseData >> 16) & 0xFFFF);
 
-			Dispatcher.Invoke(() =>
+			Dispatcher.BeginInvoke(new Action(() =>
 			{
 				int currentPercent = (int)Math.Round(MenuSlider.Value * 100);
 				int newPercent;
 
-				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+				// Check for either the Control key OR the Right Mouse Button being held
+				if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) || Mouse.RightButton == MouseButtonState.Pressed)
 				{
 					if (delta > 0) newPercent = currentPercent + 1;
 					else newPercent = currentPercent - 1;
@@ -89,7 +90,7 @@ public partial class TrayMenuWindow : Window
 				newPercent = Math.Max(minPercent, Math.Min(maxPercent, newPercent));
 
 				MenuSlider.Value = newPercent / 100.0;
-			});
+			}));
 
 			// Return 1 to "eat" the message so the window underneath doesn't also scroll
 			return (IntPtr)1;
@@ -100,6 +101,7 @@ public partial class TrayMenuWindow : Window
 	public TrayMenuWindow(MainWindow mainWindow)
 	{
 		InitializeComponent();
+		this.IsVisibleChanged += Window_IsVisibleChanged;
 
 		if (!SystemParameters.DropShadow && this.Content is FrameworkElement root)
 		{
@@ -115,8 +117,8 @@ public partial class TrayMenuWindow : Window
 		{
 			if (e.Key == Key.Escape)
 			{
-				this.Close();
 				e.Handled = true;
+				this.Hide();
 			}
 			else if (e.Key == Key.Up || e.Key == Key.Down)
 			{
@@ -160,8 +162,21 @@ public partial class TrayMenuWindow : Window
 		_isSyncing = false;
 	}
 
-	private void Window_Loaded(object sender, RoutedEventArgs e)
+	private void Window_Loaded(object sender, RoutedEventArgs e) { }
+
+	private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 	{
+		if (!(bool)e.NewValue) return;
+
+		if (this.ActualWidth == 0 || this.ActualHeight == 0)
+		{
+			this.UpdateLayout();
+			this.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		}
+
+		double menuWidth = this.ActualWidth > 0 ? this.ActualWidth : this.DesiredSize.Width;
+		double menuHeight = this.ActualHeight > 0 ? this.ActualHeight : this.DesiredSize.Height;
+
 		GetCursorPos(out POINTStruct pt);
 
 		var source = PresentationSource.FromVisual(this);
@@ -217,8 +232,8 @@ public partial class TrayMenuWindow : Window
 			if (isRight)
 			{
 				// Position the window so its bottom-right visual corner sits left and up from the cursor
-				newLeft = cursorX - this.ActualWidth - edgeOffset - cursorClearance;
-				newTop = cursorY - this.ActualHeight - edgeOffset - cursorClearance;
+				newLeft = cursorX - menuWidth - edgeOffset - cursorClearance;
+				newTop = cursorY - menuHeight - edgeOffset - cursorClearance;
 			}
 			else if (isTop)
 			{
@@ -230,28 +245,28 @@ public partial class TrayMenuWindow : Window
 			{
 				// Default (Bottom or Left Taskbar): Position bottom-left visual corner right and up from the cursor
 				newLeft = cursorX + edgeOffset + cursorClearance;
-				newTop = cursorY - this.ActualHeight - edgeOffset - cursorClearance;
+				newTop = cursorY - menuHeight - edgeOffset - cursorClearance;
 			}
 		}
 		else if (isLeft)
 		{
 			newLeft = workLeft + edgeOffset;
-			newTop = cursorY - this.ActualHeight + 20; // Align bottom of menu upwards from cursor
+			newTop = cursorY - menuHeight + 20; // Align bottom of menu upwards from cursor
 		}
 		else if (isRight)
 		{
-			newLeft = workRight - this.ActualWidth - edgeOffset;
-			newTop = cursorY - this.ActualHeight + 20; // Align bottom of menu upwards from cursor
+			newLeft = workRight - menuWidth - edgeOffset;
+			newTop = cursorY - menuHeight + 20; // Align bottom of menu upwards from cursor
 		}
 		else if (isTop)
 		{
 			newTop = workTop + edgeOffset;
-			newLeft = cursorX - (this.ActualWidth / 2);
+			newLeft = cursorX - (menuWidth / 2);
 		}
 		else // Bottom (or auto-hide)
 		{
-			newTop = workBottom - this.ActualHeight - edgeOffset;
-			newLeft = cursorX - (this.ActualWidth / 2);
+			newTop = workBottom - menuHeight - edgeOffset;
+			newLeft = cursorX - (menuWidth / 2);
 		}
 
 		// Final safety clamps must use the raw Monitor Area so the shadow bounding box can safely enter the taskbar space
@@ -260,8 +275,8 @@ public partial class TrayMenuWindow : Window
 		double screenLeft = monitorArea.Left / dpiX;
 		double screenTop = monitorArea.Top / dpiY;
 
-		newLeft = Math.Max(screenLeft, Math.Min(screenRight - this.ActualWidth, newLeft));
-		newTop = Math.Max(screenTop, Math.Min(screenBottom - this.ActualHeight, newTop));
+		newLeft = Math.Max(screenLeft, Math.Min(screenRight - menuWidth, newLeft));
+		newTop = Math.Max(screenTop, Math.Min(screenBottom - menuHeight, newTop));
 
 		this.Left = newLeft;
 		this.Top = newTop;
@@ -293,7 +308,16 @@ public partial class TrayMenuWindow : Window
 	private void Window_Deactivated(object sender, EventArgs e)
 	{
 		RemoveHook();
-		this.Close();
+
+		try
+		{
+			this.Hide();
+		}
+		catch (InvalidOperationException)
+		{
+			// The WPF Window is actively closing during a hard application shutdown.
+			// Safely absorb the lifecycle event.
+		}
 	}
 
 	private void Controls_Click(object sender, RoutedEventArgs e)

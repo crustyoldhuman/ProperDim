@@ -450,6 +450,8 @@ namespace ProperDim
 				return true;
 			}, IntPtr.Zero);
 
+			if (activeMonitors.Count == 0) return;
+
 			bool listChanged = false;
 
 			var toRemove = Monitors.Where(m => !activeMonitors.Any(a => a.DeviceName == m.DeviceName)).ToList();
@@ -502,6 +504,52 @@ namespace ProperDim
 			_ = SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW | WS_EX_LAYERED);
 
 			RegisterGlobalHotkeys();
+
+			if (TrayIcon?.TrayIcon?.MessageWindow != null)
+			{
+				TrayIcon.TrayIcon.MessageWindow.KeyboardEventReceived += (s, args) =>
+				{
+					bool appsKeyHardwareTriggered = GetAsyncKeyState(0x5D) != 0;
+
+					Dispatcher.InvokeAsync(async () =>
+					{
+						bool isShiftF10 = (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) || System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift)) &&
+										  System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.F10);
+
+						bool isRightClick = isShiftF10 || System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Apps) || appsKeyHardwareTriggered;
+
+						bool isActionKey = System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Enter) || System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Space);
+
+						if (isRightClick || isActionKey)
+						{
+							var identifier = new NOTIFYICONIDENTIFIER
+							{
+								cbSize = (uint)Marshal.SizeOf<NOTIFYICONIDENTIFIER>(),
+								hWnd = TrayIcon.TrayIcon.WindowHandle,
+								uID = (uint)TrayIcon.TrayIcon.Icon,
+								guidItem = TrayIcon.TrayIcon.Id
+							};
+
+							if (Shell_NotifyIconGetRect(ref identifier, out RectStruct rect) == 0)
+							{
+								int targetX = rect.Left + ((rect.Right - rect.Left) / 2);
+								int targetY = rect.Top + ((rect.Bottom - rect.Top) / 2);
+								SetCursorPos(targetX, targetY);
+								await System.Threading.Tasks.Task.Delay(50);
+							}
+
+							if (isRightClick)
+							{
+								HandleTrayMenuToggle();
+							}
+							else
+							{
+								ToggleControlPanel();
+							}
+						}
+					});
+				};
+			}
 		}
 
 		private IntPtr HwndHook(IntPtr _1, int msg, IntPtr _2, IntPtr _3, ref bool _4)
@@ -610,14 +658,14 @@ namespace ProperDim
 			_lastTriggeredHour = h;
 			_lastTriggeredMinute = m;
 
+			double val = triggeredSchedule.Brightness;
 			triggeredSchedule.LastTriggered = now;
+			ConfigManager.Settings.LastOpacity = val;
+
+			// Write both state updates to disk simultaneously
 			SaveSchedules();
 
-			double val = triggeredSchedule.Brightness;
 			ApplyBrightnessAnimated(val);
-
-			ConfigManager.Settings.LastOpacity = val;
-			ConfigManager.Settings.Save();
 			ScheduleTriggered?.Invoke();
 		}
 
@@ -687,10 +735,10 @@ namespace ProperDim
 			if (mostRecentMissed != null)
 			{
 				mostRecentMissed.LastTriggered = now;
-				SaveSchedules();
-
 				ConfigManager.Settings.LastOpacity = mostRecentMissed.Brightness;
-				ConfigManager.Settings.Save();
+
+				// Write both state updates to disk simultaneously
+				SaveSchedules();
 
 				ApplyBrightnessAnimated(mostRecentMissed.Brightness);
 				ScheduleTriggered?.Invoke();
@@ -848,6 +896,7 @@ namespace ProperDim
 
 		private TrayMenuWindow _currentTrayMenu;
 		private DateTime _lastTrayMenuCloseTime = DateTime.MinValue;
+		private bool _isShuttingDown = false;
 
 		private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
 		{
@@ -863,55 +912,64 @@ namespace ProperDim
 
 		private void HandleTrayMenuToggle()
 		{
+			if ((DateTime.Now - _lastTrayMenuCloseTime).TotalMilliseconds < 250) return;
+
 			if (_currentTrayMenu != null)
 			{
-				try { _currentTrayMenu.Close(); } catch { }
-				_currentTrayMenu = null;
-				return;
-			}
-
-			if ((DateTime.Now - _lastTrayMenuCloseTime).TotalMilliseconds < 500)
-			{
+				if (_currentTrayMenu.IsVisible)
+				{
+					_currentTrayMenu.Hide();
+				}
+				else
+				{
+					if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = "";
+					_currentTrayMenu.Show();
+				}
 				return;
 			}
 
 			_currentTrayMenu = new TrayMenuWindow(this);
-			_currentTrayMenu.Closed += (s, ev) =>
+			_currentTrayMenu.IsVisibleChanged += (s, ev) =>
 			{
-				_currentTrayMenu = null;
-				_lastTrayMenuCloseTime = DateTime.Now;
+				if (_isShuttingDown) return;
 
-				// Restore tooltip when menu closes
-				if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = $"Brightness: {Math.Round(_currentGlobalBrightness * 100)}%";
-
-				GetCursorPos(out POINTStruct cursorPos);
-
-				void CheckAndCloseOverflow(string className)
+				if (!(bool)ev.NewValue) // Window just hid
 				{
-					IntPtr hwnd = FindWindow(className, null);
-					if (hwnd != IntPtr.Zero && IsWindowVisible(hwnd))
+					_lastTrayMenuCloseTime = DateTime.Now;
+
+					if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = $"Brightness: {Math.Round(_currentGlobalBrightness * 100)}%";
+
+					GetCursorPos(out POINTStruct cursorPos);
+
+					void CheckAndCloseOverflow(string className)
 					{
-						GetWindowRect(hwnd, out RectStruct rect);
-						// Only close the overflow if the click was strictly OUTSIDE of it
-						if (cursorPos.X < rect.Left || cursorPos.X > rect.Right || cursorPos.Y < rect.Top || cursorPos.Y > rect.Bottom)
+						IntPtr hwnd = FindWindow(className, null);
+						if (hwnd != IntPtr.Zero && IsWindowVisible(hwnd))
 						{
-							ShowWindow(hwnd, 0); // SW_HIDE
+							GetWindowRect(hwnd, out RectStruct rect);
+							if (cursorPos.X < rect.Left || cursorPos.X > rect.Right || cursorPos.Y < rect.Top || cursorPos.Y > rect.Bottom)
+							{
+								ShowWindow(hwnd, 0); // SW_HIDE
+							}
 						}
 					}
-				}
 
-				CheckAndCloseOverflow("NotifyIconOverflowWindow");
-				CheckAndCloseOverflow("TopLevelWindowForOverflowDropShadow");
+					CheckAndCloseOverflow("NotifyIconOverflowWindow");
+					CheckAndCloseOverflow("TopLevelWindowForOverflowDropShadow");
+				}
 			};
 
-			// Suppress tooltip while menu is open
-			if (TrayIcon is { } trayIcon) trayIcon.ToolTipText = "";
-
+			if (TrayIcon is { } newTrayIcon) newTrayIcon.ToolTipText = "";
 			_currentTrayMenu.Show();
 		}
 
+		private DateTime _lastToggleTime = DateTime.MinValue;
+
 		public void ToggleControlPanel()
 		{
+			if ((DateTime.Now - _lastToggleTime).TotalMilliseconds < 300) return;
+			_lastToggleTime = DateTime.Now;
+
 			ControlPanel cp = Application.Current.Windows.OfType<ControlPanel>().FirstOrDefault();
 			if (cp?.IsVisible == true)
 			{
@@ -944,6 +1002,12 @@ namespace ProperDim
 
 		public void ShutdownApp()
 		{
+			_isShuttingDown = true;
+			if (_currentTrayMenu != null)
+			{
+				try { _currentTrayMenu.Close(); } catch { }
+			}
+
 			foreach (var m in Monitors)
 			{
 				_gammaService.SetTargetGamma(m.DeviceName, 1.0);

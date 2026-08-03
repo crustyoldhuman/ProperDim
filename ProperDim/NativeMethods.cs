@@ -19,8 +19,19 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace ProperDim;
+
+public sealed class SafeDcHandle : SafeHandleZeroOrMinusOneIsInvalid
+{
+	public SafeDcHandle() : base(true) { }
+
+	protected override bool ReleaseHandle()
+	{
+		return NativeMethods.DeleteDC(handle);
+	}
+}
 
 // --- NATIVE STRUCTS & DELEGATES ---
 [StructLayout(LayoutKind.Sequential)]
@@ -157,6 +168,14 @@ public struct POINTStruct
 }
 
 [StructLayout(LayoutKind.Sequential)]
+
+public struct NOTIFYICONIDENTIFIER
+{
+	public uint cbSize;
+	public IntPtr hWnd;
+	public uint uID;
+	public Guid guidItem;
+}
 public struct DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO
 {
 	public DISPLAYCONFIG_DEVICE_INFO_HEADER header;
@@ -258,9 +277,19 @@ internal static class NativeMethods
 	[DllImport("shcore.dll")]
 	internal static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
 
+	[DllImport("shell32.dll")]
+	internal static extern int Shell_NotifyIconGetRect(ref NOTIFYICONIDENTIFIER identifier, out RectStruct iconLocation);
+
 	[DllImport("user32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static extern bool GetCursorPos(out POINTStruct lpPoint);
+
+	[DllImport("user32.dll")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static extern bool SetCursorPos(int x, int y);
+
+	[DllImport("user32.dll")]
+	internal static extern short GetAsyncKeyState(int vKey);
 
 	[DllImport("user32.dll")]
 	internal static extern IntPtr GetDC(IntPtr hWnd);
@@ -283,7 +312,7 @@ internal static class NativeMethods
 	internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
 	[DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
-	internal static extern IntPtr CreateDC(string lpszDriver, string lpszDevice, string lpszOutput, IntPtr lpInitData);
+	internal static extern SafeDcHandle CreateDC(string lpszDriver, string lpszDevice, string lpszOutput, IntPtr lpInitData);
 
 	[DllImport("gdi32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
@@ -291,11 +320,11 @@ internal static class NativeMethods
 
 	[DllImport("gdi32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static extern bool GetDeviceGammaRamp(IntPtr hdc, ref RAMP lpRamp);
+	internal static extern bool GetDeviceGammaRamp(SafeDcHandle hdc, ref RAMP lpRamp);
 
 	[DllImport("gdi32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static extern bool SetDeviceGammaRamp(IntPtr hdc, ref RAMP lpRamp);
+	internal static extern bool SetDeviceGammaRamp(SafeDcHandle hdc, ref RAMP lpRamp);
 
 	[DllImport("user32.dll", CharSet = CharSet.Unicode)]
 	internal static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFOEX lpmi);

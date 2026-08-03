@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ProperDim;
@@ -68,14 +69,12 @@ public class HardwareGammaService : IDisposable
 
 	public static bool TestGammaSupport(string deviceName)
 	{
-		IntPtr dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
-		if (dc != IntPtr.Zero)
+		using SafeDcHandle dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
+		if (!dc.IsInvalid)
 		{
 			RAMP testRamp = new() { Red = new ushort[256], Green = new ushort[256], Blue = new ushort[256] };
 			// This returns false if the driver lacks a physical Look-Up Table
-			bool supported = NativeMethods.GetDeviceGammaRamp(dc, ref testRamp);
-			NativeMethods.DeleteDC(dc);
-			return supported;
+			return NativeMethods.GetDeviceGammaRamp(dc, ref testRamp);
 		}
 		return false;
 	}
@@ -153,23 +152,12 @@ public class HardwareGammaService : IDisposable
 				_sharedRamp.Blue[i] = value;
 			}
 
-			IntPtr dc = IntPtr.Zero;
-			try
+			using SafeDcHandle dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
+			if (!dc.IsInvalid)
 			{
-				dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
-				if (dc != IntPtr.Zero)
+				if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
 				{
-					if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
-					{
-						_appliedGammas[deviceName] = hardwareTarget;
-					}
-				}
-			}
-			finally
-			{
-				if (dc != IntPtr.Zero)
-				{
-					NativeMethods.DeleteDC(dc);
+					_appliedGammas[deviceName] = hardwareTarget;
 				}
 			}
 		}

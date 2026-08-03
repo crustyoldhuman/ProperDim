@@ -609,7 +609,7 @@ public partial class ControlPanel : Window
 		int currentPercent = (int)Math.Round(DimmerSlider.Value * 100);
 		int newPercent;
 
-		if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+		if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) || e.RightButton == MouseButtonState.Pressed)
 		{
 			if (e.Delta > 0) newPercent = currentPercent + 1;
 			else newPercent = currentPercent - 1;

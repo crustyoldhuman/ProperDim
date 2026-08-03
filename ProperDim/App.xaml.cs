@@ -34,7 +34,11 @@ public partial class App : Application
 		EventManager.RegisterClassHandler(typeof(System.Windows.Controls.CheckBox), System.Windows.UIElement.PreviewKeyDownEvent, new System.Windows.Input.KeyEventHandler(GlobalCheckBox_PreviewKeyDown));
 		EventManager.RegisterClassHandler(typeof(System.Windows.Documents.Hyperlink), System.Windows.ContentElement.PreviewKeyDownEvent, new System.Windows.Input.KeyEventHandler(GlobalHyperlink_PreviewKeyDown));
 
-		AppDomain.CurrentDomain.UnhandledException += (s, args) => EmergencyReset();
+		AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+		{
+			LogCrash(args.ExceptionObject as Exception);
+			EmergencyReset();
+		};
 		this.DispatcherUnhandledException += (s, args) =>
 		{
 			if (args.Exception is InvalidOperationException && args.Exception.Message.Contains("UpdateToolTip"))
@@ -56,6 +60,11 @@ public partial class App : Application
 					args.Handled = true;
 					return; // WPF will automatically recreate the render target when DWM returns
 				}
+				LogCrash(comEx, isNative: true);
+			}
+			else
+			{
+				LogCrash(args.Exception);
 			}
 
 			EmergencyReset();
@@ -123,6 +132,29 @@ public partial class App : Application
 			_mutex.Dispose();
 		}
 		base.OnExit(e);
+	}
+
+	private static void LogCrash(Exception ex, bool isNative = false)
+	{
+		if (ex == null) return;
+		try
+		{
+			string basePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
+			if (isNative)
+			{
+				string logPath = System.IO.Path.Combine(basePath, "NativeLogs.txt");
+				System.IO.Directory.CreateDirectory(basePath);
+				System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {ex.Message}\n{ex.StackTrace}\n\n");
+			}
+			else
+			{
+				string crashDir = System.IO.Path.Combine(basePath, "CrashLogs");
+				System.IO.Directory.CreateDirectory(crashDir);
+				string logPath = System.IO.Path.Combine(crashDir, $"Crash_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
+				System.IO.File.WriteAllText(logPath, ex.ToString());
+			}
+		}
+		catch { }
 	}
 
 	private void EmergencyReset()

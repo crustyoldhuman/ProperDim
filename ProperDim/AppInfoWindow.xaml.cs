@@ -92,4 +92,17 @@ public partial class AppInfoWindow : Window
 			MessageBox.Show("Unable to open link: " + ex.Message);
 		}
 	}
+
+	private void HelpLink_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "ProperDim_README.txt");
+			Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+		}
+		catch (System.Exception ex)
+		{
+			MessageBox.Show("Unable to open help file: " + ex.Message);
+		}
+	}
 }
