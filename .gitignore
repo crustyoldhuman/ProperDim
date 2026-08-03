@@ -1,0 +1,14 @@
+Inno_FullySetup.iss
+Inno_LiteSetup.iss
+LICENSE
+ProperDim_FullFileIndex.txt
+PUBLISHandCOMPILEtoOUTPUT.ps1
+SideImage.bmp
+TopImage.bmp
+Output/
+ProperDim.MSIXPackage/
+/ProperDim/Properties/PublishProfiles
+/ProperDim/bin
+/Inno_FullSetup.iss
+/ProperDim/.vs
+/ProperDim/obj
