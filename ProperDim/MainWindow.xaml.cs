@@ -340,7 +340,7 @@ namespace ProperDim
 
 			GlobalBrightnessChanged?.Invoke(_currentGlobalBrightness);
 
-			if (!_isUpdatingFromAnimator && TrayIcon is { } trayIcon && _currentTrayMenu == null)
+			if (!_isUpdatingFromAnimator && TrayIcon is { } trayIcon && _currentTrayMenu?.IsVisible != true)
 			{
 				try
 				{
@@ -740,7 +740,7 @@ namespace ProperDim
 				// Write both state updates to disk simultaneously
 				SaveSchedules();
 
-				ApplyBrightnessAnimated(mostRecentMissed.Brightness);
+				ApplyBrightness(mostRecentMissed.Brightness);
 				ScheduleTriggered?.Invoke();
 			}
 			else
@@ -1017,7 +1017,7 @@ namespace ProperDim
 
 			TrayIcon?.Dispose();
 			_hotkeyService?.Dispose();
-			Application.Current.Shutdown();
+			Environment.Exit(0);
 		}
 	}
 }
