@@ -265,6 +265,7 @@ namespace ProperDim
 
 		private double _currentGlobalBrightness = 1.0;
 		private double _lastAppliedHardwareBrightness = 1.0;
+		private double _lockedHardwareBrightness = 1.0;
 
 		public void TriggerSave()
 		{
@@ -675,11 +676,11 @@ namespace ProperDim
 			return _shortDays[(int)d];
 		}
 
-		private void EvaluateMissedSchedules()
+		private void EvaluateMissedSchedules(bool animate = false, int durationMs = 200)
 		{
 			if (!ConfigManager.Settings.ScheduleToggle || ActiveSchedules.Count == 0)
 			{
-				ApplyBrightness(ConfigManager.Settings.LastOpacity);
+				ApplyBrightness(ConfigManager.Settings.LastOpacity, animate: animate, durationMs: durationMs);
 				return;
 			}
 
@@ -740,19 +741,23 @@ namespace ProperDim
 				// Write both state updates to disk simultaneously
 				SaveSchedules();
 
-				ApplyBrightness(mostRecentMissed.Brightness);
+				ApplyBrightness(mostRecentMissed.Brightness, animate: animate, durationMs: durationMs);
 				ScheduleTriggered?.Invoke();
 			}
 			else
 			{
 				// Nothing was missed, just restore whatever the opacity was before sleep
-				ApplyBrightness(ConfigManager.Settings.LastOpacity);
+				ApplyBrightness(ConfigManager.Settings.LastOpacity, animate: animate, durationMs: durationMs);
 			}
 		}
 
 		private void SystemEvents_SessionSwitch(object _, SessionSwitchEventArgs e)
 		{
-			if (e.Reason == SessionSwitchReason.SessionUnlock)
+			if (e.Reason == SessionSwitchReason.SessionLock)
+			{
+				_lockedHardwareBrightness = _lastAppliedHardwareBrightness;
+			}
+			else if (e.Reason == SessionSwitchReason.SessionUnlock)
 			{
 				// Run asynchronously to allow delays without blocking the UI thread
 				Dispatcher.InvokeAsync(async () =>
@@ -762,7 +767,12 @@ namespace ProperDim
 
 					// Force a fresh detection of hardware handles
 					RefreshMonitors();
-					EvaluateMissedSchedules();
+
+					// Rewind starting coordinate to the physical lock screen level
+					_lastAppliedHardwareBrightness = _lockedHardwareBrightness;
+
+					// Animate to the evaluated target (whether it is a missed event or restoring the pre-sleep state)
+					EvaluateMissedSchedules(animate: true, durationMs: 1500);
 
 					if (TrayIcon != null)
 					{
@@ -778,13 +788,17 @@ namespace ProperDim
 
 		private void SystemEvents_PowerModeChanged(object _, PowerModeChangedEventArgs e)
 		{
-			if (e.Mode == PowerModes.Resume)
+			if (e.Mode == PowerModes.Suspend)
+			{
+				_lockedHardwareBrightness = _lastAppliedHardwareBrightness;
+			}
+			else if (e.Mode == PowerModes.Resume)
 			{
 				Dispatcher.InvokeAsync(async () =>
 				{
 					await System.Threading.Tasks.Task.Delay(1000);
 					RefreshMonitors();
-					EvaluateMissedSchedules();
+					// Do not call EvaluateMissedSchedules() here; wait until SessionUnlock so events are not consumed on the lock screen.
 				});
 			}
 		}
