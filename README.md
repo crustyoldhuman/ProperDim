@@ -59,7 +59,7 @@ ProperDim is a tiny-but-mighty screen brightness management and automation utili
 
 ## Usage & Licensing
 
-ProperDim is free to use, modify, and distribute without worry. The only thing you CAN'T do is use it to make money. This is a tool for humans, not for bank accounts. For full details & legal jargon, see the license document <a href="https://github.com/crustyoldhuman/ProperDim/blob/master/LICENSE">here</a>.
+ProperDim is free and open source. You can check out the legal jargon behind that <a href="https://github.com/crustyoldhuman/ProperDim/blob/master/LICENSE">here</a>.
 
 ## System Requirements
 - Windows 10 and up

@@ -1,20 +1,19 @@
 ﻿<!--
- * Copyright 2026 Kevin Stanislawski
+ * properdim[cite: 1] - <lightweight non-DDC screen brightness management app>
+ * Copyright (C) <2026> <crustyoldhuman/Kevin Stanislawski>
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * As an exception, this software is subject to the Commons Clause License Condition v1.0.
- * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <Window x:Class="ProperDim.MinBrightnessDialog"
@@ -22,14 +21,14 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		Title="ProperDim" Height="260" Width="300"
         MinHeight="260" MaxHeight="260" MinWidth="300" MaxWidth="300"
-        WindowStyle="None" WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        WindowStyle="None" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Background="#2D2D2D"
         Loaded="Window_Loaded">
 	<WindowChrome.WindowChrome>
 		<WindowChrome GlassFrameThickness="1" CornerRadius="0" CaptionHeight="0" UseAeroCaptionButtons="False" ResizeBorderThickness="0" />
 	</WindowChrome.WindowChrome>
-	<Border Background="#2D2D2D" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="8">
+	<Border Width="300" Height="260" Background="#2D2D2D" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left" VerticalAlignment="Top">
 		<Grid>
-			<Grid.RowDefinitions>
+				<Grid.RowDefinitions>
 				<RowDefinition Height="30" />
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
@@ -72,12 +71,12 @@
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,10">
+				<TextBlock Grid.Row="0" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,4">
 					Adjust the slider below to set the absolute minimum brightness. 
 				</TextBlock>
 
-				<StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,14">
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14">
+				<StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
 						<TextBlock Text="Minimum Brightness: " Foreground="White" FontSize="14" FontWeight="SemiBold" />
 						<TextBlock Text="{Binding ElementName=MinSlider, Path=Value, StringFormat={}{0:P0}}" Foreground="White" FontSize="14" FontWeight="SemiBold" />
 					</StackPanel>
@@ -169,7 +168,7 @@
 					</Grid>
 				</StackPanel>
 
-				<TextBlock Grid.Row="2" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,16">
+				<TextBlock Grid.Row="2" Foreground="#FF909090" FontStyle="Italic" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,16">
 					TIP: Enable hotkeys before saving changes here so you can't accidentally blackout your screen.
 				</TextBlock>
 
@@ -203,7 +202,7 @@
 					<Button Content="Looks good" Width="100" Height="25" Background="#3E3E42" Margin="5,0" Click="LooksGood_Click" />
 					<Button Content="Never mind" Width="100" Height="25" Background="#3E3E42" Margin="5,0" Click="NeverMind_Click" />
 				</UniformGrid>
-			</Grid>
+				</Grid>
 		</Grid>
 	</Border>
 </Window>
