@@ -266,14 +266,13 @@ ProperDim 1.4:  ProperDim was now feature complete, but it was
 	   '///,\\\   Licensing & Support   ///,\\\'
              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- ProperDim is licensed under PolyForm  Non-commercial  License  1.0.0 
-and is completely free and open source for anyone to use in any 
-scenario OTHER THAN any scenario in which you make profit off of it. 
-			Rest your eyes. 
-- If you have an issue with ProperDim, I am not actively 
-maintaining the program. However, you are more than welcome to 
-contact me at any of the shameless plug links below. You might 
-even find a Discord Link if you dig around these a bit. 
+- ProperDim is licensed under the GNU GENERAL PUBLIC LICENSE  
+Version 3  making it completely free and open source
+
+- If you have an issue with ProperDim you can use the Github link
+provided below to create an issue or start a topic in the 
+discussions area. 
+https://github.com/crustyoldhuman/ProperDim 
 
 
 	     '///,\\\   Shameless Plugs   ///,\\\'
