@@ -38,6 +38,7 @@ public partial class ScheduleDialog : Window
 	private readonly DimSchedule _editingItem = null;
 	private readonly double _originalBrightness;
 	private static readonly string[] _daySeparator = [", "];
+	private bool _isInitializing = true;
 
 
 	// 1. THIS IS FOR ADDING NEW SCHEDULES
@@ -88,6 +89,7 @@ public partial class ScheduleDialog : Window
 		if (string.IsNullOrEmpty(savedDays)) savedDays = "Mo, Tu, We, Th, Fr, Sa, Su";
 		SetDayCheckboxes(savedDays);
 
+		ApplySavedSize();
 		ValidateTime();
 	}
 
@@ -126,6 +128,7 @@ public partial class ScheduleDialog : Window
 		SetTimeUI(existing.Time.Hours, existing.Time.Minutes);
 		SetDayCheckboxes(existing.Days);
 
+		ApplySavedSize();
 		ValidateTime();
 		this.PreviewKeyDown += (s, e) =>
 		{
@@ -135,6 +138,38 @@ public partial class ScheduleDialog : Window
 				e.Handled = true;
 			}
 		};
+	}
+
+	private void ApplySavedSize()
+	{
+		if (ConfigManager.Settings.ScheduleDialogWidth >= this.MinWidth && ConfigManager.Settings.ScheduleDialogHeight >= this.MinHeight)
+		{
+			this.Width = Math.Min(ConfigManager.Settings.ScheduleDialogWidth, 640);
+			this.Height = Math.Min(ConfigManager.Settings.ScheduleDialogHeight, 560);
+		}
+		_isInitializing = false;
+	}
+
+	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		if (_isInitializing) return;
+
+		ConfigManager.Settings.ScheduleDialogWidth = this.Width;
+		ConfigManager.Settings.ScheduleDialogHeight = this.Height;
+		ConfigManager.Settings.Save();
+	}
+
+	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+	{
+		double targetRatio = 320.0 / 280.0;
+		double minWidth = 320;
+		double maxWidth = 500; // 150% limit
+
+		double newWidth = this.Width + e.HorizontalChange;
+		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+
+		this.Width = finalWidth;
+		this.Height = finalWidth / targetRatio;
 	}
 
 	private void SetTimeUI(int h, int m)

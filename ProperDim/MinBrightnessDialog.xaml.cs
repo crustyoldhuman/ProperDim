@@ -17,15 +17,18 @@
  * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
  */
 
+
 using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
-
 namespace ProperDim;
 
 public partial class MinBrightnessDialog : Window
 {
+	private bool _isInitializing = true;
+
 	public MinBrightnessDialog()
 	{
 		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
@@ -87,6 +90,7 @@ public partial class MinBrightnessDialog : Window
 
 	private void Window_Loaded(object sender, RoutedEventArgs e)
 	{
+		ApplySavedSize();
 		MinSlider.Value = ConfigManager.Settings.GlobalMinimum;
 	}
 
@@ -199,6 +203,38 @@ public partial class MinBrightnessDialog : Window
 	{
 		this.DialogResult = false;
 		this.Close();
+	}
+
+	private void ApplySavedSize()
+	{
+		if (ConfigManager.Settings.MinBrightnessDialogWidth >= this.MinWidth && ConfigManager.Settings.MinBrightnessDialogHeight >= this.MinHeight)
+		{
+			this.Width = Math.Min(ConfigManager.Settings.MinBrightnessDialogWidth, 450);
+			this.Height = Math.Min(ConfigManager.Settings.MinBrightnessDialogHeight, 390);
+		}
+		_isInitializing = false;
+	}
+
+	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		if (_isInitializing) return;
+
+		ConfigManager.Settings.MinBrightnessDialogWidth = this.Width;
+		ConfigManager.Settings.MinBrightnessDialogHeight = this.Height;
+		ConfigManager.Settings.Save();
+	}
+
+	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+	{
+		double targetRatio = 300.0 / 260.0;
+		double minWidth = 300;
+		double maxWidth = 450; // 150% limit
+
+		double newWidth = this.Width + e.HorizontalChange;
+		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+
+		this.Width = finalWidth;
+		this.Height = finalWidth / targetRatio;
 	}
 	private void PreviewButton_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
 	{

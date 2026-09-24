@@ -1,20 +1,18 @@
 ﻿<!--
- * Copyright 2026 Kevin Stanislawski
+ * Copyright (C) [2026] [Kevin Stanislawski]]
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * As an exception, this software is subject to the Commons Clause License Condition v1.0.
- * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <Window x:Class="ProperDim.ControlPanel"
@@ -22,12 +20,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ProperDim Control Panel" 
         Height="200" Width="350" 
-        MinHeight="200" MaxHeight="200"
-		MinWidth="350" MaxWidth="350"
-        WindowStyle="None" 
+        MinHeight="200" MinWidth="350"
+        WindowStyle="None" ResizeMode="NoResize"
         WindowStartupLocation="Manual"
         ShowInTaskbar="False" 
         LocationChanged="Window_LocationChanged" 
+        SizeChanged="Window_SizeChanged"
         Closing="Window_Closing" 
         Loaded="Window_Loaded">
 	<WindowChrome.WindowChrome>
@@ -279,15 +277,30 @@
 			</Style>
 		</ResourceDictionary>
 	</FrameworkElement.Resources>
-	<Border Background="#2D2D2D" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="8">
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="30" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-			<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" CornerRadius="7,7,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-				<Grid>
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+	<Grid>
+		<!-- Static outer frame to maintain perfect 8px physical edge regardless of scale -->
+		<Border Background="#2D2D2D" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="8" />
+
+		<Grid Margin="1">
+			<!-- Mask generator (matches app background color to prevent white flashes) -->
+			<Border Name="MaskBorder" Background="#2D2D2D" CornerRadius="7" />
+
+			<Grid>
+				<Grid.OpacityMask>
+					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
+				</Grid.OpacityMask>
+
+				<Viewbox Stretch="Uniform">
+					<Grid Width="348" Height="198">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="30" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+
+						<!-- CornerRadius removed because OpacityMask natively clips the curves perfectly -->
+						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+							<Grid>
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
 						<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
 						<TextBlock Text="ProperDim" Foreground="#AAAAAA" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center" />
 					</StackPanel>
@@ -585,8 +598,22 @@
 							</TextBlock>
 						</Grid>
 					</TabItem>
-				</TabControl>
+							</TabControl>
+						</Grid>
+
+						<!-- Thumb moved inside the Viewbox Grid so it scales perfectly with the UI -->
+						<Thumb Grid.RowSpan="2" Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
+							<Thumb.Template>
+								<ControlTemplate TargetType="{x:Type Thumb}">
+									<Border Background="{TemplateBinding Background}">
+										<Path Data="M 8,14 L 14,8 M 2,14 L 14,2" Stroke="#555555" StrokeThickness="1.25" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+									</Border>
+								</ControlTemplate>
+							</Thumb.Template>
+						</Thumb>
+					</Grid>
+				</Viewbox>
 			</Grid>
 		</Grid>
-	</Border>
+	</Grid>
 </Window>

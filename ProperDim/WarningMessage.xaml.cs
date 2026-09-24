@@ -17,16 +17,18 @@
  * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
  */
 
+
 using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
-
 namespace ProperDim;
 
 public partial class WarningMessage : Window
 {
 	public MessageBoxResult Result { get; private set; } = MessageBoxResult.No;
+	private bool _isInitializing = true;
 
 	private WarningMessage(string message, string title, bool isOkOnly, string customButtonText)
 	{
@@ -53,6 +55,7 @@ public partial class WarningMessage : Window
 		this.Opacity = 0;
 		this.Loaded += (s, e) =>
 		{
+			ApplySavedSize();
 			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
 			this.BeginAnimation(Window.OpacityProperty, anim);
 		};
@@ -86,6 +89,38 @@ public partial class WarningMessage : Window
 	{
 		Result = MessageBoxResult.No;
 		this.Close();
+	}
+
+	private void ApplySavedSize()
+	{
+		if (ConfigManager.Settings.WarningMessageWidth >= this.MinWidth && ConfigManager.Settings.WarningMessageHeight >= this.MinHeight)
+		{
+			this.Width = Math.Min(ConfigManager.Settings.WarningMessageWidth, 450);
+			this.Height = Math.Min(ConfigManager.Settings.WarningMessageHeight, 225);
+		}
+		_isInitializing = false;
+	}
+
+	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		if (_isInitializing) return;
+
+		ConfigManager.Settings.WarningMessageWidth = this.Width;
+		ConfigManager.Settings.WarningMessageHeight = this.Height;
+		ConfigManager.Settings.Save();
+	}
+
+	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+	{
+		double targetRatio = 300.0 / 150.0;
+		double minWidth = 300;
+		double maxWidth = 450; // 150% limit
+
+		double newWidth = this.Width + e.HorizontalChange;
+		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+
+		this.Width = finalWidth;
+		this.Height = finalWidth / targetRatio;
 	}
 
 	protected override void OnSourceInitialized(EventArgs e)

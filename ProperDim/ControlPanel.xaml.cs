@@ -1,20 +1,18 @@
 ﻿/*
- * Copyright 2026 Kevin Stanislawski
+ * Copyright (C) [2026] [Kevin Stanislawski]]
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * As an exception, this software is subject to the Commons Clause License Condition v1.0.
- * You may not Sell the Software. For the full text of the Commons Clause, see the LICENSE file.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -104,6 +102,29 @@ public partial class ControlPanel : Window
 		ConfigManager.Settings.ControlPanelLeft = this.Left;
 		ConfigManager.Settings.ControlPanelTop = this.Top;
 		ConfigManager.Settings.Save();
+	}
+
+	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		if (_isInitializing) return;
+		if (this.WindowState != WindowState.Normal) return;
+
+		ConfigManager.Settings.ControlPanelWidth = this.Width;
+		ConfigManager.Settings.ControlPanelHeight = this.Height;
+		ConfigManager.Settings.Save();
+	}
+
+	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+	{
+		double targetRatio = 350.0 / 200.0;
+		double minWidth = 350;
+		double maxWidth = 525; // 150% limit
+
+		double newWidth = this.Width + e.HorizontalChange;
+		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+
+		this.Width = finalWidth;
+		this.Height = finalWidth / targetRatio;
 	}
 
 	protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -823,6 +844,12 @@ public partial class ControlPanel : Window
 		else
 		{
 			this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+		}
+
+		if (ConfigManager.Settings.ControlPanelWidth >= this.MinWidth && ConfigManager.Settings.ControlPanelHeight >= this.MinHeight)
+		{
+			this.Width = Math.Min(ConfigManager.Settings.ControlPanelWidth, 700);
+			this.Height = Math.Min(ConfigManager.Settings.ControlPanelHeight, 400);
 		}
 
 		// --- Restore last dimmer brightness ---
