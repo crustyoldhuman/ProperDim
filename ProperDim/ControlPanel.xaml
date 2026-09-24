@@ -27,7 +27,11 @@
         LocationChanged="Window_LocationChanged" 
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing" 
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Height="200" Width="350"
+        MinHeight="200" MaxHeight="200"
+        MinWidth="350" MaxWidth="350"
+        Background="#2D2D2D">
 	<WindowChrome.WindowChrome>
 		<WindowChrome GlassFrameThickness="1" CornerRadius="0" CaptionHeight="0" UseAeroCaptionButtons="False" ResizeBorderThickness="0" />
 	</WindowChrome.WindowChrome>
@@ -587,8 +591,8 @@
 										</Setter>
 									</Style>
 								</UniformGrid.Resources>
-								<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
-								<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
+								<Button Content="Clear Schedule" Width="110" Height="22" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
+								<Button Content="Resync Displays" Width="110" Height="22" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
 							</UniformGrid>
 
 							<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
