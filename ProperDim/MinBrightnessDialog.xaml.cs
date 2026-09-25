@@ -230,7 +230,11 @@ public partial class MinBrightnessDialog : Window
 		double minWidth = 300;
 		double maxWidth = 450; // 150% limit
 
-		double newWidth = this.Width + e.HorizontalChange;
+		double scaleX = e.HorizontalChange / this.Width;
+		double scaleY = e.VerticalChange / this.Height;
+		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+
+		double newWidth = this.Width + (this.Width * dominantScale);
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

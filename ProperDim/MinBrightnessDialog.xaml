@@ -33,7 +33,7 @@
 				<Grid.OpacityMask>
 					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
 				</Grid.OpacityMask>
-				<Viewbox Stretch="Uniform">
+				<Viewbox Stretch="Fill">
 					<Grid Width="298" Height="258">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="30" />
@@ -82,8 +82,8 @@
 					Adjust the slider below to set the absolute minimum brightness. 
 				</TextBlock>
 
-				<StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,14">
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14">
+				<StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,-8,10,0">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
 						<TextBlock Text="Minimum Brightness: " Foreground="White" FontSize="14" FontWeight="SemiBold" />
 						<TextBlock Text="{Binding ElementName=MinSlider, Path=Value, StringFormat={}{0:P0}}" Foreground="White" FontSize="14" FontWeight="SemiBold" />
 					</StackPanel>

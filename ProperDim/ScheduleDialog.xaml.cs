@@ -165,7 +165,11 @@ public partial class ScheduleDialog : Window
 		double minWidth = 320;
 		double maxWidth = 500; // 150% limit
 
-		double newWidth = this.Width + e.HorizontalChange;
+		double scaleX = e.HorizontalChange / this.Width;
+		double scaleY = e.VerticalChange / this.Height;
+		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+
+		double newWidth = this.Width + (this.Width * dominantScale);
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

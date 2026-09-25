@@ -112,7 +112,7 @@
                     </Hyperlink>
 				</TextBlock>
 
-				<Button Content="Cool" Width="70" Height="25" Click="Close_Click" Foreground="White" Margin="0,0,0,5">
+				<Button Content="Cool" Width="70" Height="25" Click="Close_Click" Foreground="White" Margin="0,0,0,8">
 					<Button.Template>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<Border Name="BtnBorder" Background="#3E3E42" BorderBrush="#555" BorderThickness="1" CornerRadius="0">

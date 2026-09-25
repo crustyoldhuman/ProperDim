@@ -120,7 +120,14 @@ public partial class ControlPanel : Window
 		double minWidth = 350;
 		double maxWidth = 525; // 150% limit
 
-		double newWidth = this.Width + e.HorizontalChange;
+		// Calculate proportional drag on both axes to allow natural vertical, horizontal, or diagonal pulling
+		double scaleX = e.HorizontalChange / this.Width;
+		double scaleY = e.VerticalChange / this.Height;
+
+		// Use the axis with the largest movement to determine the scale direction and magnitude
+		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+
+		double newWidth = this.Width + (this.Width * dominantScale);
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

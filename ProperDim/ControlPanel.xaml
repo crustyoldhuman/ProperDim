@@ -27,8 +27,7 @@
         LocationChanged="Window_LocationChanged" 
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing" 
-        Loaded="Window_Loaded"
-        Background="#2D2D2D">
+        Loaded="Window_Loaded">
 	<WindowChrome.WindowChrome>
 		<WindowChrome GlassFrameThickness="1" CornerRadius="0" CaptionHeight="0" UseAeroCaptionButtons="False" ResizeBorderThickness="0" />
 	</WindowChrome.WindowChrome>
@@ -291,7 +290,7 @@
 					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
 				</Grid.OpacityMask>
 
-				<Viewbox Stretch="Uniform">
+				<Viewbox Stretch="Fill">
 					<Grid Width="348" Height="198">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="30" />
@@ -602,19 +601,20 @@
 							</TabControl>
 						</Grid>
 
-						<!-- Thumb moved inside the Viewbox Grid so it scales perfectly with the UI -->
-						<Thumb Grid.RowSpan="2" Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
-							<Thumb.Template>
-								<ControlTemplate TargetType="{x:Type Thumb}">
-									<Border Background="{TemplateBinding Background}">
-										<Path Data="M 8,14 L 14,8 M 2,14 L 14,2" Stroke="#555555" StrokeThickness="1.25" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-									</Border>
-								</ControlTemplate>
-							</Thumb.Template>
-						</Thumb>
 					</Grid>
 				</Viewbox>
 			</Grid>
 		</Grid>
+
+		<!-- Thumb moved outside the Viewbox to prevent recursive coordinate scaling -->
+		<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
+			<Thumb.Template>
+				<ControlTemplate TargetType="{x:Type Thumb}">
+					<Border Background="{TemplateBinding Background}">
+						<Path Data="M 8,14 L 14,8 M 2,14 L 14,2" Stroke="#555555" StrokeThickness="1.25" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+					</Border>
+				</ControlTemplate>
+			</Thumb.Template>
+		</Thumb>
 	</Grid>
 </Window>

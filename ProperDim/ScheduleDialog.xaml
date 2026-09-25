@@ -20,7 +20,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Event Scheduler" 
         Height="280" Width="320" 
-        MinHeight="280" MinWidth="320"
+        MinHeight="285" MinWidth="320"
         Foreground="#FFFFFFFF" 
         WindowStyle="None" ResizeMode="NoResize"
         SizeChanged="Window_SizeChanged"
@@ -211,7 +211,7 @@
 					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
 				</Grid.OpacityMask>
 
-				<Viewbox Stretch="Uniform">
+				<Viewbox Stretch="Fill">
 					<Grid Width="318" Height="278">
 						<DockPanel>
 							<!-- CornerRadius removed because OpacityMask natively clips the curves perfectly -->
@@ -244,7 +244,7 @@
 					</Button>
 				</Grid>
 			</Border>
-			<StackPanel Margin="20,10,20,15">
+			<StackPanel Margin="20,4,20,15">
 				<TextBlock Text="Time" Margin="0,0,0,6" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Center" />
 				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
 					<ComboBox Name="HourBox" Width="65" SelectionChanged="TimeSelection_Changed" />

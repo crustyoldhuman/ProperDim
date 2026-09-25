@@ -39,7 +39,7 @@
 					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
 				</Grid.OpacityMask>
 
-				<Viewbox Stretch="Uniform">
+				<Viewbox Stretch="Fill">
 					<Grid Width="298" Height="148">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="30" />
