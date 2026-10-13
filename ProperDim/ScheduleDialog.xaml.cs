@@ -36,8 +36,7 @@ public partial class ScheduleDialog : Window
 	private readonly List<DimSchedule> _existingSchedules;
 	private readonly string _originalButtonText = "Add Event";
 	private readonly DimSchedule _editingItem = null;
-	private readonly double _originalBrightness;
-	private static readonly string[] _daySeparator = [", "];
+	private static readonly char[] _daySeparator = [',', ' '];
 	private bool _isInitializing = true;
 
 
@@ -56,21 +55,20 @@ public partial class ScheduleDialog : Window
 				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
 				this.BeginAnimation(Window.OpacityProperty, anim);
 			};
-
-			this.PreviewKeyDown += (s, e) =>
-			{
-				if (e.Key == Key.Escape)
-				{
-					this.Close();
-					e.Handled = true;
-				}
-			};
 		}
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				this.Close();
+				e.Handled = true;
+			}
+		};
 
 		_existingSchedules = existingSchedules ?? [];
 
 		Is24hCheck.IsChecked = ConfigManager.Settings.UseMilitaryTime;
-		_originalBrightness = ConfigManager.Settings.LastOpacity;
 		DialogDimmerSlider.Background = Brushes.Transparent;
 
 		// "Add" mode defaults
@@ -82,7 +80,7 @@ public partial class ScheduleDialog : Window
 		// Default to current time and brightness
 		DateTime now = DateTime.Now;
 		SetTimeUI(now.Hour, now.Minute);
-		DialogDimmerSlider.Value = _originalBrightness;
+		DialogDimmerSlider.Value = ConfigManager.Settings.LastOpacity;
 
 		// Load the last used days from settings
 		string savedDays = ConfigManager.Settings.LastScheduleDays;
@@ -114,7 +112,6 @@ public partial class ScheduleDialog : Window
 		_editingItem = existing;
 
 		Is24hCheck.IsChecked = ConfigManager.Settings.UseMilitaryTime;
-		_originalBrightness = ConfigManager.Settings.LastOpacity;
 		DialogDimmerSlider.Background = Brushes.Transparent;
 
 		// "Update" mode text
@@ -156,7 +153,12 @@ public partial class ScheduleDialog : Window
 
 		ConfigManager.Settings.ScheduleDialogWidth = this.Width;
 		ConfigManager.Settings.ScheduleDialogHeight = this.Height;
+	}
+
+	protected override void OnClosed(EventArgs e)
+	{
 		ConfigManager.Settings.Save();
+		base.OnClosed(e);
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -165,11 +167,14 @@ public partial class ScheduleDialog : Window
 		double minWidth = 320;
 		double maxWidth = 500; // 150% limit
 
-		double scaleX = e.HorizontalChange / this.Width;
-		double scaleY = e.VerticalChange / this.Height;
-		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+		Point mousePos = Mouse.GetPosition(this);
+		double requestedWidth = mousePos.X;
+		double requestedHeight = mousePos.Y;
 
-		double newWidth = this.Width + (this.Width * dominantScale);
+		double newWidth = requestedWidth > requestedHeight * targetRatio
+			? requestedWidth
+			: requestedHeight * targetRatio;
+
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;
@@ -203,7 +208,7 @@ public partial class ScheduleDialog : Window
 		// Reset all boxes first
 		DayM.IsChecked = DayT.IsChecked = DayW.IsChecked = DayTh.IsChecked = DayF.IsChecked = DayS.IsChecked = DaySu.IsChecked = false;
 
-		var dayParts = daysString.Split(_daySeparator, StringSplitOptions.None);
+		var dayParts = daysString.Split(_daySeparator, StringSplitOptions.RemoveEmptyEntries);
 
 		foreach (var d in dayParts)
 		{
@@ -297,7 +302,7 @@ public partial class ScheduleDialog : Window
 
 			// If times match, check for day overlap
 			// Split the stored days string (e.g. "Mo, Tu") into parts
-			var scheduleDays = s.Days.Split(_daySeparator, StringSplitOptions.None);
+			var scheduleDays = s.Days.Split(_daySeparator, StringSplitOptions.RemoveEmptyEntries);
 
 			// Conflict exists ONLY if the sets of days intersect
 			return scheduleDays.Intersect(currentDays).Any();
@@ -562,18 +567,6 @@ public partial class ScheduleDialog : Window
 			}
 		}
 	}
-	private static void AnimateScroll(ScrollViewer sv, double ToValue)
-	{
-		DoubleAnimation scrollAnimation = new()
-		{
-			From = sv.VerticalOffset,
-			To = ToValue,
-			Duration = new Duration(TimeSpan.FromMilliseconds(200)),
-			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
-		};
-
-		sv.BeginAnimation(ScrollViewerBehavior.VerticalOffsetProperty, scrollAnimation);
-	}
 
 	private void ScrollBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 	{
@@ -684,7 +677,4 @@ public partial class ScheduleDialog : Window
 			}
 		}
 	}
-
-
-
 }

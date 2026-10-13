@@ -101,7 +101,7 @@ public partial class ControlPanel : Window
 
 		ConfigManager.Settings.ControlPanelLeft = this.Left;
 		ConfigManager.Settings.ControlPanelTop = this.Top;
-		ConfigManager.Settings.Save();
+		_mainWindow?.TriggerSave();
 	}
 
 	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -111,7 +111,7 @@ public partial class ControlPanel : Window
 
 		ConfigManager.Settings.ControlPanelWidth = this.Width;
 		ConfigManager.Settings.ControlPanelHeight = this.Height;
-		ConfigManager.Settings.Save();
+		_mainWindow?.TriggerSave();
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -120,14 +120,14 @@ public partial class ControlPanel : Window
 		double minWidth = 350;
 		double maxWidth = 525; // 150% limit
 
-		// Calculate proportional drag on both axes to allow natural vertical, horizontal, or diagonal pulling
-		double scaleX = e.HorizontalChange / this.Width;
-		double scaleY = e.VerticalChange / this.Height;
+		Point mousePos = Mouse.GetPosition(this);
+		double requestedWidth = mousePos.X;
+		double requestedHeight = mousePos.Y;
 
-		// Use the axis with the largest movement to determine the scale direction and magnitude
-		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+		double newWidth = requestedWidth > requestedHeight * targetRatio
+			? requestedWidth
+			: requestedHeight * targetRatio;
 
-		double newWidth = this.Width + (this.Width * dominantScale);
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;
@@ -171,17 +171,8 @@ public partial class ControlPanel : Window
 
 	private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 	{
-		if (TrayCheckBox.IsChecked == true)
-		{
-			e.Cancel = true;
-			this.Hide();
-			this.ShowInTaskbar = false;
-
-			MainTabs.SelectedIndex = 0;
-
-			var scrollViewer = GetScrollViewer(ScheduleListBox);
-			scrollViewer?.ScrollToTop();
-		}
+		e.Cancel = true;
+		HandleClosure();
 	}
 
 	private void HandleClosure()
@@ -830,12 +821,15 @@ public partial class ControlPanel : Window
 
 	private async void Window_Loaded(object sender, RoutedEventArgs e)
 	{
-		_scrollDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
-		_scrollDebounceTimer.Tick += (s, args) =>
+		if (_scrollDebounceTimer == null)
 		{
-			_isScrolling = false;
-			_scrollDebounceTimer.Stop();
-		};
+			_scrollDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
+			_scrollDebounceTimer.Tick += (s, args) =>
+			{
+				_isScrolling = false;
+				_scrollDebounceTimer.Stop();
+			};
+		}
 		_isInitializing = true;
 		// --- Restore window position ---
 		double left = ConfigManager.Settings.ControlPanelLeft;
@@ -861,12 +855,6 @@ public partial class ControlPanel : Window
 
 		// --- Restore last dimmer brightness ---
 		DimmerSlider.Value = ConfigManager.Settings.LastOpacity;
-		if (_mainWindow != null)
-		{
-			// Use Authority method on load
-			_mainWindow.ApplyBrightness(ConfigManager.Settings.LastOpacity);
-			_mainWindow.LoadSchedules();
-		}
 
 		// --- Sync checkboxes and hotkeys ---
 		await InitializeFromSettingsAsync();
@@ -982,6 +970,7 @@ public partial class ControlPanel : Window
 		ConfigManager.Settings.ScheduleToggle = true;
 		ConfigManager.Settings.Save();
 		ToggleScheduleUI(true);
+		_mainWindow.EvaluateMissedSchedules(animate: true, durationMs: 1500);
 	}
 
 	private void ScheduleCheckbox_Unchecked(object sender, RoutedEventArgs e)

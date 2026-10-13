@@ -52,12 +52,26 @@ public partial class WarningMessage : Window
 			SecondaryButton.Click += Yes_Click;
 		}
 
-		this.Opacity = 0;
-		this.Loaded += (s, e) =>
+		this.Loaded += (s, e) => ApplySavedSize();
+
+		if (SystemParameters.ClientAreaAnimation)
 		{
-			ApplySavedSize();
-			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
-			this.BeginAnimation(Window.OpacityProperty, anim);
+			this.Opacity = 0;
+			this.Loaded += (s, e) =>
+			{
+				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+				this.BeginAnimation(Window.OpacityProperty, anim);
+			};
+		}
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				Result = MessageBoxResult.No;
+				this.Close();
+				e.Handled = true;
+			}
 		};
 	}
 
@@ -107,7 +121,12 @@ public partial class WarningMessage : Window
 
 		ConfigManager.Settings.WarningMessageWidth = this.Width;
 		ConfigManager.Settings.WarningMessageHeight = this.Height;
+	}
+
+	protected override void OnClosed(EventArgs e)
+	{
 		ConfigManager.Settings.Save();
+		base.OnClosed(e);
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -116,11 +135,14 @@ public partial class WarningMessage : Window
 		double minWidth = 300;
 		double maxWidth = 450; // 150% limit
 
-		double scaleX = e.HorizontalChange / this.Width;
-		double scaleY = e.VerticalChange / this.Height;
-		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+		Point mousePos = Mouse.GetPosition(this);
+		double requestedWidth = mousePos.X;
+		double requestedHeight = mousePos.Y;
 
-		double newWidth = this.Width + (this.Width * dominantScale);
+		double newWidth = requestedWidth > requestedHeight * targetRatio
+			? requestedWidth
+			: requestedHeight * targetRatio;
+
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

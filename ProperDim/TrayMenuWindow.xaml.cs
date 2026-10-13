@@ -19,6 +19,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using static ProperDim.NativeMethods;
 
 namespace ProperDim;
@@ -175,19 +176,15 @@ public partial class TrayMenuWindow : Window
 		double menuWidth = this.ActualWidth > 0 ? this.ActualWidth : this.DesiredSize.Width;
 		double menuHeight = this.ActualHeight > 0 ? this.ActualHeight : this.DesiredSize.Height;
 
-		GetCursorPos(out POINTStruct pt);
-
-		var source = PresentationSource.FromVisual(this);
-		double dpiX = 1.0, dpiY = 1.0;
-		if (source?.CompositionTarget != null)
+		Point trayPos = _mainWindow.GetTrayIconScreenPosition();
+		var mainDpi = VisualTreeHelper.GetDpi(_mainWindow);
+		POINTStruct pt = new POINTStruct
 		{
-			dpiX = source.CompositionTarget.TransformToDevice.M11;
-			dpiY = source.CompositionTarget.TransformToDevice.M22;
-		}
+			X = (int)(trayPos.X * mainDpi.DpiScaleX),
+			Y = (int)(trayPos.Y * mainDpi.DpiScaleY)
+		};
 
-		double cursorX = pt.X / dpiX;
-		double cursorY = pt.Y / dpiY;
-
+		double dpiX = 1.0, dpiY = 1.0;
 		RectStruct workArea = new() { Left = 0, Top = 0, Right = 1920, Bottom = 1080 };
 		RectStruct monitorArea = workArea;
 
@@ -200,10 +197,18 @@ public partial class TrayMenuWindow : Window
 				{
 					workArea = mi.rcWork;
 					monitorArea = mi.rcMonitor;
+					if (GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, out uint dX, out uint dY) == 0)
+					{
+						dpiX = dX / 96.0;
+						dpiY = dY / 96.0;
+					}
 				}
 			}
 			return true;
 		}, IntPtr.Zero);
+
+		double cursorX = pt.X / dpiX;
+		double cursorY = pt.Y / dpiY;
 
 		double workBottom = workArea.Bottom / dpiY;
 		double workRight = workArea.Right / dpiX;
@@ -217,33 +222,37 @@ public partial class TrayMenuWindow : Window
 		// If the cursor clicked inside the Work Area, the icon is inside the Overflow Menu flyout, not on the Taskbar.
 		bool isInOverflow = pt.X >= workArea.Left && pt.X <= workArea.Right && pt.Y >= workArea.Top && pt.Y <= workArea.Bottom;
 
-		// The XAML has a 10px margin around the border for the drop shadow.
-		// To make the visible UI physically flush with the taskbar, we pull the window into the taskbar boundary by 10px.
-		double edgeOffset = -28;
+		// The XAML has a 28px margin around the border for the drop shadow.
+		double shadowMargin = 28;
+
+		// Windows 11 native menus spawn 12px away from the taskbar edge.
+		double taskbarGap = 12;
+		double edgeOffset = -(shadowMargin - taskbarGap); // -16
+
+		// For the overflow menu, retain a 2px clearance from the cursor so it doesn't intercept clicks
+		double overflowOffset = -(shadowMargin - 2); // -26
 
 		double newLeft, newTop;
 
 		if (isInOverflow)
 		{
-			int cursorClearance = 2; // Prevents the transparent shadow margin from intercepting the toggle click
-
 			if (isRight)
 			{
 				// Position the window so its bottom-right visual corner sits left and up from the cursor
-				newLeft = cursorX - menuWidth - edgeOffset - cursorClearance;
-				newTop = cursorY - menuHeight - edgeOffset - cursorClearance;
+				newLeft = cursorX - menuWidth - overflowOffset;
+				newTop = cursorY - menuHeight - overflowOffset;
 			}
 			else if (isTop)
 			{
 				// Position the window so its top-left visual corner sits right and down from the cursor
-				newLeft = cursorX + edgeOffset + cursorClearance;
-				newTop = cursorY + edgeOffset + cursorClearance;
+				newLeft = cursorX + overflowOffset;
+				newTop = cursorY + overflowOffset;
 			}
 			else
 			{
 				// Default (Bottom or Left Taskbar): Position bottom-left visual corner right and up from the cursor
-				newLeft = cursorX + edgeOffset + cursorClearance;
-				newTop = cursorY - menuHeight - edgeOffset - cursorClearance;
+				newLeft = cursorX + overflowOffset;
+				newTop = cursorY - menuHeight - overflowOffset;
 			}
 		}
 		else if (isLeft)
@@ -292,6 +301,7 @@ public partial class TrayMenuWindow : Window
 			this.Opacity = 1.0;
 		}
 
+		RemoveHook();
 		_proc = HookCallback;
 		_hookID = SetHook(_proc);
 	}
@@ -321,8 +331,7 @@ public partial class TrayMenuWindow : Window
 	private void Controls_Click(object sender, RoutedEventArgs e)
 	{
 		_mainWindow.ShowControlPanel();
-		// Removing this.Close() prevents double-closure crashes. 
-		// Focusing the Control Panel automatically triggers Window_Deactivated, which safely handles the closure.
+		this.Hide();
 	}
 
 	private void Exit_Click(object sender, RoutedEventArgs e)

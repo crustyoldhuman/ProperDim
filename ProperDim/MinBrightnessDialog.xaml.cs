@@ -43,16 +43,16 @@ public partial class MinBrightnessDialog : Window
 				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
 				this.BeginAnimation(Window.OpacityProperty, anim);
 			};
-
-			this.PreviewKeyDown += (s, e) =>
-			{
-				if (e.Key == Key.Escape)
-				{
-					this.Close();
-					e.Handled = true;
-				}
-			};
 		}
+
+		this.PreviewKeyDown += (s, e) =>
+		{
+			if (e.Key == Key.Escape)
+			{
+				this.Close();
+				e.Handled = true;
+			}
+		};
 	}
 
 	protected override void OnSourceInitialized(EventArgs e)
@@ -196,13 +196,11 @@ public partial class MinBrightnessDialog : Window
 		ConfigManager.Settings.Save();
 
 		this.DialogResult = true;
-		this.Close();
 	}
 
 	private void NeverMind_Click(object sender, RoutedEventArgs e)
 	{
 		this.DialogResult = false;
-		this.Close();
 	}
 
 	private void ApplySavedSize()
@@ -221,7 +219,12 @@ public partial class MinBrightnessDialog : Window
 
 		ConfigManager.Settings.MinBrightnessDialogWidth = this.Width;
 		ConfigManager.Settings.MinBrightnessDialogHeight = this.Height;
+	}
+
+	protected override void OnClosed(EventArgs e)
+	{
 		ConfigManager.Settings.Save();
+		base.OnClosed(e);
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -230,11 +233,14 @@ public partial class MinBrightnessDialog : Window
 		double minWidth = 300;
 		double maxWidth = 450; // 150% limit
 
-		double scaleX = e.HorizontalChange / this.Width;
-		double scaleY = e.VerticalChange / this.Height;
-		double dominantScale = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+		Point mousePos = Mouse.GetPosition(this);
+		double requestedWidth = mousePos.X;
+		double requestedHeight = mousePos.Y;
 
-		double newWidth = this.Width + (this.Width * dominantScale);
+		double newWidth = requestedWidth > requestedHeight * targetRatio
+			? requestedWidth
+			: requestedHeight * targetRatio;
+
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

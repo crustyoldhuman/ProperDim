@@ -130,7 +130,12 @@ public static class ConfigManager
 				Directory.CreateDirectory(directory);
 			}
 
-			string json = JsonSerializer.Serialize(instance, _jsonOptions);
+			string json;
+			lock (_saveLock)
+			{
+				json = JsonSerializer.Serialize(instance, _jsonOptions);
+			}
+
 			System.Threading.Tasks.Task.Run(() =>
 			{
 				lock (_saveLock)

@@ -76,7 +76,13 @@ public class GlobalHotkeyService : IDisposable
 
 	public void Dispose()
 	{
-		_hotkeyWindow?.Dispose();
+		if (_hotkeyWindow != null)
+		{
+			IntPtr handle = _hotkeyWindow.Handle;
+			UnregisterHotKey(handle, HOTKEY_ID_UP);
+			UnregisterHotKey(handle, HOTKEY_ID_DOWN);
+			_hotkeyWindow.Dispose();
+		}
 		GC.SuppressFinalize(this);
 	}
 

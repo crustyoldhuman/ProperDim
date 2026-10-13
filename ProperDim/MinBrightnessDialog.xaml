@@ -95,8 +95,7 @@
 						</Grid.ColumnDefinitions>
 
 						<Slider x:Name="MinSlider" Grid.Column="0" Margin="0,2,8,0" Minimum="0.01" Maximum="0.40" SmallChange="0.01" LargeChange="0.05" 
-								ValueChanged="MinSlider_ValueChanged"
-								PreviewMouseLeftButtonDown="MinSlider_PreviewMouseLeftButtonDown" 
+                                PreviewMouseLeftButtonDown="MinSlider_PreviewMouseLeftButtonDown"
 								PreviewMouseMove="MinSlider_PreviewMouseMove" 
 								PreviewMouseLeftButtonUp="MinSlider_PreviewMouseLeftButtonUp">
 							<Slider.Style>

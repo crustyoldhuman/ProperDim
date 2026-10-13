@@ -27,19 +27,25 @@ public static class RegistryService
 	private const string StartupKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 	private const string AppName = "ProperDim";
 
+	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+	private static async Task<bool> IsStartupEnabledMsixAsync()
+	{
+		try
+		{
+			var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
+			return task.State is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	public static async Task<bool> IsStartupEnabledAsync()
 	{
 		if (NativeMethods.IsRunningAsMsix())
 		{
-			try
-			{
-				var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
-				return task.State is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
-			}
-			catch
-			{
-				return false;
-			}
+			return await IsStartupEnabledMsixAsync();
 		}
 
 		try
@@ -53,49 +59,55 @@ public static class RegistryService
 		}
 	}
 
+	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+	private static async Task<bool> SetStartupMsixAsync(bool enable)
+	{
+		try
+		{
+			var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
+			if (enable)
+			{
+				var state = await task.RequestEnableAsync();
+				return state is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
+			}
+			else
+			{
+				task.Disable();
+				return true;
+			}
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	public static async Task<bool> SetStartupAsync(bool enable)
 	{
 		if (NativeMethods.IsRunningAsMsix())
 		{
-			try
-			{
-				var task = await Windows.ApplicationModel.StartupTask.GetAsync("ProperDimStartupTask");
-				if (enable)
-				{
-					var state = await task.RequestEnableAsync();
-					return state is Windows.ApplicationModel.StartupTaskState.Enabled or Windows.ApplicationModel.StartupTaskState.EnabledByPolicy;
-				}
-				else
-				{
-					task.Disable();
-					return true;
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Failed to update packaged startup settings: " + ex.Message);
-				return false;
-			}
+			return await SetStartupMsixAsync(enable);
 		}
 
 		try
 		{
 			using RegistryKey key = Registry.CurrentUser.OpenSubKey(StartupKey, true);
-			if (enable)
+			if (key != null)
 			{
-				string path = Environment.ProcessPath;
-				key.SetValue(AppName, $"\"{path}\"");
+				if (enable)
+				{
+					string path = Environment.ProcessPath;
+					key.SetValue(AppName, $"\"{path}\"");
+				}
+				else
+				{
+					key.DeleteValue(AppName, false);
+				}
 			}
-			else
-			{
-				key.DeleteValue(AppName, false);
-			}
-
 			return true;
 		}
-		catch (Exception ex)
+		catch
 		{
-			MessageBox.Show("Failed to update startup settings: " + ex.Message);
 			return false;
 		}
 	}

@@ -34,13 +34,17 @@ public partial class AppInfoWindow : Window
 		InitializeComponent();
 		NativeMethods.ApplyWindows10Shadow(this);
 
-		this.Opacity = 0;
-		this.Loaded += (s, e) =>
+		this.Loaded += (s, e) => ApplySavedSize();
+
+		if (SystemParameters.ClientAreaAnimation)
 		{
-			ApplySavedSize();
-			System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
-			this.BeginAnimation(Window.OpacityProperty, anim);
-		};
+			this.Opacity = 0;
+			this.Loaded += (s, e) =>
+			{
+				System.Windows.Media.Animation.DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
+				this.BeginAnimation(Window.OpacityProperty, anim);
+			};
+		}
 
 		this.PreviewKeyDown += (s, e) =>
 		{
@@ -91,7 +95,7 @@ public partial class AppInfoWindow : Window
 		}
 		catch (System.Exception ex)
 		{
-			MessageBox.Show("Unable to open link: " + ex.Message);
+			WarningMessage.Show(this, "Unable to open link: " + ex.Message, "Error", true, "OK");
 		}
 	}
 
@@ -104,7 +108,7 @@ public partial class AppInfoWindow : Window
 		}
 		catch (System.Exception ex)
 		{
-			MessageBox.Show("Unable to open help file: " + ex.Message);
+			WarningMessage.Show(this, "Unable to open help file: " + ex.Message, "Error", true, "OK");
 		}
 	}
 
@@ -124,7 +128,12 @@ public partial class AppInfoWindow : Window
 
 		ConfigManager.Settings.AppInfoWindowWidth = this.Width;
 		ConfigManager.Settings.AppInfoWindowHeight = this.Height;
+	}
+
+	protected override void OnClosed(EventArgs e)
+	{
 		ConfigManager.Settings.Save();
+		base.OnClosed(e);
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -133,7 +142,14 @@ public partial class AppInfoWindow : Window
 		double minWidth = 320;
 		double maxWidth = 480; // 150% limit
 
-		double newWidth = this.Width + e.HorizontalChange;
+		Point mousePos = Mouse.GetPosition(this);
+		double requestedWidth = mousePos.X;
+		double requestedHeight = mousePos.Y;
+
+		double newWidth = requestedWidth > requestedHeight * targetRatio
+			? requestedWidth
+			: requestedHeight * targetRatio;
+
 		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
 
 		this.Width = finalWidth;

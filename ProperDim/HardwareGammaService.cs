@@ -50,7 +50,14 @@ public class HardwareGammaService : IDisposable
 	{
 		if (_isRunning) return;
 		_isRunning = true;
-		_watchdogTimer = new Timer(WatchdogTick, null, 0, _intervalMs);
+		if (_watchdogTimer == null)
+		{
+			_watchdogTimer = new Timer(WatchdogTick, null, 0, Timeout.Infinite);
+		}
+		else
+		{
+			_watchdogTimer.Change(0, Timeout.Infinite);
+		}
 	}
 
 	public void Stop()
@@ -120,9 +127,16 @@ public class HardwareGammaService : IDisposable
 	private void WatchdogTick(object state)
 	{
 		if (!_isRunning) return;
-		foreach (var kvp in _targetGammas)
+		try
 		{
-			ApplyGamma(kvp.Key, kvp.Value, force: true);
+			foreach (var kvp in _targetGammas)
+			{
+				ApplyGamma(kvp.Key, kvp.Value, force: true);
+			}
+		}
+		finally
+		{
+			if (_isRunning) _watchdogTimer?.Change(_intervalMs, Timeout.Infinite);
 		}
 	}
 
@@ -136,8 +150,24 @@ public class HardwareGammaService : IDisposable
 			return;
 		}
 
+		using SafeDcHandle dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
+		if (dc.IsInvalid) return;
+
 		lock (_rampLock)
 		{
+			if (force)
+			{
+				RAMP currentRamp = new() { Red = new ushort[256], Green = new ushort[256], Blue = new ushort[256] };
+				if (NativeMethods.GetDeviceGammaRamp(dc, ref currentRamp))
+				{
+					ushort expected = (ushort)(hardwareTarget * 65535);
+					if (Math.Abs(currentRamp.Red[255] - expected) < 256)
+					{
+						_appliedGammas[deviceName] = hardwareTarget;
+						return; // Hardware matches expected state, skip costly update
+					}
+				}
+			}
 			for (int i = 0; i < 256; i++)
 			{
 				double normalized = i / 255.0;
@@ -150,13 +180,9 @@ public class HardwareGammaService : IDisposable
 				_sharedRamp.Blue[i] = value;
 			}
 
-			using SafeDcHandle dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
-			if (!dc.IsInvalid)
+			if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
 			{
-				if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
-				{
-					_appliedGammas[deviceName] = hardwareTarget;
-				}
+				_appliedGammas[deviceName] = hardwareTarget;
 			}
 		}
 	}

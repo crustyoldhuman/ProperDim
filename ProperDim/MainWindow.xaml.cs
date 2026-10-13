@@ -156,7 +156,7 @@ namespace ProperDim
 			};
 			RefreshMonitors();
 
-			EvaluateMissedSchedules();
+			EvaluateMissedSchedules(animate: true, durationMs: 1500);
 		}
 
 		private static bool IsVirtualDisplay(params string[] hardwareStrings)
@@ -369,7 +369,8 @@ namespace ProperDim
 		{
 			Dispatcher.InvokeAsync(() =>
 			{
-				RefreshMonitors();
+				_debounceTimer?.Stop();
+				_debounceTimer?.Start();
 			});
 		}
 		public void RefreshMonitors()
@@ -502,6 +503,7 @@ namespace ProperDim
 			int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 			_ = SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW | WS_EX_LAYERED);
 
+			HwndSource.FromHwnd(hwnd)?.AddHook(HwndHook);
 			RegisterGlobalHotkeys();
 
 			if (TrayIcon?.TrayIcon?.MessageWindow != null)
@@ -510,7 +512,7 @@ namespace ProperDim
 				{
 					bool appsKeyHardwareTriggered = GetAsyncKeyState(0x5D) != 0;
 
-					Dispatcher.InvokeAsync(async () =>
+					Application.Current.Dispatcher.InvokeAsync(() =>
 					{
 						bool isShiftF10 = (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) || System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift)) &&
 										  System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.F10);
@@ -521,29 +523,13 @@ namespace ProperDim
 
 						if (isRightClick || isActionKey)
 						{
-							var identifier = new NOTIFYICONIDENTIFIER
-							{
-								cbSize = (uint)Marshal.SizeOf<NOTIFYICONIDENTIFIER>(),
-								hWnd = TrayIcon.TrayIcon.WindowHandle,
-								uID = (uint)TrayIcon.TrayIcon.Icon,
-								guidItem = TrayIcon.TrayIcon.Id
-							};
-
-							if (Shell_NotifyIconGetRect(ref identifier, out RectStruct rect) == 0)
-							{
-								int targetX = rect.Left + ((rect.Right - rect.Left) / 2);
-								int targetY = rect.Top + ((rect.Bottom - rect.Top) / 2);
-								SetCursorPos(targetX, targetY);
-								await System.Threading.Tasks.Task.Delay(50);
-							}
-
 							if (isRightClick)
 							{
-								HandleTrayMenuToggle();
+								TrayIcon_TrayRightMouseUp(this, new RoutedEventArgs());
 							}
 							else
 							{
-								ToggleControlPanel();
+								TrayIcon_TrayLeftMouseDown(this, new RoutedEventArgs());
 							}
 						}
 					});
@@ -555,10 +541,71 @@ namespace ProperDim
 		{
 			if (msg == WM_DISPLAYCHANGE || msg == WM_SETTINGCHANGE)
 			{
-				RefreshMonitors();
-				ApplyBrightness(ConfigManager.Settings.LastOpacity);
+				_debounceTimer?.Stop();
+				_debounceTimer?.Start();
 			}
 			return IntPtr.Zero;
+		}
+
+		public Point GetTrayIconScreenPosition()
+		{
+			try
+			{
+				bool rectFound = false;
+
+				var identifier = new NOTIFYICONIDENTIFIER
+				{
+					cbSize = (uint)Marshal.SizeOf<NOTIFYICONIDENTIFIER>(),
+					hWnd = TrayIcon.TrayIcon.WindowHandle,
+					uID = 0,
+					guidItem = TrayIcon.Id
+				};
+
+				if (Shell_NotifyIconGetRect(ref identifier, out RectStruct rect) == 0)
+				{
+					rectFound = true;
+				}
+				else
+				{
+					for (uint i = 0; i <= 10; i++)
+					{
+						identifier.uID = i;
+						identifier.guidItem = TrayIcon.Id;
+						if (Shell_NotifyIconGetRect(ref identifier, out rect) == 0)
+						{
+							rectFound = true;
+							break;
+						}
+
+						identifier.guidItem = TrayIcon.TrayIcon.Id;
+						if (Shell_NotifyIconGetRect(ref identifier, out rect) == 0)
+						{
+							rectFound = true;
+							break;
+						}
+
+						identifier.guidItem = Guid.Empty;
+						if (Shell_NotifyIconGetRect(ref identifier, out rect) == 0)
+						{
+							rectFound = true;
+							break;
+						}
+					}
+				}
+
+				if (rectFound)
+				{
+					var dpi = VisualTreeHelper.GetDpi(this);
+					double x = (rect.Left + (rect.Right - rect.Left) / 2.0) / dpi.DpiScaleX;
+					double y = (rect.Top + (rect.Bottom - rect.Top) / 2.0) / dpi.DpiScaleY;
+					return new Point(x, y);
+				}
+			}
+			catch { }
+
+			GetCursorPos(out POINTStruct pos);
+			var fallbackDpi = VisualTreeHelper.GetDpi(this);
+			return new Point(pos.X / fallbackDpi.DpiScaleX, pos.Y / fallbackDpi.DpiScaleY);
 		}
 
 		// ---------------------------------------------------------
@@ -576,6 +623,10 @@ namespace ProperDim
 		{
 			if (!ConfigManager.Settings.HotkeysEnabled) return;
 
+			// Prevent Windows key auto-repeat from moving the brightness too rapidly
+			if ((DateTime.Now - _lastHotkeyTime).TotalMilliseconds < 75) return;
+			_lastHotkeyTime = DateTime.Now;
+
 			double baseValue = _gammaAnimator.IsActive
 				? _gammaAnimator.TargetValue
 				: ConfigManager.Settings.LastOpacity;
@@ -590,9 +641,9 @@ namespace ProperDim
 			if (id == HOTKEY_ID_UP) targetPercent += 5;
 			else if (id == HOTKEY_ID_DOWN) targetPercent -= 5;
 
-			int minPercent = (int)Math.Round(ConfigManager.Settings.GlobalMinimum * 100);
+			// Logical brightness goes down to 1% (0.01), ApplyBrightness handles the hardware floor scaling
 			if (targetPercent > 100) targetPercent = 100;
-			if (targetPercent < minPercent) targetPercent = minPercent;
+			if (targetPercent < 1) targetPercent = 1;
 
 			double finalTarget = targetPercent / 100.0;
 
@@ -601,12 +652,8 @@ namespace ProperDim
 			_saveDebouncer.Stop();
 			_saveDebouncer.Start();
 
-			bool isHeldDown = (DateTime.Now - _lastHotkeyTime).TotalMilliseconds < 150;
-			_lastHotkeyTime = DateTime.Now;
-
-			int animDuration = isHeldDown ? 50 : 200;
-
-			ApplyBrightness(finalTarget, animate: true, linear: true, durationMs: animDuration);
+			// Use a fixed duration that blends smoothly if the key is held
+			ApplyBrightness(finalTarget, animate: true, linear: true, durationMs: 150);
 		}
 
 		public void SaveSchedules()
@@ -622,7 +669,11 @@ namespace ProperDim
 		public void LoadSchedules()
 		{
 			var list = ConfigManager.Settings.SavedSchedules ?? [];
-			ActiveSchedules = [.. list];
+			ActiveSchedules.Clear();
+			foreach (var s in list)
+			{
+				ActiveSchedules.Add(s);
+			}
 		}
 
 		private void SetupTimer()
@@ -674,7 +725,7 @@ namespace ProperDim
 			return _shortDays[(int)d];
 		}
 
-		private void EvaluateMissedSchedules(bool animate = false, int durationMs = 200)
+		public void EvaluateMissedSchedules(bool animate = false, int durationMs = 200)
 		{
 			if (!ConfigManager.Settings.ScheduleToggle || ActiveSchedules.Count == 0)
 			{
@@ -777,7 +828,9 @@ namespace ProperDim
 						var iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/ProperDimIcon.ico"))?.Stream;
 						if (iconStream != null)
 						{
+							var oldIcon = TrayIcon.Icon;
 							TrayIcon.Icon = new System.Drawing.Icon(iconStream);
+							oldIcon?.Dispose();
 						}
 					}
 				});
@@ -853,7 +906,7 @@ namespace ProperDim
 
 				long now = Stopwatch.GetTimestamp();
 				double elapsedSeconds = (double)(now - _startTime) / Stopwatch.Frequency;
-				double progress = elapsedSeconds / _duration.TotalSeconds;
+				double progress = _duration.TotalSeconds > 0 ? elapsedSeconds / _duration.TotalSeconds : 1.0;
 
 				if (progress >= 1.0)
 				{
@@ -924,6 +977,9 @@ namespace ProperDim
 
 		private void HandleTrayMenuToggle()
 		{
+			if ((DateTime.Now - _lastToggleTime).TotalMilliseconds < 300) return;
+			_lastToggleTime = DateTime.Now;
+
 			if ((DateTime.Now - _lastTrayMenuCloseTime).TotalMilliseconds < 250) return;
 
 			if (_currentTrayMenu != null)
@@ -941,6 +997,7 @@ namespace ProperDim
 			}
 
 			_currentTrayMenu = new TrayMenuWindow(this);
+			_currentTrayMenu.Closed += (s, ev) => _currentTrayMenu = null;
 			_currentTrayMenu.IsVisibleChanged += (s, ev) =>
 			{
 				if (_isShuttingDown) return;
