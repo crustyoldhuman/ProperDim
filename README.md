@@ -10,6 +10,9 @@
 ## What is ProperDim?
 ProperDim is a tiny-but-mighty screen brightness management and automation utility that includes a scheduler, hotkeys, and minimum brightness adjustment all packaged in a clean interface that won't get in your way. 
 
+
+<p align="center"><img width="425" src="https://github.com/user-attachments/assets/4a729dc0-3169-47a2-9445-1b186b198765" /></p>
+
 ## Is ProperDim for me?
 - Are you running at least Windows 10? ***Then, YES!***
 - Have the brightness options that came with your screen left you feeling unsatisfied and yearning for more? ***Then, YES!***
