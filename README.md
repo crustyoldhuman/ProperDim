@@ -89,17 +89,17 @@ The release page has two installation versions available: **Full** and **Lite**
 ## Shameless Plugs
 
 <h3>Gaming streams</h3>I stream games no one cares about to a tiny audience on Twitch & YouTube. If you like yammering people, weird games, and custom stream interactions, check me out:
-<p align="center"><img width="175" alt="crustyoldhuman avatar" src="https://github.com/user-attachments/assets/e4de8e77-57ed-4a98-8f70-d2c7246ca553" /></p>
+<p align="center"><img width="125" alt="crustyoldhuman avatar" src="https://github.com/user-attachments/assets/e4de8e77-57ed-4a98-8f70-d2c7246ca553" /></p>
 
 <p align="center">https://www.youtube.com/@crustyoldhuman</p>
 <p align="center">https://www.twitch.tv/crustyoldhuman</p>
 <br>
 <h3>SkyPeek</h3>Coming soon. 
-<p align="center"><img width="500" src="https://github.com/user-attachments/assets/c75bef14-32e0-438a-b557-1a3aad64f66c" /></p>
+<p align="center"><img width="400" src="https://github.com/user-attachments/assets/c75bef14-32e0-438a-b557-1a3aad64f66c" /></p>
 <br>
 <h3>SSVidPlayer</h3>A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
 
-<p align="center"><img width="500" alt="ProperDim Banner" src="https://github.com/user-attachments/assets/8b3b3706-c4dd-46e9-9a57-ad62c30db0bc" /></p>
+<p align="center"><img width="400" alt="ProperDim Banner" src="https://github.com/user-attachments/assets/8b3b3706-c4dd-46e9-9a57-ad62c30db0bc" /></p>
 <p align="center">Try it right now in your browser, no installation required: https://crustyoldhuman.github.io/SSVidPlayer/SSVidPlayer.html</p>
 <p align="center">GitHub page: https://github.com/crustyoldhuman/SSVidPlayer</p>
 
