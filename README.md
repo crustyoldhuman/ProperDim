@@ -95,7 +95,8 @@ The release page has two installation versions available: **Full** and **Lite**
 <p align="center">https://www.twitch.tv/crustyoldhuman</p>
 <br>
 <h3>SkyPeek</h3>Coming soon. 
-<p align="center"><img width="400" src="https://github.com/user-attachments/assets/c75bef14-32e0-438a-b557-1a3aad64f66c" /></p>
+<p align="center"><img width="400" src="https://github.com/user-attachments/assets/43ef5ecc-274a-417e-9293-39169c7cb096" /></p>
+
 <br>
 <h3>SSVidPlayer</h3>A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
 
