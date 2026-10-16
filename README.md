@@ -100,7 +100,7 @@ The release page has two installation versions available: **Full** and **Lite**
 <br>
 <h3>SSVidPlayer</h3>A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
 
-<p align="center"><img width="400" alt="ProperDim Banner" src="https://github.com/user-attachments/assets/8b3b3706-c4dd-46e9-9a57-ad62c30db0bc" /></p>
+<p align="center"><img width="400" alt="ProperDim Banner" src="https://github.com/user-attachments/assets/2f545380-6cb3-4b79-839d-246fa67c09c3" /></p>
 <p align="center">Try it right now in your browser, no installation required: https://crustyoldhuman.github.io/SSVidPlayer/SSVidPlayer.html</p>
 <p align="center">GitHub page: https://github.com/crustyoldhuman/SSVidPlayer</p>
 
