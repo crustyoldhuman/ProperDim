@@ -77,10 +77,12 @@ public partial class ScheduleDialog : Window
 
 		PopulateTimeBoxes();
 
+		DialogDimmerSlider.Minimum = ConfigManager.Settings.GlobalMinimum;
+
 		// Default to current time and brightness
 		DateTime now = DateTime.Now;
 		SetTimeUI(now.Hour, now.Minute);
-		DialogDimmerSlider.Value = ConfigManager.Settings.LastOpacity;
+		DialogDimmerSlider.Value = Math.Max(DialogDimmerSlider.Minimum, ConfigManager.Settings.LastOpacity);
 
 		// Load the last used days from settings
 		string savedDays = ConfigManager.Settings.LastScheduleDays;
@@ -120,8 +122,10 @@ public partial class ScheduleDialog : Window
 
 		PopulateTimeBoxes();
 
+		DialogDimmerSlider.Minimum = ConfigManager.Settings.GlobalMinimum;
+
 		// Load values from the existing item
-		DialogDimmerSlider.Value = existing.Brightness;
+		DialogDimmerSlider.Value = Math.Max(DialogDimmerSlider.Minimum, existing.Brightness);
 		SetTimeUI(existing.Time.Hours, existing.Time.Minutes);
 		SetDayCheckboxes(existing.Days);
 
@@ -141,8 +145,10 @@ public partial class ScheduleDialog : Window
 	{
 		if (ConfigManager.Settings.ScheduleDialogWidth >= this.MinWidth && ConfigManager.Settings.ScheduleDialogHeight >= this.MinHeight)
 		{
-			this.Width = Math.Min(ConfigManager.Settings.ScheduleDialogWidth, 640);
-			this.Height = Math.Min(ConfigManager.Settings.ScheduleDialogHeight, 560);
+			double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
+			double contentWidth = Math.Min(ConfigManager.Settings.ScheduleDialogWidth - marginOffset, 500);
+			this.Width = contentWidth + marginOffset;
+			this.Height = (contentWidth / (320.0 / 290.0)) + marginOffset;
 		}
 		_isInitializing = false;
 	}
@@ -151,8 +157,8 @@ public partial class ScheduleDialog : Window
 	{
 		if (_isInitializing) return;
 
-		ConfigManager.Settings.ScheduleDialogWidth = this.Width;
-		ConfigManager.Settings.ScheduleDialogHeight = this.Height;
+		ConfigManager.Settings.ScheduleDialogWidth = this.ActualWidth;
+		ConfigManager.Settings.ScheduleDialogHeight = this.ActualHeight;
 	}
 
 	protected override void OnClosed(EventArgs e)
@@ -161,24 +167,49 @@ public partial class ScheduleDialog : Window
 		base.OnClosed(e);
 	}
 
+	private POINTStruct _resizeStartPos;
+	private double _resizeStartWidth;
+	private double _dpiScaleX = 1.0;
+	private double _dpiScaleY = 1.0;
+
+	private void ResizeThumb_DragStarted(object sender, DragStartedEventArgs e)
+	{
+		NativeMethods.GetCursorPos(out _resizeStartPos);
+		_resizeStartWidth = this.ActualWidth;
+
+		this.Width = double.NaN;
+		this.Height = double.NaN;
+
+		PresentationSource source = PresentationSource.FromVisual(this);
+		if (source != null && source.CompositionTarget != null)
+		{
+			_dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+			_dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
+		}
+	}
+
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
 	{
-		double targetRatio = 320.0 / 280.0;
+		double targetRatio = 320.0 / 290.0;
 		double minWidth = 320;
 		double maxWidth = 500; // 150% limit
+		double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
 
-		Point mousePos = Mouse.GetPosition(this);
-		double requestedWidth = mousePos.X;
-		double requestedHeight = mousePos.Y;
+		NativeMethods.GetCursorPos(out POINTStruct currentPos);
+		double logicalDeltaX = (currentPos.X - _resizeStartPos.X) / _dpiScaleX;
 
-		double newWidth = requestedWidth > requestedHeight * targetRatio
-			? requestedWidth
-			: requestedHeight * targetRatio;
+		double requestedContentWidth = (_resizeStartWidth - marginOffset) + logicalDeltaX;
+		double finalContentWidth = Math.Max(minWidth, Math.Min(maxWidth, requestedContentWidth));
+		double finalContentHeight = finalContentWidth / targetRatio;
 
-		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+		double finalLogicalWidth = finalContentWidth + marginOffset;
+		double finalLogicalHeight = finalContentHeight + marginOffset;
 
-		this.Width = finalWidth;
-		this.Height = finalWidth / targetRatio;
+		IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+		int physWidth = (int)Math.Round(finalLogicalWidth * _dpiScaleX);
+		int physHeight = (int)Math.Round(finalLogicalHeight * _dpiScaleY);
+
+		NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, 0, 0, physWidth, physHeight, 0x0016);
 	}
 
 	private void SetTimeUI(int h, int m)
@@ -464,6 +495,9 @@ public partial class ScheduleDialog : Window
 				UpdateScheduleSliderFromMouse(slider, e);
 			}
 
+			// Start preview regardless of whether they clicked the track or the thumb
+			StartPreview();
+
 			_isDragging = true;
 		}
 	}
@@ -484,10 +518,16 @@ public partial class ScheduleDialog : Window
 			slider.ReleaseMouseCapture();
 			_isDragging = false;
 
-			// Only restore original brightness if they actually dragged the slider
-			if (_hasDragged && Owner is ControlPanel main)
+			if (Owner is ControlPanel main)
 			{
-				main.EndPreview(false);
+				if (_hasDragged)
+				{
+					main.EndPreview(false);
+				}
+				else
+				{
+					StopPreview();
+				}
 			}
 			_hasDragged = false;
 		}

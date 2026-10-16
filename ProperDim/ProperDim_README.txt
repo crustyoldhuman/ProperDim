@@ -72,7 +72,8 @@ setup. See the "Tips & Tidbits" section for exceptions and details.
 interactive elements. Enter or Spacebar activates selected items. 
 When a window tab is selected, pressing the Left/Right arrows 
 cycles between tabs.
-- 
+- Every program window can be permanently resized at any time via
+the bottom-right drag corner. 
 
 
 __| Schedule |____________________________________________________
@@ -256,30 +257,66 @@ ProperDim 1.4:  ProperDim was now feature complete, but it was
 		choice of cutting the whole feature. I then added 
 		the Minimum Brightness Adjustment setting, because 
 		this was the only way I could ensure every user 
-		could get the deep blacks I wanted to give them for 
-		their specific screens. And that's it. Everything 
-		is implemented and perfect. 
+		could get the deep blacks I wanted to give them 
+		for their specific screens. And that's it. 
+		Everything is implemented and perfect. 
 
 		ProperDim is finished. I hope it works for you!
+
+Version 1.4.5:  Some quality-of-life additions have been added.
+		Every window now has a scalable corner to resize.
+		Also, "State Recovery" has been added. Now, if
+		your PC is asleep or shut off, when it resumes
+		your brightness settings will be recovered as if
+		nothing happened! You can utilize this to auto-
+		matically reset your brightness to 100% before you
+		turn your PC on in the morning. I also cleaned up
+		up the text rendering on windows 10 machines and
+		some stability/performance improvements.
 
 
 	   '///,\\\   Licensing & Support   ///,\\\'
              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - ProperDim is licensed under the GNU GENERAL PUBLIC LICENSE  
-Version 3 making it completely free and open source
+Version 3  making it completely free and open source
 
 - If you have an issue with ProperDim you can use the Github link
 provided below to create an issue or start a topic in the 
 discussions area. 
-https://github.com/crustyoldhuman/ProperDim 
+
+         https://github.com/crustyoldhuman/ProperDim 
 
 
 	     '///,\\\   Shameless Plugs   ///,\\\'
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-          https://www.twitch.tv/crustyoldhuman
-          https://www.youtube.com/@crustyoldhuman
+Game streaming: I be streaming weird indie games and picking apart
+old retro stuff and just fartin' around. I do all my stream assets
+myself so lots of fun custom fun stuff I built from the ground up.
+
+              https://www.twitch.tv/crustyoldhuman
+             https://www.youtube.com/@crustyoldhuman
 
 
+SSVidPlayer: A lightweight, zero-dependency HTML5 video player 
+for PC designed to apply native browser AI video upscaling (like
+NVIDIA RTX Video Super Resolution or AMD RSR) to your local media
+files, all while remaining entirely local and privacy-respecting.
+
+          https://github.com/crustyoldhuman/SSVidPlayer
+
+
+SkyPeek: Coming soon. A fully featured, minimal, efficient, and 
+beautiful weather app that lives right in your PCs system tray by
+the clock. If you're looking for a one-stop shop for radar, per-
+city granular alerts, Windows theme integration, 10-day forecast,
+24-hour forecast, Daily summary with air quality ratings, plenty
+of other bells & whistles, all with no registration, signs up, or
+API keys required anywhere--keep an eye out!
+
+	     https://github.com/crustyoldhuman/SkyPeek
+
+
+<3
 ~crustyoldhuman

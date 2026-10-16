@@ -34,5 +34,13 @@
 		<Style TargetType="{x:Type Hyperlink}">
 			<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 		</Style>
+		<Style TargetType="{x:Type Window}">
+			<Setter Property="FontFamily" Value="Segoe UI" />
+			<Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+			<Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+			<Setter Property="RenderOptions.ClearTypeHint" Value="Enabled" />
+			<Setter Property="UseLayoutRounding" Value="True" />
+			<Setter Property="SnapsToDevicePixels" Value="True" />
+		</Style>
 	</Application.Resources>
 </Application>

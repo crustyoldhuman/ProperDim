@@ -20,9 +20,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Event Scheduler" 
         Height="280" Width="320" 
-        MinHeight="285" MinWidth="320"
+        MinHeight="280" MinWidth="320"
         Foreground="#FFFFFFFF" 
         WindowStyle="None" ResizeMode="NoResize"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
         SizeChanged="Window_SizeChanged"
         WindowStartupLocation="CenterOwner">
 	<WindowChrome.WindowChrome>
@@ -132,7 +136,7 @@
 								</ToggleButton>
 								<ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding ComboBox.SelectionBoxItem}" Margin="10,3,23,3" VerticalAlignment="Center" HorizontalAlignment="Left" />
 								<Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding ComboBox.IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
-									<Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}">
+									<Grid Name="DropDown" Background="#2D2D2D" RenderOptions.ClearTypeHint="Enabled" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True" SnapsToDevicePixels="True" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}">
 										<Border Name="DropDownBorder" Background="#2D2D2D" BorderThickness="1" BorderBrush="#3F3F46" />
 										<ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True" PreviewMouseWheel="DropDownScrollViewer_PreviewMouseWheel" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
 											<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
@@ -212,10 +216,10 @@
 				</Grid.OpacityMask>
 
 				<Viewbox Stretch="Fill">
-					<Grid Width="318" Height="278">
+					<Grid Width="318" Height="288" Background="#2D2D2D" RenderOptions.ClearTypeHint="Enabled">
 						<DockPanel>
 							<!-- CornerRadius removed because OpacityMask natively clips the curves perfectly -->
-							<Border DockPanel.Dock="Top" Height="32" Background="#1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+							<Border DockPanel.Dock="Top" Height="32" Background="#1E1E1E" RenderOptions.ClearTypeHint="Enabled" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 								<Grid>
 					<TextBlock Text="Event Scheduler" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="#AAAAAA" FontSize="12" IsHitTestVisible="False" />
 					<Button Content="✕" HorizontalAlignment="Right" Width="32" Height="32" Foreground="#FFFFFFFF" BorderThickness="0" Click="Close_Click">
@@ -393,7 +397,7 @@
 						</DockPanel>
 
 						<!-- Thumb moved inside the Viewbox Grid so it scales perfectly with the UI -->
-						<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
+						<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragStarted="ResizeThumb_DragStarted" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
 							<Thumb.Template>
 								<ControlTemplate TargetType="{x:Type Thumb}">
 									<Border Background="{TemplateBinding Background}">

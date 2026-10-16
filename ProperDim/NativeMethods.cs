@@ -406,7 +406,15 @@ internal static class NativeMethods
 				Opacity = window.IsActive ? 0.70 : 0.60,
 				Direction = 270
 			};
-			root.Effect = shadow;
+
+			if (root is System.Windows.Controls.Panel panel && panel.Children.Count > 0 && panel.Children[0] is System.Windows.UIElement shadowTarget)
+			{
+				shadowTarget.Effect = shadow;
+			}
+			else
+			{
+				root.Effect = shadow;
+			}
 
 			var duration = TimeSpan.FromMilliseconds(150);
 

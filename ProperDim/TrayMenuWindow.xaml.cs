@@ -102,9 +102,9 @@ public partial class TrayMenuWindow : Window
 		InitializeComponent();
 		this.IsVisibleChanged += Window_IsVisibleChanged;
 
-		if (!SystemParameters.DropShadow && this.Content is FrameworkElement root)
+		if (!SystemParameters.DropShadow && this.Content is System.Windows.Controls.Panel panel && panel.Children.Count > 0 && panel.Children[0] is UIElement shadowBorder)
 		{
-			root.Effect = null;
+			shadowBorder.Effect = null;
 		}
 
 		_mainWindow = mainWindow;

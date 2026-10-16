@@ -20,9 +20,9 @@
 		<ApplicationIcon>ProperDimIcon.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<Version>1.4.50</Version>
-		<AssemblyVersion>1.4.50</AssemblyVersion>
-		<FileVersion>1.4.50</FileVersion>
+		<Version>1.4.51</Version>
+		<AssemblyVersion>1.4.51</AssemblyVersion>
+		<FileVersion>1.4.51</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

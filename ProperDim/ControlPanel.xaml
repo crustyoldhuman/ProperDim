@@ -23,7 +23,11 @@
         MinHeight="200" MinWidth="350"
         WindowStyle="None" ResizeMode="NoResize"
         WindowStartupLocation="Manual"
-        ShowInTaskbar="False" 
+        ShowInTaskbar="False"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
         LocationChanged="Window_LocationChanged" 
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing" 
@@ -112,7 +116,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type CheckBox}">
-							<BulletDecorator Background="#00FFFFFF">
+							<BulletDecorator Background="#00FFFFFF" MinHeight="18">
 								<BulletDecorator.Bullet>
 									<Grid Width="16" Height="16">
 										<Border Name="BoxBorder" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="2" />
@@ -140,7 +144,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type TabItem}">
-							<Border Name="Border" Margin="2,0,2,-1" Padding="10,5" CornerRadius="3,3,0,0" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1,1,1,0">
+							<Border Name="Border" Margin="2,0,2,-1" Padding="10,5" CornerRadius="3,3,0,0" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1,1,1,0" RenderOptions.ClearTypeHint="Enabled">
 								<ContentPresenter Name="ContentSite" ContentSource="Header" />
 							</Border>
 							<ControlTemplate.Triggers>
@@ -170,7 +174,7 @@
 									<RowDefinition Height="*" />
 								</Grid.RowDefinitions>
 								<ItemsPresenter Name="HeaderPanel" Grid.Row="0" Margin="2,2,2,0" Panel.ZIndex="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
-								<Border Name="ContentBorder" Grid.Row="1" Background="{TemplateBinding Background}" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="0,3,3,3">
+								<Border Name="ContentBorder" Grid.Row="1" Background="{TemplateBinding Background}" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="0,3,3,3" RenderOptions.ClearTypeHint="Enabled">
 									<ContentPresenter ContentSource="SelectedContent" />
 								</Border>
 							</Grid>
@@ -234,7 +238,7 @@
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<Border Name="border" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="1" CornerRadius="13">
-								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,2" />
+								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 							</Border>
 							<ControlTemplate.Triggers>
 								<Trigger Property="UIElement.IsMouseOver" Value="True">
@@ -260,7 +264,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type TextBox}">
-							<Border Name="border" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" CornerRadius="0">
+							<Border Name="border" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" CornerRadius="0" RenderOptions.ClearTypeHint="Enabled">
 								<ScrollViewer Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
 							</Border>
 							<ControlTemplate.Triggers>
@@ -290,15 +294,15 @@
 					<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
 				</Grid.OpacityMask>
 
-				<Viewbox Stretch="Fill">
-					<Grid Width="348" Height="198">
+				<Viewbox Stretch="Uniform">
+					<Grid Width="348" Height="198" Background="#2D2D2D" RenderOptions.ClearTypeHint="Enabled">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="30" />
 							<RowDefinition Height="*" />
 						</Grid.RowDefinitions>
 
 						<!-- CornerRadius removed because OpacityMask natively clips the curves perfectly -->
-						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" RenderOptions.ClearTypeHint="Enabled" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 							<Grid>
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
 						<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
@@ -409,13 +413,13 @@
 						</Grid>
 					</TabItem>
 					<TabItem Header="Schedule">
-						<Grid Background="#00FFFFFF" Margin="10,8,10,5">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="*" />
-							</Grid.RowDefinitions>
-							<Grid Row="0" Margin="0,0,0,0">
-								<CheckBox Name="ScheduleCheckbox" 
+						<Grid Background="#00FFFFFF" Margin="10,5,10,5">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto" />
+											<RowDefinition Height="*" />
+										</Grid.RowDefinitions>
+										<Grid Row="0" Margin="0,0,0,0" Height="26">
+											<CheckBox Name="ScheduleCheckbox" 
 										  Content="Enable Schedule" 
 										  HorizontalAlignment="Left"
 										  Margin="2,0,0,0" 
@@ -423,10 +427,17 @@
 										  FontWeight="SemiBold"
 										  Checked="ScheduleCheckbox_Checked" 
 										  Unchecked="ScheduleCheckbox_Unchecked" />
-								<Button Name="AddScheduleButton" Style="{StaticResource RoundedAddButton}" Content="+" FontSize="14" FontWeight="SemiBold" Width="25" Height="25" Margin="0,-1,4,0" Cursor="Hand" Background="#3E3E42" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Add New Schedule" Click="AddSchedule_Click" />
-							</Grid>
+											<Button Name="AddScheduleButton" Style="{StaticResource RoundedAddButton}" Width="24" Height="24" Margin="0,0,0,0" Cursor="Hand" Background="#3E3E42" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Add New Schedule" Click="AddSchedule_Click">
+												<Button.Content>
+													<Grid Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" UseLayoutRounding="True">
+														<Rectangle Width="10" Height="2" Fill="#FFFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+														<Rectangle Width="2" Height="10" Fill="#FFFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+													</Grid>
+												</Button.Content>
+											</Button>
+										</Grid>
 							<Grid Grid.Row="1" Margin="0,1,0,-3">
-								<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,15" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
+								<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,0" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
 								<ListBox Name="ScheduleListBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" Margin="0,2,0,0" AlternationCount="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.ScrollUnit="Pixel" KeyboardNavigation.TabNavigation="Continue" MouseDoubleClick="ScheduleList_MouseDoubleClick" PreviewMouseWheel="ScheduleList_PreviewMouseWheel" PreviewKeyDown="ScheduleList_PreviewKeyDown">
 									<ListBox.ItemsPanel>
 										<ItemsPanelTemplate>
@@ -466,11 +477,11 @@
 											<Setter Property="Background" Value="#292929" />
 											<Setter Property="Template">
 												<Setter.Value>
-													<ControlTemplate TargetType="{x:Type ListBoxItem}">
-														<Border Name="Bd" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Padding="{TemplateBinding Control.Padding}" SnapsToDevicePixels="True">
-															<ContentPresenter HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-														</Border>
-														<ControlTemplate.Triggers>
+																<ControlTemplate TargetType="{x:Type ListBoxItem}">
+																	<Border Name="Bd" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Padding="{TemplateBinding Control.Padding}" SnapsToDevicePixels="True" RenderOptions.ClearTypeHint="Enabled">
+																		<ContentPresenter HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+																	</Border>
+																	<ControlTemplate.Triggers>
 															<Trigger Property="UIElement.IsMouseOver" Value="True">
 																<Setter TargetName="Bd" Property="Border.Background" Value="#44444A" />
 															</Trigger>
@@ -492,13 +503,19 @@
 							</Grid>
 						</Grid>
 					</TabItem>
-					<TabItem Header="Hotkeys">
-						<Grid Background="Transparent" MouseDown="HotkeysTab_MouseDown" Focusable="True" FocusVisualStyle="{x:Null}">
-							<Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-								<StackPanel Width="280" Margin="0,8,32,0">
-									<CheckBox Name="EnableHotkeysCheckBox" Content="Enable Hotkeys" Margin="0,0,0,8" FontWeight="SemiBold" HorizontalAlignment="Left" Checked="EnableHotkeysCheckBox_Changed" Unchecked="EnableHotkeysCheckBox_Changed" />
-									<StackPanel IsEnabled="{Binding ElementName=EnableHotkeysCheckBox, Path=IsChecked}">
-										<FrameworkElement.Style>
+								<TabItem Header="Hotkeys">
+									<Grid Background="Transparent" MouseDown="HotkeysTab_MouseDown" Focusable="True" FocusVisualStyle="{x:Null}" Margin="10,5,10,5">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto" />
+											<RowDefinition Height="*" />
+										</Grid.RowDefinitions>
+										<Grid Grid.Row="0" Height="26">
+											<CheckBox Name="EnableHotkeysCheckBox" Content="Enable Hotkeys" Margin="2,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Left" Checked="EnableHotkeysCheckBox_Changed" Unchecked="EnableHotkeysCheckBox_Changed" />
+										</Grid>
+										<Grid Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+											<StackPanel Width="280" Margin="0,0,32,0">
+												<StackPanel IsEnabled="{Binding ElementName=EnableHotkeysCheckBox, Path=IsChecked}">
+													<FrameworkElement.Style>
 											<Style TargetType="{x:Type StackPanel}">
 												<Style.Triggers>
 													<Trigger Property="IsEnabled" Value="False">
@@ -529,37 +546,41 @@
 							</Grid>
 						</Grid>
 					</TabItem>
-					<TabItem Header="Options" DockPanel.Dock="Right">
-						<Grid Margin="0,0,0,0">
+								<TabItem Header="Options" DockPanel.Dock="Right">
+									<Grid Margin="0,0,0,0">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="*" />
+											<RowDefinition Height="Auto" />
+										</Grid.RowDefinitions>
 
-							<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="34,12,0,0">
-								<CheckBox Name="StartupCheckBox" 
-										  Content="Run ProperDim when Windows starts" 
-										  Margin="0,0,0,4" 
-										  Checked="StartupCheckBox_Changed" 
-										  Unchecked="StartupCheckBox_Changed" />
+										<StackPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="34,0,0,0">
+											<CheckBox Name="StartupCheckBox" 
+                                                      Content="Run ProperDim when Windows starts" 
+                                                      Margin="0,0,0,4" 
+                                                      Checked="StartupCheckBox_Changed" 
+                                                      Unchecked="StartupCheckBox_Changed" />
 
-								<CheckBox Name="TrayCheckBox" 
-										  Content="Close button minimizes to system tray" 
-										  Margin="0,0,0,4" 
-										  Checked="TrayCheckBox_Changed" 
-										  Unchecked="TrayCheckBox_Changed" />
+											<CheckBox Name="TrayCheckBox" 
+                                                      Content="Close button minimizes to system tray" 
+                                                      Margin="0,0,0,4" 
+                                                      Checked="TrayCheckBox_Changed" 
+                                                      Unchecked="TrayCheckBox_Changed" />
 
-								<CheckBox Name="ShowStartupCheckBox" 
-										  Content="Show Controls window on app startup" 
-										  Margin="0,0,0,4"
-										  Checked="ShowStartupCheckBox_Changed" 
-										  Unchecked="ShowStartupCheckBox_Changed" />
+											<CheckBox Name="ShowStartupCheckBox" 
+                                                      Content="Show Controls window on app startup" 
+                                                      Margin="0,0,0,4"
+                                                      Checked="ShowStartupCheckBox_Changed" 
+                                                      Unchecked="ShowStartupCheckBox_Changed" />
 
-								<CheckBox Name="SwapTrayClicksCheckBox" 
-										  Content="Swap tray icon left/right click buttons" 
-										  Margin="0,0,0,4"
-										  Checked="SwapTrayClicksCheckBox_Changed" 
-										  Unchecked="SwapTrayClicksCheckBox_Changed" />
-							</StackPanel>
+											<CheckBox Name="SwapTrayClicksCheckBox" 
+                                                      Content="Swap tray icon left/right click buttons" 
+                                                      Margin="0,0,0,0"
+                                                      Checked="SwapTrayClicksCheckBox_Changed" 
+                                                      Unchecked="SwapTrayClicksCheckBox_Changed" />
+										</StackPanel>
 
-							<UniformGrid Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
-								<UniformGrid.Resources>
+										<UniformGrid Grid.Row="1" Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
+											<UniformGrid.Resources>
 									<Style TargetType="{x:Type Button}">
 										<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
 										<Setter Property="Foreground" Value="#FFFFFFFF" />
@@ -587,13 +608,13 @@
 										</Setter>
 									</Style>
 								</UniformGrid.Resources>
-								<Button Content="Clear Schedule" Width="110" Height="22" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
-								<Button Content="Resync Displays" Width="110" Height="22" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
-							</UniformGrid>
+											<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
+											<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
+										</UniformGrid>
 
-							<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
-								<Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
-									<Run Text="Info..." FontSize="10" />
+										<TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
+                                            <Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
+									<Run Text="Info..." FontSize="11" />
 								</Hyperlink>
 							</TextBlock>
 						</Grid>
@@ -607,7 +628,7 @@
 		</Grid>
 
 		<!-- Thumb moved outside the Viewbox to prevent recursive coordinate scaling -->
-		<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
+		<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragStarted="ResizeThumb_DragStarted" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
 			<Thumb.Template>
 				<ControlTemplate TargetType="{x:Type Thumb}">
 					<Border Background="{TemplateBinding Background}">

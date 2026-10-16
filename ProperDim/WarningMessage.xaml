@@ -21,6 +21,10 @@
 		Title="ProperDim" Height="150" Width="300"
         MinHeight="150" MinWidth="300"
         WindowStyle="None" ResizeMode="NoResize"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
         SizeChanged="Window_SizeChanged"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
 	<WindowChrome.WindowChrome>
@@ -40,7 +44,7 @@
 				</Grid.OpacityMask>
 
 				<Viewbox Stretch="Fill">
-					<Grid Width="298" Height="148">
+					<Grid Width="298" Height="148" Background="#2D2D2D" RenderOptions.ClearTypeHint="Enabled">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="30" />
 							<RowDefinition Height="*" />
@@ -48,7 +52,7 @@
 						</Grid.RowDefinitions>
 
 						<!-- CornerRadius removed because OpacityMask natively clips the curves perfectly -->
-						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" RenderOptions.ClearTypeHint="Enabled" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 							<TextBlock Name="TitleText" Foreground="#AAAAAA" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" />
 			</Border>
 			<TextBlock Name="MessageText" Grid.Row="1" Foreground="White" TextWrapping="Wrap" Margin="15,15,15,0" TextAlignment="Center" VerticalAlignment="Center" />
@@ -88,7 +92,7 @@
 		</Grid>
 
 		<!-- Thumb remains outside the Viewbox to retain fixed size -->
-		<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
+		<Thumb Width="12" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragStarted="ResizeThumb_DragStarted" DragDelta="ResizeThumb_DragDelta" Background="Transparent" Margin="0,0,2,2">
 			<Thumb.Template>
 				<ControlTemplate TargetType="{x:Type Thumb}">
 					<Border Background="{TemplateBinding Background}">

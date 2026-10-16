@@ -109,9 +109,30 @@ public partial class ControlPanel : Window
 		if (_isInitializing) return;
 		if (this.WindowState != WindowState.Normal) return;
 
-		ConfigManager.Settings.ControlPanelWidth = this.Width;
-		ConfigManager.Settings.ControlPanelHeight = this.Height;
+		ConfigManager.Settings.ControlPanelWidth = this.ActualWidth;
+		ConfigManager.Settings.ControlPanelHeight = this.ActualHeight;
 		_mainWindow?.TriggerSave();
+	}
+
+	private POINTStruct _resizeStartPos;
+	private double _resizeStartWidth;
+	private double _dpiScaleX = 1.0;
+	private double _dpiScaleY = 1.0;
+
+	private void ResizeThumb_DragStarted(object sender, DragStartedEventArgs e)
+	{
+		NativeMethods.GetCursorPos(out _resizeStartPos);
+		_resizeStartWidth = this.ActualWidth;
+
+		this.Width = double.NaN;
+		this.Height = double.NaN;
+
+		PresentationSource source = PresentationSource.FromVisual(this);
+		if (source != null && source.CompositionTarget != null)
+		{
+			_dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+			_dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
+		}
 	}
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -119,19 +140,23 @@ public partial class ControlPanel : Window
 		double targetRatio = 350.0 / 200.0;
 		double minWidth = 350;
 		double maxWidth = 525; // 150% limit
+		double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
 
-		Point mousePos = Mouse.GetPosition(this);
-		double requestedWidth = mousePos.X;
-		double requestedHeight = mousePos.Y;
+		NativeMethods.GetCursorPos(out POINTStruct currentPos);
+		double logicalDeltaX = (currentPos.X - _resizeStartPos.X) / _dpiScaleX;
 
-		double newWidth = requestedWidth > requestedHeight * targetRatio
-			? requestedWidth
-			: requestedHeight * targetRatio;
+		double requestedContentWidth = (_resizeStartWidth - marginOffset) + logicalDeltaX;
+		double finalContentWidth = Math.Max(minWidth, Math.Min(maxWidth, requestedContentWidth));
+		double finalContentHeight = finalContentWidth / targetRatio;
 
-		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+		double finalLogicalWidth = finalContentWidth + marginOffset;
+		double finalLogicalHeight = finalContentHeight + marginOffset;
 
-		this.Width = finalWidth;
-		this.Height = finalWidth / targetRatio;
+		IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+		int physWidth = (int)Math.Round(finalLogicalWidth * _dpiScaleX);
+		int physHeight = (int)Math.Round(finalLogicalHeight * _dpiScaleY);
+
+		NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, 0, 0, physWidth, physHeight, 0x0016);
 	}
 
 	protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -849,8 +874,10 @@ public partial class ControlPanel : Window
 
 		if (ConfigManager.Settings.ControlPanelWidth >= this.MinWidth && ConfigManager.Settings.ControlPanelHeight >= this.MinHeight)
 		{
-			this.Width = Math.Min(ConfigManager.Settings.ControlPanelWidth, 700);
-			this.Height = Math.Min(ConfigManager.Settings.ControlPanelHeight, 400);
+			double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
+			double contentWidth = Math.Min(ConfigManager.Settings.ControlPanelWidth - marginOffset, 525);
+			this.Width = contentWidth + marginOffset;
+			this.Height = (contentWidth / (350.0 / 200.0)) + marginOffset;
 		}
 
 		// --- Restore last dimmer brightness ---

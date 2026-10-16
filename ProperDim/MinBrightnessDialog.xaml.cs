@@ -87,6 +87,7 @@ public partial class MinBrightnessDialog : Window
 	}
 
 	private bool _isDragging = false;
+	private bool _hasDragged = false;
 
 	private void Window_Loaded(object sender, RoutedEventArgs e)
 	{
@@ -95,11 +96,6 @@ public partial class MinBrightnessDialog : Window
 	}
 
 	// --- SLIDER PREVIEW LOGIC ---
-
-	private void MinSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-	{
-		// Stripped: Value changes no longer trigger live previews automatically.
-	}
 
 	private void MinSlider_MouseWheel(object sender, MouseWheelEventArgs e)
 	{
@@ -115,6 +111,7 @@ public partial class MinBrightnessDialog : Window
 		{
 			slider.CaptureMouse();
 			_isDragging = true;
+			_hasDragged = false;
 
 			bool clickedTrack = !(e.OriginalSource is FrameworkElement fe && (fe is System.Windows.Controls.Primitives.Thumb || fe.TemplatedParent is System.Windows.Controls.Primitives.Thumb));
 
@@ -123,8 +120,7 @@ public partial class MinBrightnessDialog : Window
 				UpdateSliderFromMouse(slider, e);
 			}
 
-			// If clicking the track, smoothly transition to the new spot. If grabbing the thumb, instant is fine.
-			if (Owner is ControlPanel cp) cp.ApplyPreview(slider.Value, clickedTrack);
+			StartPreview();
 		}
 	}
 
@@ -132,6 +128,7 @@ public partial class MinBrightnessDialog : Window
 	{
 		if (_isDragging && sender is System.Windows.Controls.Slider slider && slider.IsMouseCaptured)
 		{
+			_hasDragged = true;
 			UpdateSliderFromMouse(slider, e);
 			// Dragging must remain instantaneous (animate: false) so it perfectly tracks the mouse without rubber-banding
 			if (Owner is ControlPanel cp) cp.ApplyPreview(slider.Value, false);
@@ -145,7 +142,18 @@ public partial class MinBrightnessDialog : Window
 			slider.ReleaseMouseCapture();
 			_isDragging = false;
 
-			if (Owner is ControlPanel cp) cp.EndPreview(true);
+			if (Owner is ControlPanel cp)
+			{
+				if (_hasDragged)
+				{
+					cp.EndPreview(false);
+				}
+				else
+				{
+					StopPreview();
+				}
+			}
+			_hasDragged = false;
 		}
 	}
 
@@ -207,8 +215,10 @@ public partial class MinBrightnessDialog : Window
 	{
 		if (ConfigManager.Settings.MinBrightnessDialogWidth >= this.MinWidth && ConfigManager.Settings.MinBrightnessDialogHeight >= this.MinHeight)
 		{
-			this.Width = Math.Min(ConfigManager.Settings.MinBrightnessDialogWidth, 450);
-			this.Height = Math.Min(ConfigManager.Settings.MinBrightnessDialogHeight, 390);
+			double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
+			double contentWidth = Math.Min(ConfigManager.Settings.MinBrightnessDialogWidth - marginOffset, 450);
+			this.Width = contentWidth + marginOffset;
+			this.Height = (contentWidth / (300.0 / 260.0)) + marginOffset;
 		}
 		_isInitializing = false;
 	}
@@ -217,8 +227,8 @@ public partial class MinBrightnessDialog : Window
 	{
 		if (_isInitializing) return;
 
-		ConfigManager.Settings.MinBrightnessDialogWidth = this.Width;
-		ConfigManager.Settings.MinBrightnessDialogHeight = this.Height;
+		ConfigManager.Settings.MinBrightnessDialogWidth = this.ActualWidth;
+		ConfigManager.Settings.MinBrightnessDialogHeight = this.ActualHeight;
 	}
 
 	protected override void OnClosed(EventArgs e)
@@ -227,24 +237,49 @@ public partial class MinBrightnessDialog : Window
 		base.OnClosed(e);
 	}
 
+	private POINTStruct _resizeStartPos;
+	private double _resizeStartWidth;
+	private double _dpiScaleX = 1.0;
+	private double _dpiScaleY = 1.0;
+
+	private void ResizeThumb_DragStarted(object sender, DragStartedEventArgs e)
+	{
+		NativeMethods.GetCursorPos(out _resizeStartPos);
+		_resizeStartWidth = this.ActualWidth;
+
+		this.Width = double.NaN;
+		this.Height = double.NaN;
+
+		PresentationSource source = PresentationSource.FromVisual(this);
+		if (source != null && source.CompositionTarget != null)
+		{
+			_dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+			_dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
+		}
+	}
+
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
 	{
 		double targetRatio = 300.0 / 260.0;
 		double minWidth = 300;
 		double maxWidth = 450; // 150% limit
+		double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
 
-		Point mousePos = Mouse.GetPosition(this);
-		double requestedWidth = mousePos.X;
-		double requestedHeight = mousePos.Y;
+		NativeMethods.GetCursorPos(out POINTStruct currentPos);
+		double logicalDeltaX = (currentPos.X - _resizeStartPos.X) / _dpiScaleX;
 
-		double newWidth = requestedWidth > requestedHeight * targetRatio
-			? requestedWidth
-			: requestedHeight * targetRatio;
+		double requestedContentWidth = (_resizeStartWidth - marginOffset) + logicalDeltaX;
+		double finalContentWidth = Math.Max(minWidth, Math.Min(maxWidth, requestedContentWidth));
+		double finalContentHeight = finalContentWidth / targetRatio;
 
-		double finalWidth = Math.Max(minWidth, Math.Min(maxWidth, newWidth));
+		double finalLogicalWidth = finalContentWidth + marginOffset;
+		double finalLogicalHeight = finalContentHeight + marginOffset;
 
-		this.Width = finalWidth;
-		this.Height = finalWidth / targetRatio;
+		IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+		int physWidth = (int)Math.Round(finalLogicalWidth * _dpiScaleX);
+		int physHeight = (int)Math.Round(finalLogicalHeight * _dpiScaleY);
+
+		NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, 0, 0, physWidth, physHeight, 0x0016);
 	}
 	private void PreviewButton_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
 	{
