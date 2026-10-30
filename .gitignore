@@ -15,3 +15,4 @@ ProperDim.MSIXPackage/
 .gitignore
 /.gitignore
 /ProperDim/ProperDim.csproj.user
+/License.txt

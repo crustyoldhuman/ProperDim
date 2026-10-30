@@ -132,6 +132,13 @@ public partial class App : Application
 		base.OnExit(e);
 	}
 
+	protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
+	{
+		base.OnSessionEnding(e);
+		EmergencyReset();
+		Environment.Exit(0);
+	}
+
 	private static void LogCrash(Exception ex, bool isNative = false)
 	{
 		if (ex == null) return;
