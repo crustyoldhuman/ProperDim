@@ -88,20 +88,25 @@ The release page has two installation versions available: **Full** and **Lite**
 
 ## Shameless Plugs
 
-<h3>Gaming streams</h3>I stream games no one cares about to a tiny audience on Twitch & YouTube. If you like yammering people, weird games, and custom stream interactions, check me out:
+<h3><p align="center">Gaming streams</h3>
+<p align="center">I stream games no one cares about to a tiny audience on Twitch & YouTube. If you like yammering people, weird games, and custom stream interactions, check me out:
 <p align="center"><img width="125" alt="crustyoldhuman avatar" src="https://github.com/user-attachments/assets/e4de8e77-57ed-4a98-8f70-d2c7246ca553" /></p>
 
 <p align="center">https://www.youtube.com/@crustyoldhuman</p>
 <p align="center">https://www.twitch.tv/crustyoldhuman</p>
 <br>
-<h3>Rapt Video Player</h3>A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
+<h3><p align="center">Rapt Video Player</h3>
+<p align="center">A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
 
 <p align="center"><img width="400" src="https://github.com/user-attachments/assets/fdaa8c53-7728-47ef-874a-e43dada5c1ab" /></p>
 <p align="center">Try it right now in your browser, no installation required: https://crustyoldhuman.github.io/Rapt/RaptVideoPlayer.html</p>
 <p align="center">GitHub page: https://github.com/crustyoldhuman/SSVidPlayer</p>
 <p align="center">Microsoft Store: https://apps.microsoft.com/detail/9P074TF9RTJ2</p>
 <br>
-<h3>SkyPeek</h3>Coming soon. 
+<h3><p align="center">SkyPeek</h3>
+<p align="center">Coming soon.
 <p align="center"><img width="400" src="https://github.com/user-attachments/assets/e8208072-1a0b-4c20-afed-74bae111e8a4" /></p>
+<p align="center">GitHub repo: https://github.com/crustyoldhuman/SkyPeek</p>
+<p align="center">Microsoft Store: https://apps.microsoft.com/detail/9P074TF9RTJ2</p>
 <br>
 <p align="center"><img src="https://github.com/user-attachments/assets/1e2011c2-b9b0-4c53-9b67-6c13ab03582b" /></p>
