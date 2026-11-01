@@ -94,7 +94,6 @@ The release page has two installation versions available: **Full** and **Lite**
 
 <p align="center">https://www.youtube.com/@crustyoldhuman</p>
 <p align="center">https://www.twitch.tv/crustyoldhuman</p>
-<br>
 <h3><p align="center">Rapt Video Player</h3>
 <p align="center">A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
 
@@ -102,7 +101,6 @@ The release page has two installation versions available: **Full** and **Lite**
 <p align="center">Try it right now in your browser, no installation required: https://crustyoldhuman.github.io/Rapt/RaptVideoPlayer.html</p>
 <p align="center">GitHub page: https://github.com/crustyoldhuman/SSVidPlayer</p>
 <p align="center">Microsoft Store: https://apps.microsoft.com/detail/9P074TF9RTJ2</p>
-<br>
 <h3><p align="center">SkyPeek</h3>
 <p align="center">Coming soon.
 <p align="center"><img width="400" src="https://github.com/user-attachments/assets/e8208072-1a0b-4c20-afed-74bae111e8a4" /></p>
