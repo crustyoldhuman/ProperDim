@@ -106,5 +106,6 @@ The release page has two installation versions available: **Full** and **Lite**
 <p align="center"><img width="400" src="https://github.com/user-attachments/assets/e8208072-1a0b-4c20-afed-74bae111e8a4" /></p>
 <p align="center">GitHub repo: https://github.com/crustyoldhuman/SkyPeek</p>
 <p align="center">Microsoft Store: https://apps.microsoft.com/detail/9P074TF9RTJ2</p>
-<br>
-<p align="center"><img src="https://github.com/user-attachments/assets/1e2011c2-b9b0-4c53-9b67-6c13ab03582b" /></p>
+
+---
+*Created with love by [crustyoldhuman](https://github.com/crustyoldhuman)*
