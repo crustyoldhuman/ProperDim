@@ -95,7 +95,7 @@ The release page has two installation versions available: **Full** and **Lite**
 <p align="center">https://www.youtube.com/@crustyoldhuman</p>
 <p align="center">https://www.twitch.tv/crustyoldhuman</p>
 <h3><p align="center">Rapt Video Player</h3>
-<p align="center">A lightweight, zero-dependency HTML5 video player for PC designed to apply native browser AI video upscaling (like NVIDIA RTX Video Super Resolution) to your local .mp4 files, all while remaining entirely local and privacy-respecting. It can be downloaded and ran offline, or you can bookmark the live github url below.
+<p align="center">Rapt is a zero-bloat, minimalist media player designed for dark-room viewing, featuring dynamic ambient edge-glow, a tasteful audio visualizer, custom draggable subtitles, and instant hardware upscaling. It's entirely local and privacy-respecting, and can be downloaded and ran offline, or you can bookmark the live github url below. 
 
 <p align="center"><img width="400" src="https://github.com/user-attachments/assets/fdaa8c53-7728-47ef-874a-e43dada5c1ab" /></p>
 <p align="center">Try it right now in your browser, no installation required: https://crustyoldhuman.github.io/Rapt/RaptVideoPlayer.html</p>
