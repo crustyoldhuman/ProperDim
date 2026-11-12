@@ -118,7 +118,7 @@ public static class ConfigManager
 		SaveInstance(Settings);
 	}
 
-	private static readonly object _saveLock = new();
+	internal static readonly object _saveLock = new();
 
 	internal static void SaveInstance(AppSettings instance)
 	{
@@ -133,7 +133,34 @@ public static class ConfigManager
 			string json;
 			lock (_saveLock)
 			{
-				json = JsonSerializer.Serialize(instance, _jsonOptions);
+				AppSettings snapshot = new()
+				{
+					ShowOnStartup = instance.ShowOnStartup,
+					CloseToTray = instance.CloseToTray,
+					HotkeysEnabled = instance.HotkeysEnabled,
+					IncreaseHotkey = instance.IncreaseHotkey,
+					DecreaseHotkey = instance.DecreaseHotkey,
+					ScheduleToggle = instance.ScheduleToggle,
+					ControlPanelLeft = instance.ControlPanelLeft,
+					ControlPanelTop = instance.ControlPanelTop,
+					ControlPanelWidth = instance.ControlPanelWidth,
+					ControlPanelHeight = instance.ControlPanelHeight,
+					ScheduleDialogWidth = instance.ScheduleDialogWidth,
+					ScheduleDialogHeight = instance.ScheduleDialogHeight,
+					AppInfoWindowWidth = instance.AppInfoWindowWidth,
+					AppInfoWindowHeight = instance.AppInfoWindowHeight,
+					WarningMessageWidth = instance.WarningMessageWidth,
+					WarningMessageHeight = instance.WarningMessageHeight,
+					MinBrightnessDialogWidth = instance.MinBrightnessDialogWidth,
+					MinBrightnessDialogHeight = instance.MinBrightnessDialogHeight,
+					LastOpacity = instance.LastOpacity,
+					SavedSchedules = [.. instance.SavedSchedules],
+					UseMilitaryTime = instance.UseMilitaryTime,
+					LastScheduleDays = instance.LastScheduleDays,
+					SwapTrayIconClicks = instance.SwapTrayIconClicks,
+					GlobalMinimum = instance.GlobalMinimum
+				};
+				json = JsonSerializer.Serialize(snapshot, _jsonOptions);
 			}
 
 			System.Threading.Tasks.Task.Run(() =>
@@ -142,9 +169,19 @@ public static class ConfigManager
 				{
 					try
 					{
-						File.WriteAllText(ConfigFilePath, json);
+						string tempPath = ConfigFilePath + ".tmp";
+						File.WriteAllText(tempPath, json);
+						File.Move(tempPath, ConfigFilePath, overwrite: true);
 					}
-					catch { }
+					catch (Exception ex)
+					{
+						try
+						{
+							string logPath = Path.Combine(directory ?? string.Empty, "error.log");
+							File.AppendAllText(logPath, $"[{System.DateTime.Now:O}] Save failure: {ex.Message}{Environment.NewLine}");
+						}
+						catch { }
+					}
 				}
 			});
 		}

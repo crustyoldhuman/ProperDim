@@ -660,7 +660,10 @@ namespace ProperDim
 		{
 			try
 			{
-				ConfigManager.Settings.SavedSchedules = [.. ActiveSchedules];
+				lock (ConfigManager._saveLock)
+				{
+					ConfigManager.Settings.SavedSchedules = [.. ActiveSchedules];
+				}
 				ConfigManager.Settings.Save();
 			}
 			catch { }
@@ -668,7 +671,11 @@ namespace ProperDim
 
 		public void LoadSchedules()
 		{
-			var list = ConfigManager.Settings.SavedSchedules ?? [];
+			List<DimSchedule> list;
+			lock (ConfigManager._saveLock)
+			{
+				list = [.. ConfigManager.Settings.SavedSchedules ?? []];
+			}
 			ActiveSchedules.Clear();
 			foreach (var s in list)
 			{
@@ -709,8 +716,12 @@ namespace ProperDim
 			_lastTriggeredMinute = m;
 
 			double val = triggeredSchedule.Brightness;
-			triggeredSchedule.LastTriggered = now;
-			ConfigManager.Settings.LastOpacity = val;
+
+			lock (ConfigManager._saveLock)
+			{
+				triggeredSchedule.LastTriggered = now;
+				ConfigManager.Settings.LastOpacity = val;
+			}
 
 			// Write both state updates to disk simultaneously
 			SaveSchedules();
@@ -784,8 +795,11 @@ namespace ProperDim
 
 			if (mostRecentMissed != null)
 			{
-				mostRecentMissed.LastTriggered = now;
-				ConfigManager.Settings.LastOpacity = mostRecentMissed.Brightness;
+				lock (ConfigManager._saveLock)
+				{
+					mostRecentMissed.LastTriggered = now;
+					ConfigManager.Settings.LastOpacity = mostRecentMissed.Brightness;
+				}
 
 				// Write both state updates to disk simultaneously
 				SaveSchedules();

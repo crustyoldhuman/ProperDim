@@ -165,7 +165,12 @@ public partial class TrayMenuWindow : Window
 
 	private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 	{
-		if (!(bool)e.NewValue) return;
+		if (!(bool)e.NewValue)
+		{
+			this.BeginAnimation(Window.OpacityProperty, null);
+			this.Opacity = 0.0;
+			return;
+		}
 
 		if (this.ActualWidth == 0 || this.ActualHeight == 0)
 		{
@@ -178,7 +183,7 @@ public partial class TrayMenuWindow : Window
 
 		Point trayPos = _mainWindow.GetTrayIconScreenPosition();
 		var mainDpi = VisualTreeHelper.GetDpi(_mainWindow);
-		POINTStruct pt = new POINTStruct
+		POINTStruct pt = new()
 		{
 			X = (int)(trayPos.X * mainDpi.DpiScaleX),
 			Y = (int)(trayPos.Y * mainDpi.DpiScaleY)
