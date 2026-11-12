@@ -364,15 +364,15 @@ internal static class NativeMethods
 	[return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
 	public static extern bool GetWindowRect(IntPtr hWnd, out RectStruct lpRect);
 
-	[System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, ExactSpelling = true)]
-	private static extern int GetCurrentPackageFullName(ref int packagePathLength, System.Text.StringBuilder packagePath);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time", Justification = ".NET source generator fails to marshal ref uint")]
+	[DllImport("kernel32.dll", ExactSpelling = true)]
+	internal static extern uint GetCurrentPackageId(ref uint packagePathLength, IntPtr packagePath);
 
 	public static bool IsRunningAsMsix()
 	{
-		int length = 0;
-		int result = GetCurrentPackageFullName(ref length, null);
-		// 15700 (0x3D54) is APPMODEL_ERROR_NO_PACKAGE. If we get anything else, we are in a container.
-		return result != 15700;
+		uint length = 0;
+		uint result = GetCurrentPackageId(ref length, IntPtr.Zero);
+		return result == 122; // 122 is ERROR_INSUFFICIENT_BUFFER, meaning the identity exists
 	}
 
 	public static void PrepareWindowForOS(System.Windows.Window window, string win11BackgroundHex = "#2D2D2D")

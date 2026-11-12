@@ -107,9 +107,32 @@ public static class ConfigManager
 				Settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
 			}
 		}
-		catch
+		catch (Exception ex1)
 		{
-			Settings = new AppSettings();
+			try
+			{
+				if (File.Exists(ConfigFilePath + ".bak"))
+				{
+					string bakJson = File.ReadAllText(ConfigFilePath + ".bak");
+					Settings = JsonSerializer.Deserialize<AppSettings>(bakJson) ?? new AppSettings();
+				}
+				else
+				{
+					Settings = new AppSettings();
+					throw new FileNotFoundException("No backup file exists to recover from.");
+				}
+			}
+			catch (Exception ex2)
+			{
+				Settings = new AppSettings();
+				try
+				{
+					string directory = Path.GetDirectoryName(ConfigFilePath) ?? string.Empty;
+					string logPath = Path.Combine(directory, "error.log");
+					File.AppendAllText(logPath, $"[{System.DateTime.Now:O}] Settings load failed. Primary: {ex1.Message} | Backup: {ex2.Message}{Environment.NewLine}");
+				}
+				catch { }
+			}
 		}
 	}
 
@@ -171,7 +194,15 @@ public static class ConfigManager
 					{
 						string tempPath = ConfigFilePath + ".tmp";
 						File.WriteAllText(tempPath, json);
-						File.Move(tempPath, ConfigFilePath, overwrite: true);
+
+						if (File.Exists(ConfigFilePath))
+						{
+							File.Replace(tempPath, ConfigFilePath, ConfigFilePath + ".bak", ignoreMetadataErrors: true);
+						}
+						else
+						{
+							File.Move(tempPath, ConfigFilePath);
+						}
 					}
 					catch (Exception ex)
 					{

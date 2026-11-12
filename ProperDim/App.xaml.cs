@@ -144,7 +144,24 @@ public partial class App : Application
 		if (ex == null) return;
 		try
 		{
-			string basePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
+			string basePath = NativeMethods.IsRunningAsMsix()
+				? global::Windows.Storage.ApplicationData.Current.LocalFolder.Path
+				: System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ProperDim");
+
+			string exeDirectory = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppDomain.CurrentDomain.BaseDirectory;
+
+			if (!NativeMethods.IsRunningAsMsix())
+			{
+				try
+				{
+					string testFile = System.IO.Path.Combine(exeDirectory, ".write_test");
+					System.IO.File.WriteAllText(testFile, string.Empty);
+					System.IO.File.Delete(testFile);
+					basePath = exeDirectory;
+				}
+				catch { }
+			}
+
 			if (isNative)
 			{
 				string logPath = System.IO.Path.Combine(basePath, "NativeLogs.txt");
