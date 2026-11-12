@@ -1,37 +1,37 @@
-﻿<!--
- * Copyright (C) [2026] [Kevin Stanislawski]]
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
+﻿	<!--
+	 * Copyright (C) [2026] [Kevin Stanislawski]]
+	 *
+	 * This program is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+	-->
 
 <Window x:Class="ProperDim.ControlPanel"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ProperDim Control Panel" 
-        Height="200" Width="350"
-        MinHeight="200" MinWidth="350"
-        WindowStyle="None" ResizeMode="NoResize"
-        WindowStartupLocation="Manual"
-        ShowInTaskbar="False"
-        TextOptions.TextFormattingMode="Display"
-        TextOptions.TextRenderingMode="ClearType"
-        UseLayoutRounding="True"
-        SnapsToDevicePixels="True"
-        LocationChanged="Window_LocationChanged" 
-        SizeChanged="Window_SizeChanged"
-        Closing="Window_Closing" 
-        Loaded="Window_Loaded">
+			xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			Title="ProperDim Control Panel" 
+			Height="200" Width="350"
+			MinHeight="200" MinWidth="350"
+			WindowStyle="None" ResizeMode="NoResize"
+			WindowStartupLocation="Manual"
+			ShowInTaskbar="False"
+			TextOptions.TextFormattingMode="Display"
+			TextOptions.TextRenderingMode="ClearType"
+			UseLayoutRounding="True"
+			SnapsToDevicePixels="True"
+			LocationChanged="Window_LocationChanged" 
+			SizeChanged="Window_SizeChanged"
+			Closing="Window_Closing" 
+			Loaded="Window_Loaded">
 	<WindowChrome.WindowChrome>
 		<WindowChrome GlassFrameThickness="1" CornerRadius="0" CaptionHeight="0" UseAeroCaptionButtons="False" ResizeBorderThickness="0" />
 	</WindowChrome.WindowChrome>
@@ -121,7 +121,7 @@
 									<Grid Width="16" Height="16">
 										<Border Name="BoxBorder" Background="#3E3E42" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="2" />
 										<Path Name="CheckMark" Visibility="Collapsed" Data="M3,8 L6,11 L13,4" 
-                                  Stroke="#D3D3D3" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+									  Stroke="#D3D3D3" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
 									</Grid>
 								</BulletDecorator.Bullet>
 								<ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center" />
@@ -305,128 +305,128 @@
 						<Border Name="TitleBar" Grid.Row="0" Background="#1E1E1E" RenderOptions.ClearTypeHint="Enabled" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 							<Grid>
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
-						<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
-						<TextBlock Text="ProperDim" Foreground="#AAAAAA" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center" />
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-						<Button Content="−" Style="{StaticResource TitleBarButtonStyle}" Click="Minimize_Click" />
-						<Button Content="✕" Click="Close_Click">
-							<Button.Style>
-								<Style TargetType="Button">
-									<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
-									<Setter Property="Background" Value="Transparent"/>
-									<Setter Property="Foreground" Value="White"/>
-									<Setter Property="Width" Value="45"/>
-									<Setter Property="Height" Value="30"/>
-									<Setter Property="Template">
-										<Setter.Value>
-											<ControlTemplate TargetType="Button">
-												<Border x:Name="ButtonBorder" 
-                                Background="{TemplateBinding Background}" 
-                                CornerRadius="0,7,0,0"
-                                SnapsToDevicePixels="True">
-													<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-												</Border>
-												<ControlTemplate.Triggers>
-													<Trigger Property="IsMouseOver" Value="True">
-														<Setter TargetName="ButtonBorder" Property="Background" Value="#E81123"/>
-													</Trigger>
-												</ControlTemplate.Triggers>
-											</ControlTemplate>
-										</Setter.Value>
-									</Setter>
-								</Style>
-							</Button.Style>
-						</Button>
-					</StackPanel>
-				</Grid>
-			</Border>
-			<Grid Row="1" Margin="5" PreviewMouseWheel="TabsArea_MouseWheel">
-				<TabControl Name="MainTabs" Background="#2D2D2D" HorizontalContentAlignment="Stretch" PreviewKeyDown="MainTabs_PreviewKeyDown" KeyboardNavigation.TabNavigation="Continue">
-					<TabControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<DockPanel LastChildFill="False" Background="Transparent" />
-						</ItemsPanelTemplate>
-					</TabControl.ItemsPanel>
-
-					<TabItem Header="Controls" DockPanel.Dock="Left">
-						<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
-							<StackPanel Margin="20,12,20,0">
-								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,8">
-									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
-									<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
+									<Image Source="ProperDimIcon.ico" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
+									<TextBlock Text="ProperDim" Foreground="#AAAAAA" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center" />
 								</StackPanel>
-								<Slider Name="DimmerSlider" Margin="0,2,0,12" Minimum="0.01" 
-									Maximum="1.0" Value="1.0" IsDirectionReversed="False" 
-									ValueChanged="Slider_ValueChanged"
-									PreviewMouseLeftButtonDown="DimmerSlider_PreviewMouseLeftButtonDown"
-									PreviewMouseMove="DimmerSlider_PreviewMouseMove"
-									PreviewMouseLeftButtonUp="DimmerSlider_PreviewMouseLeftButtonUp" />
-								<UniformGrid Columns="6" Margin="0,2,0,0">
-									<UniformGrid.Resources>
-										<Style TargetType="{x:Type Button}">
-											<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
-											<Setter Property="Background" Value="#3E3E42" />
-											<Setter Property="Foreground" Value="#FFFFFFFF" />
-											<Setter Property="FontWeight" Value="SemiBold" />
-											<Setter Property="BorderBrush" Value="#555555" />
-											<Setter Property="Height" Value="22" />
-											<Setter Property="BorderThickness" Value="1" />
-											<Setter Property="Padding" Value="1" />
-											<Setter Property="HorizontalContentAlignment" Value="Center" />
-											<Setter Property="VerticalContentAlignment" Value="Center" />
-											<Setter Property="Template">
-												<Setter.Value>
-													<ControlTemplate TargetType="{x:Type Button}">
-														<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="0">
-															<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-														</Border>
-														<ControlTemplate.Triggers>
-															<Trigger Property="IsMouseOver" Value="True">
-																<Setter TargetName="border" Property="Background" Value="#D3D3D3" />
-																<Setter Property="Foreground" Value="#2D2D2D" />
-															</Trigger>
-															<Trigger Property="IsPressed" Value="True">
-																<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
-															</Trigger>
-														</ControlTemplate.Triggers>
-													</ControlTemplate>
-												</Setter.Value>
-											</Setter>
-										</Style>
-									</UniformGrid.Resources>
-									<Button Content="20%" Tag="0.2" Margin="2" Click="QuickSet_Click" />
-									<Button Content="33%" Tag="0.33" Margin="2" Click="QuickSet_Click" />
-									<Button Content="50%" Tag="0.5" Margin="2" Click="QuickSet_Click" />
-									<Button Content="66%" Tag="0.66" Margin="2" Click="QuickSet_Click" />
-									<Button Content="75%" Tag="0.75" Margin="2" Click="QuickSet_Click" />
-									<Button Content="100%" Tag="1.0" Margin="2" Click="QuickSet_Click" />
-								</UniformGrid>
-							</StackPanel>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+									<Button Content="−" Style="{StaticResource TitleBarButtonStyle}" Click="Minimize_Click" />
+									<Button Content="✕" Click="Close_Click">
+										<Button.Style>
+											<Style TargetType="Button">
+												<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+												<Setter Property="Background" Value="Transparent"/>
+												<Setter Property="Foreground" Value="White"/>
+												<Setter Property="Width" Value="45"/>
+												<Setter Property="Height" Value="30"/>
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate TargetType="Button">
+															<Border x:Name="ButtonBorder" 
+									Background="{TemplateBinding Background}" 
+									CornerRadius="0,7,0,0"
+									SnapsToDevicePixels="True">
+																<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+															</Border>
+															<ControlTemplate.Triggers>
+																<Trigger Property="IsMouseOver" Value="True">
+																	<Setter TargetName="ButtonBorder" Property="Background" Value="#E81123"/>
+																</Trigger>
+															</ControlTemplate.Triggers>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+											</Style>
+										</Button.Style>
+									</Button>
+								</StackPanel>
+							</Grid>
+						</Border>
+						<Grid Row="1" Margin="5" PreviewMouseWheel="TabsArea_MouseWheel">
+							<TabControl Name="MainTabs" Background="#2D2D2D" HorizontalContentAlignment="Stretch" PreviewKeyDown="MainTabs_PreviewKeyDown" KeyboardNavigation.TabNavigation="Continue">
+								<TabControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<DockPanel LastChildFill="False" Background="Transparent" />
+									</ItemsPanelTemplate>
+								</TabControl.ItemsPanel>
 
-							<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">
-								<Hyperlink Name="MinBrightnessLink" Foreground="#FF909090" FontSize="12" TextDecorations="Underline" Click="MinBrightnessLink_Click">
-									<Run Text="Adjust Minimum" />
-								</Hyperlink>
-							</TextBlock>
+								<TabItem Header="Controls" DockPanel.Dock="Left">
+									<Grid Background="#00FFFFFF" MouseWheel="DimmerSlider_MouseWheel">
+										<StackPanel Margin="20,12,20,0">
+											<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,8">
+												<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="Brightness Level: " />
+												<TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" Text="{Binding ElementName=DimmerSlider, Path=Value, StringFormat={}{0:P0}}" />
+											</StackPanel>
+											<Slider Name="DimmerSlider" Margin="0,2,0,12" Minimum="0.01" 
+										Maximum="1.0" Value="1.0" IsDirectionReversed="False" 
+										ValueChanged="Slider_ValueChanged"
+										PreviewMouseLeftButtonDown="DimmerSlider_PreviewMouseLeftButtonDown"
+										PreviewMouseMove="DimmerSlider_PreviewMouseMove"
+										PreviewMouseLeftButtonUp="DimmerSlider_PreviewMouseLeftButtonUp" />
+											<UniformGrid Columns="6" Margin="0,2,0,0">
+												<UniformGrid.Resources>
+													<Style TargetType="{x:Type Button}">
+														<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+														<Setter Property="Background" Value="#3E3E42" />
+														<Setter Property="Foreground" Value="#FFFFFFFF" />
+														<Setter Property="FontWeight" Value="SemiBold" />
+														<Setter Property="BorderBrush" Value="#555555" />
+														<Setter Property="Height" Value="22" />
+														<Setter Property="BorderThickness" Value="1" />
+														<Setter Property="Padding" Value="1" />
+														<Setter Property="HorizontalContentAlignment" Value="Center" />
+														<Setter Property="VerticalContentAlignment" Value="Center" />
+														<Setter Property="Template">
+															<Setter.Value>
+																<ControlTemplate TargetType="{x:Type Button}">
+																	<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="0">
+																		<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+																	</Border>
+																	<ControlTemplate.Triggers>
+																		<Trigger Property="IsMouseOver" Value="True">
+																			<Setter TargetName="border" Property="Background" Value="#D3D3D3" />
+																			<Setter Property="Foreground" Value="#2D2D2D" />
+																		</Trigger>
+																		<Trigger Property="IsPressed" Value="True">
+																			<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
+																		</Trigger>
+																	</ControlTemplate.Triggers>
+																</ControlTemplate>
+															</Setter.Value>
+														</Setter>
+													</Style>
+												</UniformGrid.Resources>
+												<Button Content="20%" Tag="0.2" Margin="2" Click="QuickSet_Click" />
+												<Button Content="33%" Tag="0.33" Margin="2" Click="QuickSet_Click" />
+												<Button Content="50%" Tag="0.5" Margin="2" Click="QuickSet_Click" />
+												<Button Content="66%" Tag="0.66" Margin="2" Click="QuickSet_Click" />
+												<Button Content="75%" Tag="0.75" Margin="2" Click="QuickSet_Click" />
+												<Button Content="100%" Tag="1.0" Margin="2" Click="QuickSet_Click" />
+											</UniformGrid>
+										</StackPanel>
 
-						</Grid>
-					</TabItem>
-					<TabItem Header="Schedule">
-						<Grid Background="#00FFFFFF" Margin="10,5,10,5">
+										<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">
+									<Hyperlink Name="MinBrightnessLink" Foreground="#FF909090" FontSize="12" TextDecorations="Underline" Click="MinBrightnessLink_Click">
+										<Run Text="Adjust Minimum" />
+									</Hyperlink>
+										</TextBlock>
+
+									</Grid>
+								</TabItem>
+								<TabItem Header="Schedule">
+									<Grid Background="#00FFFFFF" Margin="10,5,10,5">
 										<Grid.RowDefinitions>
 											<RowDefinition Height="Auto" />
 											<RowDefinition Height="*" />
 										</Grid.RowDefinitions>
 										<Grid Row="0" Margin="0,0,0,0" Height="26">
 											<CheckBox Name="ScheduleCheckbox" 
-										  Content="Enable Schedule" 
-										  HorizontalAlignment="Left"
-										  Margin="2,0,0,0" 
-										  VerticalAlignment="Center"
-										  FontWeight="SemiBold"
-										  Checked="ScheduleCheckbox_Checked" 
-										  Unchecked="ScheduleCheckbox_Unchecked" />
+											  Content="Enable Schedule" 
+											  HorizontalAlignment="Left"
+											  Margin="2,0,0,0" 
+											  VerticalAlignment="Center"
+											  FontWeight="SemiBold"
+											  Checked="ScheduleCheckbox_Checked" 
+											  Unchecked="ScheduleCheckbox_Unchecked" />
 											<Button Name="AddScheduleButton" Style="{StaticResource RoundedAddButton}" Width="24" Height="24" Margin="0,0,0,0" Cursor="Hand" Background="#3E3E42" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Add New Schedule" Click="AddSchedule_Click">
 												<Button.Content>
 													<Grid Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" UseLayoutRounding="True">
@@ -436,73 +436,73 @@
 												</Button.Content>
 											</Button>
 										</Grid>
-							<Grid Grid.Row="1" Margin="0,1,0,-3">
-								<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,0" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
-								<ListBox Name="ScheduleListBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" Margin="0,2,0,0" AlternationCount="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.ScrollUnit="Pixel" KeyboardNavigation.TabNavigation="Continue" MouseDoubleClick="ScheduleList_MouseDoubleClick" PreviewMouseWheel="ScheduleList_PreviewMouseWheel" PreviewKeyDown="ScheduleList_PreviewKeyDown">
-									<ListBox.ItemsPanel>
-										<ItemsPanelTemplate>
-											<VirtualizingStackPanel Name="ScheduleStackPanel" />
-										</ItemsPanelTemplate>
-									</ListBox.ItemsPanel>
-									<FrameworkElement.Resources>
-										<ResourceDictionary>
-											<Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ModernScrollBar}" />
-										</ResourceDictionary>
-									</FrameworkElement.Resources>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Border BorderBrush="#3F3F46" BorderThickness="0,0,0,0" Padding="5,1">
-												<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-													<Button Content="✕" Width="18" Height="18" Margin="0,0,10,0" Background="#00FFFFFF" Foreground="#FF5555" BorderThickness="0" Cursor="Hand" ToolTip="Delete Schedule" VerticalAlignment="Center" Click="DeleteSchedule_Click">
-														<Control.Template>
-															<ControlTemplate TargetType="{x:Type Button}">
-																<Border Background="#00FFFFFF">
-																	<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-																</Border>
-															</ControlTemplate>
-														</Control.Template>
-													</Button>
-													<TextBlock Width="60" Foreground="#FFD3D3D3" VerticalAlignment="Center" FontSize="11" Text="{Binding DisplayTime}" />
-													<TextBlock Width="45" Foreground="#FFD3D3D3" VerticalAlignment="Center" FontSize="11" Text="{Binding Display}" />
-													<TextBlock Foreground="#FFD3D3D3" FontSize="10" VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding Days}" />
-												</StackPanel>
-											</Border>
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-									<ItemsControl.ItemContainerStyle>
-										<Style TargetType="{x:Type ListBoxItem}">
-											<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
-											<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-											<Setter Property="Padding" Value="0" />
-											<Setter Property="Background" Value="#292929" />
-											<Setter Property="Template">
-												<Setter.Value>
+										<Grid Grid.Row="1" Margin="0,1,0,-3">
+											<TextBlock Name="NoSchedulesText" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,0" FontStyle="Italic" Foreground="#FF808080" IsHitTestVisible="False">No events scheduled...<LineBreak />Press "+" on the top right to add an event</TextBlock>
+											<ListBox Name="ScheduleListBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" Margin="0,2,0,0" AlternationCount="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.ScrollUnit="Pixel" KeyboardNavigation.TabNavigation="Continue" MouseDoubleClick="ScheduleList_MouseDoubleClick" PreviewMouseWheel="ScheduleList_PreviewMouseWheel" PreviewKeyDown="ScheduleList_PreviewKeyDown">
+												<ListBox.ItemsPanel>
+													<ItemsPanelTemplate>
+														<VirtualizingStackPanel Name="ScheduleStackPanel" />
+													</ItemsPanelTemplate>
+												</ListBox.ItemsPanel>
+												<FrameworkElement.Resources>
+													<ResourceDictionary>
+														<Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ModernScrollBar}" />
+													</ResourceDictionary>
+												</FrameworkElement.Resources>
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<Border BorderBrush="#3F3F46" BorderThickness="0,0,0,0" Padding="5,1">
+															<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+																<Button Content="✕" Width="18" Height="18" Margin="0,0,10,0" Background="#00FFFFFF" Foreground="#FF5555" BorderThickness="0" Cursor="Hand" ToolTip="Delete Schedule" VerticalAlignment="Center" Click="DeleteSchedule_Click">
+																	<Control.Template>
+																		<ControlTemplate TargetType="{x:Type Button}">
+																			<Border Background="#00FFFFFF">
+																				<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+																			</Border>
+																		</ControlTemplate>
+																	</Control.Template>
+																</Button>
+																<TextBlock Width="60" Foreground="#FFD3D3D3" VerticalAlignment="Center" FontSize="11" Text="{Binding DisplayTime}" />
+																<TextBlock Width="45" Foreground="#FFD3D3D3" VerticalAlignment="Center" FontSize="11" Text="{Binding Display}" />
+																<TextBlock Foreground="#FFD3D3D3" FontSize="10" VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding Days}" />
+															</StackPanel>
+														</Border>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+												<ItemsControl.ItemContainerStyle>
+													<Style TargetType="{x:Type ListBoxItem}">
+														<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+														<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+														<Setter Property="Padding" Value="0" />
+														<Setter Property="Background" Value="#292929" />
+														<Setter Property="Template">
+															<Setter.Value>
 																<ControlTemplate TargetType="{x:Type ListBoxItem}">
 																	<Border Name="Bd" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Padding="{TemplateBinding Control.Padding}" SnapsToDevicePixels="True" RenderOptions.ClearTypeHint="Enabled">
 																		<ContentPresenter HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
 																	</Border>
 																	<ControlTemplate.Triggers>
-															<Trigger Property="UIElement.IsMouseOver" Value="True">
-																<Setter TargetName="Bd" Property="Border.Background" Value="#44444A" />
+																		<Trigger Property="UIElement.IsMouseOver" Value="True">
+																			<Setter TargetName="Bd" Property="Border.Background" Value="#44444A" />
+																		</Trigger>
+																		<Trigger Property="ListBoxItem.IsSelected" Value="True">
+																			<Setter TargetName="Bd" Property="Border.Background" Value="#505055" />
+																		</Trigger>
+																	</ControlTemplate.Triggers>
+																</ControlTemplate>
+															</Setter.Value>
+														</Setter>
+														<Style.Triggers>
+															<Trigger Property="ItemsControl.AlternationIndex" Value="1">
+																<Setter Property="Background" Value="#313131" />
 															</Trigger>
-															<Trigger Property="ListBoxItem.IsSelected" Value="True">
-																<Setter TargetName="Bd" Property="Border.Background" Value="#505055" />
-															</Trigger>
-														</ControlTemplate.Triggers>
-													</ControlTemplate>
-												</Setter.Value>
-											</Setter>
-											<Style.Triggers>
-												<Trigger Property="ItemsControl.AlternationIndex" Value="1">
-													<Setter Property="Background" Value="#313131" />
-												</Trigger>
-											</Style.Triggers>
-										</Style>
-									</ItemsControl.ItemContainerStyle>
-								</ListBox>
-							</Grid>
-						</Grid>
-					</TabItem>
+														</Style.Triggers>
+													</Style>
+												</ItemsControl.ItemContainerStyle>
+											</ListBox>
+										</Grid>
+									</Grid>
+								</TabItem>
 								<TabItem Header="Hotkeys">
 									<Grid Background="Transparent" MouseDown="HotkeysTab_MouseDown" Focusable="True" FocusVisualStyle="{x:Null}" Margin="10,5,10,5">
 										<Grid.RowDefinitions>
@@ -516,36 +516,36 @@
 											<StackPanel Width="280" Margin="0,0,32,0">
 												<StackPanel IsEnabled="{Binding ElementName=EnableHotkeysCheckBox, Path=IsChecked}">
 													<FrameworkElement.Style>
-											<Style TargetType="{x:Type StackPanel}">
-												<Style.Triggers>
-													<Trigger Property="IsEnabled" Value="False">
-														<Setter Property="UIElement.Opacity" Value="0.4" />
-													</Trigger>
-												</Style.Triggers>
-											</Style>
-										</FrameworkElement.Style>
-										<Grid Margin="0,0,0,0">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="*" />
-												<ColumnDefinition Width="Auto" />
-											</Grid.ColumnDefinitions>
-											<TextBlock Text="Increase Brightness:" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" />
-											<TextBox Name="IncreaseHotkeyText" Grid.Column="1" Style="{StaticResource HotkeyTextBoxStyle}" IsReadOnly="True" PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" />
+														<Style TargetType="{x:Type StackPanel}">
+															<Style.Triggers>
+																<Trigger Property="IsEnabled" Value="False">
+																	<Setter Property="UIElement.Opacity" Value="0.4" />
+																</Trigger>
+															</Style.Triggers>
+														</Style>
+													</FrameworkElement.Style>
+													<Grid Margin="0,0,0,0">
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*" />
+															<ColumnDefinition Width="Auto" />
+														</Grid.ColumnDefinitions>
+														<TextBlock Text="Increase Brightness:" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" />
+														<TextBox Name="IncreaseHotkeyText" Grid.Column="1" Style="{StaticResource HotkeyTextBoxStyle}" IsReadOnly="True" PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" />
+													</Grid>
+													<Grid Margin="0,8,0,12">
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*" />
+															<ColumnDefinition Width="Auto" />
+														</Grid.ColumnDefinitions>
+														<TextBlock Text="Decrease Brightness:" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" />
+														<TextBox Name="DecreaseHotkeyText" Grid.Column="1" Style="{StaticResource HotkeyTextBoxStyle}" IsReadOnly="True" PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" />
+													</Grid>
+													<TextBlock Text="Click a field, then press desired keys" Foreground="#FF909090" FontSize="11" FontStyle="Italic" FontWeight="SemiBold" TextAlignment="Center" Margin="22,0,0,8" />
+												</StackPanel>
+											</StackPanel>
 										</Grid>
-										<Grid Margin="0,8,0,12">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="*" />
-												<ColumnDefinition Width="Auto" />
-											</Grid.ColumnDefinitions>
-											<TextBlock Text="Decrease Brightness:" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" />
-											<TextBox Name="DecreaseHotkeyText" Grid.Column="1" Style="{StaticResource HotkeyTextBoxStyle}" IsReadOnly="True" PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" />
-										</Grid>
-										<TextBlock Text="Click a field, then press desired keys" Foreground="#FF909090" FontSize="11" FontStyle="Italic" FontWeight="SemiBold" TextAlignment="Center" Margin="22,0,0,8" />
-									</StackPanel>
-								</StackPanel>
-							</Grid>
-						</Grid>
-					</TabItem>
+									</Grid>
+								</TabItem>
 								<TabItem Header="Options" DockPanel.Dock="Right">
 									<Grid Margin="0,0,0,0">
 										<Grid.RowDefinitions>
@@ -555,70 +555,70 @@
 
 										<StackPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="34,0,0,0">
 											<CheckBox Name="StartupCheckBox" 
-                                                      Content="Run ProperDim when Windows starts" 
-                                                      Margin="0,0,0,4" 
-                                                      Checked="StartupCheckBox_Changed" 
-                                                      Unchecked="StartupCheckBox_Changed" />
+														  Content="Run ProperDim when Windows starts" 
+														  Margin="0,0,0,4" 
+														  Checked="StartupCheckBox_Changed" 
+														  Unchecked="StartupCheckBox_Changed" />
 
 											<CheckBox Name="TrayCheckBox" 
-                                                      Content="Close button minimizes to system tray" 
-                                                      Margin="0,0,0,4" 
-                                                      Checked="TrayCheckBox_Changed" 
-                                                      Unchecked="TrayCheckBox_Changed" />
+														  Content="Close button minimizes to system tray" 
+														  Margin="0,0,0,4" 
+														  Checked="TrayCheckBox_Changed" 
+														  Unchecked="TrayCheckBox_Changed" />
 
 											<CheckBox Name="ShowStartupCheckBox" 
-                                                      Content="Show Controls window on app startup" 
-                                                      Margin="0,0,0,4"
-                                                      Checked="ShowStartupCheckBox_Changed" 
-                                                      Unchecked="ShowStartupCheckBox_Changed" />
+														  Content="Show Controls window on app startup" 
+														  Margin="0,0,0,4"
+														  Checked="ShowStartupCheckBox_Changed" 
+														  Unchecked="ShowStartupCheckBox_Changed" />
 
 											<CheckBox Name="SwapTrayClicksCheckBox" 
-                                                      Content="Swap tray icon left/right click buttons" 
-                                                      Margin="0,0,0,0"
-                                                      Checked="SwapTrayClicksCheckBox_Changed" 
-                                                      Unchecked="SwapTrayClicksCheckBox_Changed" />
+														  Content="Swap tray icon left/right click buttons" 
+														  Margin="0,0,0,0"
+														  Checked="SwapTrayClicksCheckBox_Changed" 
+														  Unchecked="SwapTrayClicksCheckBox_Changed" />
 										</StackPanel>
 
 										<UniformGrid Grid.Row="1" Columns="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,6">
 											<UniformGrid.Resources>
-									<Style TargetType="{x:Type Button}">
-										<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
-										<Setter Property="Foreground" Value="#FFFFFFFF" />
-										<Setter Property="BorderBrush" Value="#555555" />
-										<Setter Property="BorderThickness" Value="1" />
-										<Setter Property="HorizontalContentAlignment" Value="Center" />
-										<Setter Property="VerticalContentAlignment" Value="Center" />
-										<Setter Property="Template">
-											<Setter.Value>
-												<ControlTemplate TargetType="{x:Type Button}">
-													<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
-														<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-													</Border>
-													<ControlTemplate.Triggers>
-														<Trigger Property="IsMouseOver" Value="True">
-															<Setter TargetName="border" Property="Background" Value="IndianRed" />
-															<Setter Property="Foreground" Value="#232324" />
-														</Trigger>
-														<Trigger Property="IsPressed" Value="True">
-															<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
-														</Trigger>
-													</ControlTemplate.Triggers>
-												</ControlTemplate>
-											</Setter.Value>
-										</Setter>
-									</Style>
-								</UniformGrid.Resources>
+												<Style TargetType="{x:Type Button}">
+													<Setter Property="FocusVisualStyle" Value="{StaticResource GrayFocusVisual}" />
+													<Setter Property="Foreground" Value="#FFFFFFFF" />
+													<Setter Property="BorderBrush" Value="#555555" />
+													<Setter Property="BorderThickness" Value="1" />
+													<Setter Property="HorizontalContentAlignment" Value="Center" />
+													<Setter Property="VerticalContentAlignment" Value="Center" />
+													<Setter Property="Template">
+														<Setter.Value>
+															<ControlTemplate TargetType="{x:Type Button}">
+																<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+																	<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+																</Border>
+																<ControlTemplate.Triggers>
+																	<Trigger Property="IsMouseOver" Value="True">
+																		<Setter TargetName="border" Property="Background" Value="IndianRed" />
+																		<Setter Property="Foreground" Value="#232324" />
+																	</Trigger>
+																	<Trigger Property="IsPressed" Value="True">
+																		<Setter TargetName="border" Property="Background" Value="#A0A0A0" />
+																	</Trigger>
+																</ControlTemplate.Triggers>
+															</ControlTemplate>
+														</Setter.Value>
+													</Setter>
+												</Style>
+											</UniformGrid.Resources>
 											<Button Content="Clear Schedule" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ClearSchedule_Click" />
 											<Button Content="Resync Displays" Width="110" Height="24" Background="#993333" Margin="5,0" Click="ResetBrightness_Click" />
 										</UniformGrid>
 
 										<TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
-                                            <Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
-									<Run Text="Info..." FontSize="11" />
-								</Hyperlink>
-							</TextBlock>
-						</Grid>
-					</TabItem>
+												<Hyperlink Name="AppInfoLink" Foreground="#FF808080" TextDecorations="None" Click="AppInfoLink_Click">
+										<Run Text="Info..." FontSize="11" />
+									</Hyperlink>
+										</TextBlock>
+									</Grid>
+								</TabItem>
 							</TabControl>
 						</Grid>
 

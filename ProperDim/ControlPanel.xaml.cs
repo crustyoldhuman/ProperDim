@@ -910,9 +910,11 @@ public partial class ControlPanel : Window
 
 		if (!this.IsVisible)
 		{
+			this.BeginAnimation(Window.OpacityProperty, null);
+			this.Opacity = 0.0;
+
 			if (SystemParameters.ClientAreaAnimation)
 			{
-				this.Opacity = 0;
 				this.Show();
 				ApplyThemeShadow();
 				DoubleAnimation anim = new(0.0, 1.0, TimeSpan.FromMilliseconds(100));
