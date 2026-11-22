@@ -38,6 +38,7 @@ public partial class ScheduleDialog : Window
 	private readonly DimSchedule _editingItem = null;
 	private static readonly char[] _daySeparator = [',', ' '];
 	private bool _isInitializing = true;
+	private bool _sizeChanged = false;
 
 
 	// 1. THIS IS FOR ADDING NEW SCHEDULES
@@ -157,13 +158,21 @@ public partial class ScheduleDialog : Window
 	{
 		if (_isInitializing) return;
 
-		ConfigManager.Settings.ScheduleDialogWidth = this.ActualWidth;
-		ConfigManager.Settings.ScheduleDialogHeight = this.ActualHeight;
+		if (Math.Abs(ConfigManager.Settings.ScheduleDialogWidth - this.ActualWidth) > 0.5 ||
+			Math.Abs(ConfigManager.Settings.ScheduleDialogHeight - this.ActualHeight) > 0.5)
+		{
+			ConfigManager.Settings.ScheduleDialogWidth = this.ActualWidth;
+			ConfigManager.Settings.ScheduleDialogHeight = this.ActualHeight;
+			_sizeChanged = true;
+		}
 	}
 
 	protected override void OnClosed(EventArgs e)
 	{
-		ConfigManager.Settings.Save();
+		if (this.DialogResult != true && _sizeChanged)
+		{
+			ConfigManager.Settings.Save();
+		}
 		base.OnClosed(e);
 	}
 
@@ -472,7 +481,6 @@ public partial class ScheduleDialog : Window
 
 		ConfigManager.Settings.LastScheduleDays = Result.Days;
 		ConfigManager.Settings.UseMilitaryTime = Is24hCheck.IsChecked == true;
-		ConfigManager.Settings.Save();
 
 		this.DialogResult = true;
 		// Note: this.Close() isn't needed cuz setting DialogResult closes it automatically.

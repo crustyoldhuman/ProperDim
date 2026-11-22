@@ -28,6 +28,7 @@ namespace ProperDim;
 public partial class MinBrightnessDialog : Window
 {
 	private bool _isInitializing = true;
+	private bool _hasUnsavedChanges = false;
 
 	public MinBrightnessDialog()
 	{
@@ -200,8 +201,11 @@ public partial class MinBrightnessDialog : Window
 
 	private void LooksGood_Click(object sender, RoutedEventArgs e)
 	{
-		ConfigManager.Settings.GlobalMinimum = MinSlider.Value;
-		ConfigManager.Settings.Save();
+		if (Math.Abs(ConfigManager.Settings.GlobalMinimum - MinSlider.Value) > 0.0001)
+		{
+			ConfigManager.Settings.GlobalMinimum = MinSlider.Value;
+			_hasUnsavedChanges = true;
+		}
 
 		this.DialogResult = true;
 	}
@@ -227,13 +231,21 @@ public partial class MinBrightnessDialog : Window
 	{
 		if (_isInitializing) return;
 
-		ConfigManager.Settings.MinBrightnessDialogWidth = this.ActualWidth;
-		ConfigManager.Settings.MinBrightnessDialogHeight = this.ActualHeight;
+		if (Math.Abs(ConfigManager.Settings.MinBrightnessDialogWidth - this.ActualWidth) > 0.5 ||
+			Math.Abs(ConfigManager.Settings.MinBrightnessDialogHeight - this.ActualHeight) > 0.5)
+		{
+			ConfigManager.Settings.MinBrightnessDialogWidth = this.ActualWidth;
+			ConfigManager.Settings.MinBrightnessDialogHeight = this.ActualHeight;
+			_hasUnsavedChanges = true;
+		}
 	}
 
 	protected override void OnClosed(EventArgs e)
 	{
-		ConfigManager.Settings.Save();
+		if (_hasUnsavedChanges)
+		{
+			ConfigManager.Settings.Save();
+		}
 		base.OnClosed(e);
 	}
 

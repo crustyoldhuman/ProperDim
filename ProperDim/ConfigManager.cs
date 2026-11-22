@@ -18,7 +18,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProperDim;
 
@@ -99,40 +102,206 @@ public static class ConfigManager
 
 	public static void Load()
 	{
-		try
+		string tempPath = ConfigFilePath + ".tmp";
+		if (File.Exists(tempPath))
 		{
-			if (File.Exists(ConfigFilePath))
+			try { File.Delete(tempPath); } catch { }
+		}
+
+		string bakPath = ConfigFilePath + ".bak";
+		string primaryError = null;
+		bool primaryExists = File.Exists(ConfigFilePath);
+
+		if (primaryExists)
+		{
+			if (TryLoadAndSanitize(ConfigFilePath, out AppSettings loadedPrimary, out string primaryJson, out primaryError))
 			{
-				string json = File.ReadAllText(ConfigFilePath);
-				Settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+				Settings = loadedPrimary;
+				lock (_ioLock)
+				{
+					_lastWrittenJson = primaryJson;
+				}
+				return;
 			}
 		}
-		catch (Exception ex1)
+
+		if (File.Exists(bakPath))
 		{
-			try
+			if (TryLoadAndSanitize(bakPath, out AppSettings loadedBackup, out _, out string backupError))
 			{
-				if (File.Exists(ConfigFilePath + ".bak"))
+				Settings = loadedBackup;
+				if (primaryExists)
 				{
-					string bakJson = File.ReadAllText(ConfigFilePath + ".bak");
-					Settings = JsonSerializer.Deserialize<AppSettings>(bakJson) ?? new AppSettings();
+					QuarantineCorruptPrimary();
+					LogError($"Primary settings corrupt ({primaryError}). Recovered from backup.");
 				}
 				else
 				{
-					Settings = new AppSettings();
-					throw new FileNotFoundException("No backup file exists to recover from.");
+					LogError("Primary settings missing. Recovered from backup.");
 				}
+
+				PromoteRecoveredSettings(Settings);
+				return;
 			}
-			catch (Exception ex2)
+
+			if (primaryExists)
 			{
-				Settings = new AppSettings();
-				try
-				{
-					string directory = Path.GetDirectoryName(ConfigFilePath) ?? string.Empty;
-					string logPath = Path.Combine(directory, "error.log");
-					File.AppendAllText(logPath, $"[{System.DateTime.Now:O}] Settings load failed. Primary: {ex1.Message} | Backup: {ex2.Message}{Environment.NewLine}");
-				}
-				catch { }
+				QuarantineCorruptPrimary();
+				LogError($"Settings load failed. Primary: {primaryError} | Backup: {backupError}");
 			}
+			else
+			{
+				LogError($"Settings load failed. Primary missing | Backup: {backupError}");
+			}
+		}
+		else if (primaryExists)
+		{
+			QuarantineCorruptPrimary();
+			LogError($"Settings load failed. Primary: {primaryError} | Backup: No backup file exists.");
+		}
+
+		lock (_ioLock)
+		{
+			_lastWrittenJson = null;
+		}
+		Settings = new AppSettings();
+	}
+
+	private static bool TryLoadAndSanitize(string filePath, out AppSettings settings, out string loadedJson, out string error)
+	{
+		settings = null;
+		loadedJson = null;
+		error = null;
+
+		for (int attempt = 0; attempt < MaxWriteAttempts; attempt++)
+		{
+			try
+			{
+				string json = File.ReadAllText(filePath);
+				if (string.IsNullOrWhiteSpace(json))
+				{
+					error = "File is empty or whitespace.";
+					return false;
+				}
+
+				AppSettings deserialized = JsonSerializer.Deserialize<AppSettings>(json);
+				if (deserialized == null)
+				{
+					error = "Deserialized settings object was null.";
+					return false;
+				}
+
+				SanitizeSettings(deserialized);
+				settings = deserialized;
+				loadedJson = json;
+				return true;
+			}
+			catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+			{
+				error = ex.Message;
+				if (attempt < MaxWriteAttempts - 1)
+				{
+					Thread.Sleep(RetryDelaysMs[attempt]);
+				}
+			}
+			catch (Exception ex)
+			{
+				error = ex.Message;
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private static void SanitizeSettings(AppSettings s)
+	{
+		s.IncreaseHotkey ??= string.Empty;
+		s.DecreaseHotkey ??= string.Empty;
+		s.LastScheduleDays = string.IsNullOrWhiteSpace(s.LastScheduleDays)
+			? "Mo,Tu,We,Th,Fr,Sa,Su"
+			: s.LastScheduleDays;
+
+		s.ControlPanelLeft = SanitizeFinite(s.ControlPanelLeft, -1);
+		s.ControlPanelTop = SanitizeFinite(s.ControlPanelTop, -1);
+		s.ControlPanelWidth = SanitizePositive(s.ControlPanelWidth, 350);
+		s.ControlPanelHeight = SanitizePositive(s.ControlPanelHeight, 200);
+		s.ScheduleDialogWidth = SanitizePositive(s.ScheduleDialogWidth, 320);
+		s.ScheduleDialogHeight = SanitizePositive(s.ScheduleDialogHeight, 280);
+		s.AppInfoWindowWidth = SanitizePositive(s.AppInfoWindowWidth, 320);
+		s.AppInfoWindowHeight = SanitizePositive(s.AppInfoWindowHeight, 384);
+		s.WarningMessageWidth = SanitizePositive(s.WarningMessageWidth, 300);
+		s.WarningMessageHeight = SanitizePositive(s.WarningMessageHeight, 150);
+		s.MinBrightnessDialogWidth = SanitizePositive(s.MinBrightnessDialogWidth, 300);
+		s.MinBrightnessDialogHeight = SanitizePositive(s.MinBrightnessDialogHeight, 260);
+
+		s.LastOpacity = SanitizeRange(s.LastOpacity, 0.01, 1.0, 1.0);
+		s.GlobalMinimum = SanitizeRange(s.GlobalMinimum, 0.00, 0.99, 0.30);
+
+		if (s.SavedSchedules == null)
+		{
+			s.SavedSchedules = [];
+		}
+		else
+		{
+			s.SavedSchedules.RemoveAll(item => item == null);
+			foreach (DimSchedule item in s.SavedSchedules)
+			{
+				item.Days ??= string.Empty;
+				item.Brightness = SanitizeRange(item.Brightness, 0.01, 1.0, 1.0);
+				if (item.Time < TimeSpan.Zero || item.Time >= TimeSpan.FromDays(1))
+				{
+					item.Time = TimeSpan.Zero;
+				}
+			}
+		}
+	}
+
+	private static double SanitizeFinite(double value, double fallback)
+	{
+		return double.IsNaN(value) || double.IsInfinity(value) ? fallback : value;
+	}
+
+	private static double SanitizePositive(double value, double fallback)
+	{
+		return double.IsNaN(value) || double.IsInfinity(value) || value <= 0 ? fallback : value;
+	}
+
+	private static double SanitizeRange(double value, double min, double max, double fallback)
+	{
+		if (double.IsNaN(value) || double.IsInfinity(value))
+		{
+			return fallback;
+		}
+		return Math.Clamp(value, min, max);
+	}
+
+	private static void QuarantineCorruptPrimary()
+	{
+		try
+		{
+			if (!File.Exists(ConfigFilePath)) return;
+			File.Move(ConfigFilePath, ConfigFilePath + ".corrupt", overwrite: true);
+		}
+		catch (Exception ex)
+		{
+			LogError($"Failed to quarantine corrupt settings file: {ex.Message}");
+		}
+	}
+
+	private static void PromoteRecoveredSettings(AppSettings recovered)
+	{
+		try
+		{
+			string json = Serialize(recovered);
+			lock (_ioLock)
+			{
+				WriteToDiskCore(json, updateBackup: false);
+			}
+		}
+		catch (Exception ex)
+		{
+			LogError($"Failed to promote recovered backup to primary settings: {ex.Message}");
 		}
 	}
 
@@ -142,80 +311,218 @@ public static class ConfigManager
 	}
 
 	internal static readonly object _saveLock = new();
+	private static readonly object _queueLock = new();
+	private static readonly object _ioLock = new();
+	private static readonly object _logLock = new();
+
+	private static string _pendingJson = null;
+	private static long _revisionCounter = 0;
+	private static long _pendingRevision = 0;
+	private static long _lastWrittenRevision = 0;
+	private static bool _isWriterRunning = false;
+	private static string _lastWrittenJson = null;
+
+	private const int MaxWriteAttempts = 4;
+	private static readonly int[] RetryDelaysMs = [30, 80, 200];
+	private const long MaxErrorLogBytes = 256 * 1024;
+
+	private static string Serialize(AppSettings instance)
+	{
+		lock (_saveLock)
+		{
+			return JsonSerializer.Serialize(instance, _jsonOptions);
+		}
+	}
 
 	internal static void SaveInstance(AppSettings instance)
 	{
 		try
 		{
-			string directory = Path.GetDirectoryName(ConfigFilePath);
-			if (!string.IsNullOrEmpty(directory))
+			string json = Serialize(instance);
+
+			lock (_queueLock)
 			{
-				Directory.CreateDirectory(directory);
+				_pendingRevision = ++_revisionCounter;
+				_pendingJson = json;
+
+				if (!_isWriterRunning)
+				{
+					_isWriterRunning = true;
+					_ = Task.Run(ProcessSaveQueue);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			LogError($"Save snapshot failure: {ex.Message}");
+		}
+	}
+
+	public static void FlushSync()
+	{
+		try
+		{
+			string json = Serialize(Settings);
+			long revision;
+
+			lock (_queueLock)
+			{
+				revision = ++_revisionCounter;
+				_pendingJson = null;
 			}
 
-			string json;
-			lock (_saveLock)
+			lock (_ioLock)
 			{
-				AppSettings snapshot = new()
+				if (WriteToDiskCore(json))
 				{
-					ShowOnStartup = instance.ShowOnStartup,
-					CloseToTray = instance.CloseToTray,
-					HotkeysEnabled = instance.HotkeysEnabled,
-					IncreaseHotkey = instance.IncreaseHotkey,
-					DecreaseHotkey = instance.DecreaseHotkey,
-					ScheduleToggle = instance.ScheduleToggle,
-					ControlPanelLeft = instance.ControlPanelLeft,
-					ControlPanelTop = instance.ControlPanelTop,
-					ControlPanelWidth = instance.ControlPanelWidth,
-					ControlPanelHeight = instance.ControlPanelHeight,
-					ScheduleDialogWidth = instance.ScheduleDialogWidth,
-					ScheduleDialogHeight = instance.ScheduleDialogHeight,
-					AppInfoWindowWidth = instance.AppInfoWindowWidth,
-					AppInfoWindowHeight = instance.AppInfoWindowHeight,
-					WarningMessageWidth = instance.WarningMessageWidth,
-					WarningMessageHeight = instance.WarningMessageHeight,
-					MinBrightnessDialogWidth = instance.MinBrightnessDialogWidth,
-					MinBrightnessDialogHeight = instance.MinBrightnessDialogHeight,
-					LastOpacity = instance.LastOpacity,
-					SavedSchedules = [.. instance.SavedSchedules],
-					UseMilitaryTime = instance.UseMilitaryTime,
-					LastScheduleDays = instance.LastScheduleDays,
-					SwapTrayIconClicks = instance.SwapTrayIconClicks,
-					GlobalMinimum = instance.GlobalMinimum
-				};
-				json = JsonSerializer.Serialize(snapshot, _jsonOptions);
+					_lastWrittenRevision = Math.Max(_lastWrittenRevision, revision);
+				}
 			}
+		}
+		catch (Exception ex)
+		{
+			LogError($"FlushSync failure: {ex.Message}");
+		}
+	}
 
-			System.Threading.Tasks.Task.Run(() =>
+	private static void ProcessSaveQueue()
+	{
+		try
+		{
+			while (true)
 			{
-				lock (_saveLock)
+				string jsonToWrite;
+				long revisionToWrite;
+
+				lock (_queueLock)
 				{
-					try
+					if (_pendingJson == null)
 					{
-						string tempPath = ConfigFilePath + ".tmp";
-						File.WriteAllText(tempPath, json);
-
-						if (File.Exists(ConfigFilePath))
-						{
-							File.Replace(tempPath, ConfigFilePath, ConfigFilePath + ".bak", ignoreMetadataErrors: true);
-						}
-						else
-						{
-							File.Move(tempPath, ConfigFilePath);
-						}
+						_isWriterRunning = false;
+						return;
 					}
-					catch (Exception ex)
+
+					jsonToWrite = _pendingJson;
+					revisionToWrite = _pendingRevision;
+					_pendingJson = null;
+				}
+
+				lock (_ioLock)
+				{
+					if (revisionToWrite <= _lastWrittenRevision)
 					{
-						try
-						{
-							string logPath = Path.Combine(directory ?? string.Empty, "error.log");
-							File.AppendAllText(logPath, $"[{System.DateTime.Now:O}] Save failure: {ex.Message}{Environment.NewLine}");
-						}
-						catch { }
+						continue;
+					}
+
+					if (WriteToDiskCore(jsonToWrite))
+					{
+						_lastWrittenRevision = revisionToWrite;
 					}
 				}
-			});
+			}
 		}
-		catch { }
+		catch (Exception ex)
+		{
+			lock (_queueLock)
+			{
+				_isWriterRunning = false;
+			}
+			LogError($"Save queue worker failure: {ex.Message}");
+		}
+	}
+
+	private static bool WriteToDiskCore(string json, bool updateBackup = true)
+	{
+		if (updateBackup && string.Equals(json, _lastWrittenJson, StringComparison.Ordinal) && File.Exists(ConfigFilePath))
+		{
+			return true;
+		}
+
+		string directory = Path.GetDirectoryName(ConfigFilePath);
+		if (!string.IsNullOrEmpty(directory))
+		{
+			Directory.CreateDirectory(directory);
+		}
+
+		byte[] payloadBytes = Encoding.UTF8.GetBytes(json);
+		string tempPath = ConfigFilePath + ".tmp";
+		Exception lastException = null;
+
+		for (int attempt = 0; attempt < MaxWriteAttempts; attempt++)
+		{
+			try
+			{
+				using (FileStream fs = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096))
+				{
+					fs.Write(payloadBytes, 0, payloadBytes.Length);
+					fs.Flush(flushToDisk: true);
+				}
+
+				if (new FileInfo(tempPath).Length != payloadBytes.Length)
+				{
+					throw new IOException("Temp settings file verification failed: size mismatch.");
+				}
+
+				if (File.Exists(ConfigFilePath))
+				{
+					string backupPath = updateBackup ? ConfigFilePath + ".bak" : null;
+					File.Replace(tempPath, ConfigFilePath, backupPath, ignoreMetadataErrors: true);
+				}
+				else
+				{
+					File.Move(tempPath, ConfigFilePath);
+				}
+
+				_lastWrittenJson = json;
+				return true;
+			}
+			catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+			{
+				lastException = ex;
+				if (attempt < MaxWriteAttempts - 1)
+				{
+					Thread.Sleep(RetryDelaysMs[attempt]);
+				}
+			}
+			catch (Exception ex)
+			{
+				lastException = ex;
+				break;
+			}
+			finally
+			{
+				if (File.Exists(tempPath))
+				{
+					try { File.Delete(tempPath); } catch { }
+				}
+			}
+		}
+
+		LogError($"Save failure after {MaxWriteAttempts} attempts: {lastException?.Message}");
+		return false;
+	}
+
+	private static void LogError(string message)
+	{
+		lock (_logLock)
+		{
+			try
+			{
+				string directory = Path.GetDirectoryName(ConfigFilePath) ?? string.Empty;
+				if (!string.IsNullOrEmpty(directory))
+				{
+					Directory.CreateDirectory(directory);
+				}
+
+				string logPath = Path.Combine(directory, "error.log");
+				if (File.Exists(logPath) && new FileInfo(logPath).Length > MaxErrorLogBytes)
+				{
+					File.Move(logPath, logPath + ".old", overwrite: true);
+				}
+
+				File.AppendAllText(logPath, $"[{DateTime.Now:O}] {message}{Environment.NewLine}");
+			}
+			catch { }
+		}
 	}
 }

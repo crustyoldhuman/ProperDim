@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace ProperDim;
 
@@ -11,6 +12,7 @@ public class DimSchedule
 	public DateTime LastTriggered { get; set; } = DateTime.MinValue;
 
 	// Helper properties for display in lists
+	[JsonIgnore]
 	public string DisplayTime
 	{
 		get
@@ -21,5 +23,6 @@ public class DimSchedule
 	}
 
 	// Renamed from DisplayBrightness to Display to match your ControlPanel.xaml binding
+	[JsonIgnore]
 	public string Display => $"{Math.Round(Brightness * 100)}%";
 }

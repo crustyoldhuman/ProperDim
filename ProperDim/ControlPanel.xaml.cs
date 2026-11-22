@@ -99,9 +99,13 @@ public partial class ControlPanel : Window
 		if (_isInitializing) return;
 		if (this.WindowState != WindowState.Normal) return;
 
-		ConfigManager.Settings.ControlPanelLeft = this.Left;
-		ConfigManager.Settings.ControlPanelTop = this.Top;
-		_mainWindow?.TriggerSave();
+		if (Math.Abs(ConfigManager.Settings.ControlPanelLeft - this.Left) > 0.5 ||
+			Math.Abs(ConfigManager.Settings.ControlPanelTop - this.Top) > 0.5)
+		{
+			ConfigManager.Settings.ControlPanelLeft = this.Left;
+			ConfigManager.Settings.ControlPanelTop = this.Top;
+			_mainWindow?.TriggerSave();
+		}
 	}
 
 	private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -109,9 +113,13 @@ public partial class ControlPanel : Window
 		if (_isInitializing) return;
 		if (this.WindowState != WindowState.Normal) return;
 
-		ConfigManager.Settings.ControlPanelWidth = this.ActualWidth;
-		ConfigManager.Settings.ControlPanelHeight = this.ActualHeight;
-		_mainWindow?.TriggerSave();
+		if (Math.Abs(ConfigManager.Settings.ControlPanelWidth - this.ActualWidth) > 0.5 ||
+			Math.Abs(ConfigManager.Settings.ControlPanelHeight - this.ActualHeight) > 0.5)
+		{
+			ConfigManager.Settings.ControlPanelWidth = this.ActualWidth;
+			ConfigManager.Settings.ControlPanelHeight = this.ActualHeight;
+			_mainWindow?.TriggerSave();
+		}
 	}
 
 	private POINTStruct _resizeStartPos;
@@ -159,11 +167,6 @@ public partial class ControlPanel : Window
 		NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, 0, 0, physWidth, physHeight, 0x0016);
 	}
 
-	protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-	{
-		base.OnMouseLeftButtonUp(e);
-		ConfigManager.Settings.Save();
-	}
 	private void OnGlobalBrightnessChanged(double newBrightness)
 	{
 		// If we are previewing a schedule, do NOT move the main slider.
@@ -223,11 +226,14 @@ public partial class ControlPanel : Window
 			if (_mainWindow != null)
 			{
 				_mainWindow.ApplyBrightness(1.0);
-				_mainWindow.SaveSchedules();
+				_mainWindow.FlushPendingSavesSync();
 				_mainWindow.TrayIcon?.Dispose();
 			}
+			else
+			{
+				ConfigManager.FlushSync();
+			}
 
-			ConfigManager.Settings.Save();
 			Application.Current.Shutdown();
 		}
 	}
@@ -448,8 +454,8 @@ public partial class ControlPanel : Window
 					if (index != -1)
 					{
 						_mainWindow.ActiveSchedules[index] = dialog.Result;
-						_mainWindow.SaveSchedules();
 					}
+					_mainWindow.SaveSchedules();
 					RefreshList();
 				}
 			}

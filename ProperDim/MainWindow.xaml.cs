@@ -107,9 +107,6 @@ namespace ProperDim
 
 		public MainWindow()
 		{
-			// Initialize JSON config before anything else
-			ConfigManager.Load();
-
 			// Initialize this BEFORE InitializeComponent(). 
 			// This prevents a crash when the XAML parser coerces the slider value and triggers ValueChanged.
 			_gammaAnimator = new();
@@ -354,7 +351,7 @@ namespace ProperDim
 			// --- APPLY GLOBAL BRIGHTNESS ---
 			foreach (var m in Monitors)
 			{
-				_gammaService.SetTargetGamma(m.DeviceName, targetHardwareBrightness);
+				_gammaService.SetTargetGamma(m.DeviceName, targetHardwareBrightness, avoidIdentityBypass: !m.IsHdrEnabled);
 			}
 
 			// Delegate dimming below 50% to the global Magnification API
@@ -669,6 +666,20 @@ namespace ProperDim
 			catch { }
 		}
 
+		public void FlushPendingSavesSync()
+		{
+			try
+			{
+				_saveDebouncer?.Stop();
+				lock (ConfigManager._saveLock)
+				{
+					ConfigManager.Settings.SavedSchedules = [.. ActiveSchedules];
+				}
+				ConfigManager.FlushSync();
+			}
+			catch { }
+		}
+
 		public void LoadSchedules()
 		{
 			List<DimSchedule> list;
@@ -747,13 +758,18 @@ namespace ProperDim
 			DateTime now = DateTime.Now;
 			DimSchedule mostRecentMissed = null;
 			DateTime mostRecentTargetTime = DateTime.MinValue;
+			bool repairedAny = false;
 
 			foreach (var s in ActiveSchedules)
 			{
 				// Self-repair: Prevent newly created schedules from infinitely looking backward
 				if (s.LastTriggered == DateTime.MinValue)
 				{
-					s.LastTriggered = now;
+					lock (ConfigManager._saveLock)
+					{
+						s.LastTriggered = now;
+					}
+					repairedAny = true;
 				}
 
 				if (string.IsNullOrEmpty(s.Days)) continue;
@@ -809,6 +825,11 @@ namespace ProperDim
 			}
 			else
 			{
+				if (repairedAny)
+				{
+					SaveSchedules();
+				}
+
 				// Nothing was missed, just restore whatever the opacity was before sleep
 				ApplyBrightness(ConfigManager.Settings.LastOpacity, animate: animate, durationMs: durationMs);
 			}
@@ -1091,15 +1112,20 @@ namespace ProperDim
 				try { _currentTrayMenu.Close(); } catch { }
 			}
 
-			foreach (var m in Monitors)
+			try
 			{
-				_gammaService.SetTargetGamma(m.DeviceName, 1.0);
+				foreach (var m in Monitors)
+				{
+					_gammaService?.SetTargetGamma(m.DeviceName, 1.0);
+				}
+				_gammaService?.SetGlobalMagnification(1.0);
 			}
-			_gammaService.SetGlobalMagnification(1.0);
-			SaveSchedules();
+			catch { }
 
-			TrayIcon?.Dispose();
-			_hotkeyService?.Dispose();
+			FlushPendingSavesSync();
+
+			try { TrayIcon?.Dispose(); } catch { }
+			try { _hotkeyService?.Dispose(); } catch { }
 			Environment.Exit(0);
 		}
 	}

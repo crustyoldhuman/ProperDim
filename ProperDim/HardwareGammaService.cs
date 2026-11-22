@@ -30,7 +30,9 @@ public class HardwareGammaService : IDisposable
 
 	private readonly ConcurrentDictionary<string, double> _targetGammas = new();
 	private readonly ConcurrentDictionary<string, double> _appliedGammas = new();
+	private readonly ConcurrentDictionary<string, bool> _avoidIdentityBypass = new();
 	private readonly Lock _rampLock = new();
+	private const double SdrNonIdentityMaxGamma = 254.0 / 255.0;
 	private double _currentMagFactor = 1.0;
 
 	private RAMP _sharedRamp = new()
@@ -66,10 +68,14 @@ public class HardwareGammaService : IDisposable
 		_watchdogTimer?.Change(Timeout.Infinite, Timeout.Infinite);
 	}
 
-	public void SetTargetGamma(string deviceName, double gamma)
+	public void SetTargetGamma(string deviceName, double gamma, bool avoidIdentityBypass = false)
 	{
-		_targetGammas[deviceName] = gamma;
-		ApplyGamma(deviceName, gamma);
+		lock (_rampLock)
+		{
+			_targetGammas[deviceName] = gamma;
+			_avoidIdentityBypass[deviceName] = avoidIdentityBypass;
+			ApplyGammaLocked(deviceName, gamma, force: false, avoidIdentityBypass);
+		}
 	}
 
 	public static bool TestGammaSupport(string deviceName)
@@ -129,9 +135,16 @@ public class HardwareGammaService : IDisposable
 		if (!_isRunning) return;
 		try
 		{
-			foreach (var kvp in _targetGammas)
+			foreach (string deviceName in _targetGammas.Keys)
 			{
-				ApplyGamma(kvp.Key, kvp.Value, force: true);
+				lock (_rampLock)
+				{
+					if (_targetGammas.TryGetValue(deviceName, out double latestTarget) && latestTarget < 0.999)
+					{
+						bool avoidBypass = _avoidIdentityBypass.TryGetValue(deviceName, out bool flag) && flag;
+						ApplyGammaLocked(deviceName, latestTarget, force: true, avoidBypass);
+					}
+				}
 			}
 		}
 		finally
@@ -140,12 +153,16 @@ public class HardwareGammaService : IDisposable
 		}
 	}
 
-	private void ApplyGamma(string deviceName, double targetGamma, bool force = false)
+	private void ApplyGammaLocked(string deviceName, double targetGamma, bool force, bool avoidIdentityBypass)
 	{
 		// Hard floor at 0.5 to respect Windows Driver limits and prevent screen blackouts.
-		double hardwareTarget = Math.Max(0.5, Math.Min(1.0, targetGamma));
+		double maxGamma = avoidIdentityBypass ? SdrNonIdentityMaxGamma : 1.0;
+		double hardwareTarget = Math.Max(0.5, Math.Min(maxGamma, targetGamma));
 
-		if (!force && _appliedGammas.TryGetValue(deviceName, out double lastApplied) && Math.Abs(hardwareTarget - lastApplied) < 0.001)
+		bool isEndpoint = hardwareTarget >= maxGamma - 0.001 || hardwareTarget <= 0.501;
+		double minDelta = isEndpoint ? 0.0005 : 0.004;
+
+		if (!force && _appliedGammas.TryGetValue(deviceName, out double lastApplied) && Math.Abs(hardwareTarget - lastApplied) < minDelta)
 		{
 			return;
 		}
@@ -153,37 +170,36 @@ public class HardwareGammaService : IDisposable
 		using SafeDcHandle dc = NativeMethods.CreateDC(null, deviceName, null, IntPtr.Zero);
 		if (dc.IsInvalid) return;
 
-		lock (_rampLock)
+		if (force)
 		{
-			if (force)
+			RAMP currentRamp = new() { Red = new ushort[256], Green = new ushort[256], Blue = new ushort[256] };
+			if (NativeMethods.GetDeviceGammaRamp(dc, ref currentRamp))
 			{
-				RAMP currentRamp = new() { Red = new ushort[256], Green = new ushort[256], Blue = new ushort[256] };
-				if (NativeMethods.GetDeviceGammaRamp(dc, ref currentRamp))
+				ushort expected = (ushort)(hardwareTarget * 65535);
+				if (Math.Abs(currentRamp.Red[255] - expected) < 256)
 				{
-					ushort expected = (ushort)(hardwareTarget * 65535);
-					if (Math.Abs(currentRamp.Red[255] - expected) < 256)
-					{
-						_appliedGammas[deviceName] = hardwareTarget;
-						return; // Hardware matches expected state, skip costly update
-					}
+					_appliedGammas[deviceName] = hardwareTarget;
+					return; // Hardware matches expected state, skip costly update
 				}
 			}
-			for (int i = 0; i < 256; i++)
-			{
-				double normalized = i / 255.0;
+		}
 
-				// Linear scaling: Proportional reduction of the white point ceiling instead of crushing midtones
-				ushort value = (ushort)(normalized * hardwareTarget * 65535);
+		bool isIdentity = !avoidIdentityBypass && hardwareTarget >= 0.999;
 
-				_sharedRamp.Red[i] = value;
-				_sharedRamp.Green[i] = value;
-				_sharedRamp.Blue[i] = value;
-			}
+		for (int i = 0; i < 256; i++)
+		{
+			ushort value = isIdentity
+				? (ushort)(i << 8)
+				: (ushort)((i / 255.0) * hardwareTarget * 65535);
 
-			if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
-			{
-				_appliedGammas[deviceName] = hardwareTarget;
-			}
+			_sharedRamp.Red[i] = value;
+			_sharedRamp.Green[i] = value;
+			_sharedRamp.Blue[i] = value;
+		}
+
+		if (NativeMethods.SetDeviceGammaRamp(dc, ref _sharedRamp))
+		{
+			_appliedGammas[deviceName] = hardwareTarget;
 		}
 	}
 
