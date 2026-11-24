@@ -27,6 +27,8 @@ namespace ProperDim;
 
 public partial class AppInfoWindow : Window
 {
+	private const double BaseWidth = 320.0;
+	private const double BaseHeight = 376.0;
 	private bool _isInitializing = true;
 
 	public AppInfoWindow()
@@ -120,7 +122,7 @@ public partial class AppInfoWindow : Window
 			double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
 			double contentWidth = Math.Min(ConfigManager.Settings.AppInfoWindowWidth - marginOffset, 480);
 			this.Width = contentWidth + marginOffset;
-			this.Height = (contentWidth / (320.0 / 394.0)) + marginOffset;
+			this.Height = (contentWidth / (BaseWidth / BaseHeight)) + marginOffset;
 		}
 		_isInitializing = false;
 	}
@@ -162,8 +164,8 @@ public partial class AppInfoWindow : Window
 
 	private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
 	{
-		double targetRatio = 320.0 / 394.0;
-		double minWidth = 320;
+		double targetRatio = BaseWidth / BaseHeight;
+		double minWidth = BaseWidth;
 		double maxWidth = 480; // 150% limit
 		double marginOffset = this.Content is FrameworkElement root ? root.Margin.Left + root.Margin.Right : 0;
 

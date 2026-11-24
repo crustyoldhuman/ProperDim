@@ -40,7 +40,7 @@ public class AppSettings
 	public double ScheduleDialogWidth { get; set; } = 320;
 	public double ScheduleDialogHeight { get; set; } = 280;
 	public double AppInfoWindowWidth { get; set; } = 320;
-	public double AppInfoWindowHeight { get; set; } = 384;
+	public double AppInfoWindowHeight { get; set; } = 376;
 	public double WarningMessageWidth { get; set; } = 300;
 	public double WarningMessageHeight { get; set; } = 150;
 	public double MinBrightnessDialogWidth { get; set; } = 300;
@@ -231,7 +231,7 @@ public static class ConfigManager
 		s.ScheduleDialogWidth = SanitizePositive(s.ScheduleDialogWidth, 320);
 		s.ScheduleDialogHeight = SanitizePositive(s.ScheduleDialogHeight, 280);
 		s.AppInfoWindowWidth = SanitizePositive(s.AppInfoWindowWidth, 320);
-		s.AppInfoWindowHeight = SanitizePositive(s.AppInfoWindowHeight, 384);
+		s.AppInfoWindowHeight = SanitizePositive(s.AppInfoWindowHeight, 376);
 		s.WarningMessageWidth = SanitizePositive(s.WarningMessageWidth, 300);
 		s.WarningMessageHeight = SanitizePositive(s.WarningMessageHeight, 150);
 		s.MinBrightnessDialogWidth = SanitizePositive(s.MinBrightnessDialogWidth, 300);
