@@ -28,7 +28,7 @@ public partial class WarningMessage : Window
 	public MessageBoxResult Result { get; private set; } = MessageBoxResult.No;
 	private bool _isInitializing = true;
 
-	private WarningMessage(string message, string title, bool isOkOnly, string customButtonText)
+	private WarningMessage(string message, string title, bool isOkOnly, string customButtonText, string primaryButtonText = null, string secondaryButtonText = null)
 	{
 		NativeMethods.PrepareWindowForOS(this, "#2D2D2D");
 		InitializeComponent();
@@ -48,6 +48,18 @@ public partial class WarningMessage : Window
 			// Rewire the click event to return 'Yes' instead of 'No'
 			SecondaryButton.Click -= No_Click;
 			SecondaryButton.Click += Yes_Click;
+		}
+		else
+		{
+			if (!string.IsNullOrEmpty(primaryButtonText))
+			{
+				PrimaryButton.Content = primaryButtonText;
+			}
+
+			if (!string.IsNullOrEmpty(secondaryButtonText))
+			{
+				SecondaryButton.Content = secondaryButtonText;
+			}
 		}
 
 		this.Loaded += (s, e) => ApplySavedSize();
@@ -73,12 +85,28 @@ public partial class WarningMessage : Window
 		};
 	}
 
-	public static MessageBoxResult Show(Window owner, string message, string title, bool isOkOnly = false, string customButtonText = "OK")
+	public static MessageBoxResult Show(Window owner, string message, string title, bool isOkOnly = false, string customButtonText = "OK", string primaryButtonText = null, string secondaryButtonText = null)
 	{
-		WarningMessage msgBox = new(message, title, isOkOnly, customButtonText)
+		WarningMessage msgBox = new(message, title, isOkOnly, customButtonText, primaryButtonText, secondaryButtonText);
+
+		if (owner != null && owner.IsVisible)
 		{
-			Owner = owner
-		};
+			msgBox.Owner = owner;
+			msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+		}
+		else
+		{
+			msgBox.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			msgBox.ShowInTaskbar = true;
+			msgBox.Loaded += (s, e) =>
+			{
+				msgBox.Activate();
+				msgBox.Topmost = true;
+				msgBox.Topmost = false;
+				msgBox.Focus();
+			};
+		}
+
 		msgBox.ShowDialog();
 		return msgBox.Result;
 	}

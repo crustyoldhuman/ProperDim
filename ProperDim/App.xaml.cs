@@ -114,6 +114,12 @@ public partial class App : Application
 				ControlPanel controlPanel = new(_mainWindow);
 				controlPanel.ShowControlPanel();
 			}
+
+			// 5. Check for updates (non-MSIX builds only)
+			if (!NativeMethods.IsRunningAsMsix())
+			{
+				_ = UpdateChecker.CheckForUpdatesAsync();
+			}
 		}
 		catch (Exception ex)
 		{

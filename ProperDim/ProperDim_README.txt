@@ -274,6 +274,20 @@ Version 1.4.5:  Some quality-of-life additions have been added.
 		up the text rendering on windows 10 machines and
 		some stability/performance improvements.
 
+Version 1.4.6	I fixed a crash condition on system restarts
+
+Version 1.4.8	Tons of fixes and patches. Fixed a flicker issue
+		if you have HDR and ACM turned off in Windows. 
+		Huge improvements to the scheduling and setting 
+		saving engine, increasing stability, reducing 
+		disk writes, and other improvements. 
+
+Version 1.5.0	Finally added a proper update notifier system to
+		ProperDim. Now for users running the portable or 
+		windows setup version (not the Microsoft Store),
+		you will receive a one time pop-up message if a
+		new version is detected when it first boots. 
+
 
 	   '///,\\\   Licensing & Support   ///,\\\'
              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

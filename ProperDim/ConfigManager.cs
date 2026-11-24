@@ -51,6 +51,7 @@ public class AppSettings
 	public string LastScheduleDays { get; set; } = "Mo,Tu,We,Th,Fr,Sa,Su";
 	public bool SwapTrayIconClicks { get; set; } = false;
 	public double GlobalMinimum { get; set; } = 0.30;
+	public string LastNotifiedUpdateVersion { get; set; } = "";
 	public void Save()
 	{
 		ConfigManager.SaveInstance(this);
@@ -218,6 +219,7 @@ public static class ConfigManager
 	{
 		s.IncreaseHotkey ??= string.Empty;
 		s.DecreaseHotkey ??= string.Empty;
+		s.LastNotifiedUpdateVersion ??= string.Empty;
 		s.LastScheduleDays = string.IsNullOrWhiteSpace(s.LastScheduleDays)
 			? "Mo,Tu,We,Th,Fr,Sa,Su"
 			: s.LastScheduleDays;
@@ -311,9 +313,9 @@ public static class ConfigManager
 	}
 
 	internal static readonly object _saveLock = new();
-	private static readonly object _queueLock = new();
-	private static readonly object _ioLock = new();
-	private static readonly object _logLock = new();
+	private static readonly Lock _queueLock = new();
+	private static readonly Lock _ioLock = new();
+	private static readonly Lock _logLock = new();
 
 	private static string _pendingJson = null;
 	private static long _revisionCounter = 0;
